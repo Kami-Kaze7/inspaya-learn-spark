@@ -228,12 +228,12 @@ export default function Courses() {
                     courses.map((course) => (
                       <TableRow key={course.id}>
                         <TableCell>
-                          {course.video_url ? (
+                          {course.thumbnail_url ? (
                             <div className="relative w-16 h-16 rounded overflow-hidden">
-                              <video 
-                                src={course.video_url} 
+                              <img 
+                                src={course.thumbnail_url} 
+                                alt={course.title}
                                 className="w-full h-full object-cover"
-                                preload="metadata"
                               />
                             </div>
                           ) : (

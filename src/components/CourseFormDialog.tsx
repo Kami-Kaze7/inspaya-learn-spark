@@ -151,6 +151,7 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
         what_you_learn: formData.whatYouLearn,
         video_url: encodedVideoUrl,
         video_duration: formData.videoDuration,
+        thumbnail_url: thumbnailPreview || null,
       });
 
       if (error) throw error;
