@@ -33,7 +33,8 @@ const encodeVideoUrl = (url: string): string => {
   try {
     // Parse the URL to encode only the path part
     const urlObj = new URL(url);
-    const pathParts = urlObj.pathname.split('/');
+    // Decode first to avoid double-encoding, then encode
+    const pathParts = decodeURIComponent(urlObj.pathname).split('/');
     const encodedParts = pathParts.map(part => encodeURIComponent(part));
     urlObj.pathname = encodedParts.join('/');
     return urlObj.toString();
