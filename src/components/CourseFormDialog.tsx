@@ -148,13 +148,12 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
               <Label>Category</Label>
               <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Al Courses" />
+                  <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Courses</SelectItem>
-                  <SelectItem value="business">Business</SelectItem>
-                  <SelectItem value="technology">Technology</SelectItem>
-                  <SelectItem value="design">Design</SelectItem>
+                  <SelectItem value="ai-courses">AI Courses</SelectItem>
+                  <SelectItem value="motion-graphics">Motion Graphics</SelectItem>
+                  <SelectItem value="video-editing">Video Editing</SelectItem>
                 </SelectContent>
               </Select>
             </div>
