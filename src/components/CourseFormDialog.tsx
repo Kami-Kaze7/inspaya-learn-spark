@@ -299,8 +299,8 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
                       setVideoLoading(false);
                     }}
                   >
-                    <source src={formData.videoUrl} type="video/mp4" />
-                    <source src={formData.videoUrl} type="video/webm" />
+                    <source src={formData.videoUrl.replace(/ /g, '%20')} type="video/mp4" />
+                    <source src={formData.videoUrl.replace(/ /g, '%20')} type="video/webm" />
                     Your browser does not support the video tag.
                   </video>
                 </div>
