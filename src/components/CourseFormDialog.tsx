@@ -26,6 +26,23 @@ interface CourseFormDialogProps {
   onSuccess: () => void;
 }
 
+// Helper function to encode URL properly (spaces and special chars)
+const encodeVideoUrl = (url: string): string => {
+  if (!url) return url;
+  
+  try {
+    // Parse the URL to encode only the path part
+    const urlObj = new URL(url);
+    const pathParts = urlObj.pathname.split('/');
+    const encodedParts = pathParts.map(part => encodeURIComponent(part));
+    urlObj.pathname = encodedParts.join('/');
+    return urlObj.toString();
+  } catch {
+    // If URL parsing fails, just return the original
+    return url;
+  }
+};
+
 export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDialogProps) {
   const [loading, setLoading] = useState(false);
   const [videoLoading, setVideoLoading] = useState(false);
@@ -265,13 +282,14 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
                 placeholder="Paste your Wasabi video URL here"
                 value={formData.videoUrl}
                 onChange={(e) => {
-                  setFormData({ ...formData, videoUrl: e.target.value });
+                  const encodedUrl = encodeVideoUrl(e.target.value);
+                  setFormData({ ...formData, videoUrl: encodedUrl });
                   setVideoError(false);
                   setVideoLoading(true);
                 }}
               />
               <p className="text-xs text-muted-foreground">
-                🔗 Paste a direct video link from your Wasabi storage
+                🔗 Paste a direct video link from your Wasabi storage (spaces will be auto-encoded)
               </p>
             </div>
 
