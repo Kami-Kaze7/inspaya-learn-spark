@@ -14,6 +14,12 @@ import Enrollments from "./pages/admin/Enrollments";
 import Announcements from "./pages/admin/Announcements";
 import Messages from "./pages/admin/Messages";
 import Assignments from "./pages/admin/Assignments";
+import StudentCourses from "./pages/student/Courses";
+import StudentCertificates from "./pages/student/Certificates";
+import StudentEnroll from "./pages/student/Enroll";
+import StudentNotifications from "./pages/student/Notifications";
+import StudentAssignments from "./pages/student/Assignments";
+import StudentMessages from "./pages/student/Messages";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +34,12 @@ const App = () => (
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/student" element={<StudentDashboard />} />
+          <Route path="/student/courses" element={<StudentCourses />} />
+          <Route path="/student/certificates" element={<StudentCertificates />} />
+          <Route path="/student/enroll" element={<StudentEnroll />} />
+          <Route path="/student/notifications" element={<StudentNotifications />} />
+          <Route path="/student/assignments" element={<StudentAssignments />} />
+          <Route path="/student/messages" element={<StudentMessages />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/students" element={<Students />} />
           <Route path="/admin/instructors" element={<Instructors />} />
