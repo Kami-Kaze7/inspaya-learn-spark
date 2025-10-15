@@ -34,6 +34,31 @@ const encodeVideoUrl = (url: string): string => {
   return url.replace(/ /g, '%20');
 };
 
+// Helper function to get YouTube embed URL
+const getYouTubeEmbedUrl = (url: string): string | null => {
+  if (!url) return null;
+  
+  // Match various YouTube URL formats
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s]+)/,
+    /youtube\.com\/shorts\/([^&\s]+)/
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match && match[1]) {
+      return `https://www.youtube.com/embed/${match[1]}`;
+    }
+  }
+  
+  return null;
+};
+
+// Helper function to check if URL is a YouTube link
+const isYouTubeUrl = (url: string): boolean => {
+  return url.includes('youtube.com') || url.includes('youtu.be');
+};
+
 export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDialogProps) {
   const [loading, setLoading] = useState(false);
   const [videoLoading, setVideoLoading] = useState(false);
@@ -273,7 +298,7 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
               <Label htmlFor="videoUrl">Video URL</Label>
               <Input
                 id="videoUrl"
-                placeholder="Paste your Wasabi video URL here"
+                placeholder="Paste YouTube or Wasabi video URL here"
                 value={formData.videoUrl}
                 onChange={(e) => {
                   setFormData({ ...formData, videoUrl: e.target.value });
@@ -282,7 +307,7 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
                 }}
               />
               <p className="text-xs text-muted-foreground">
-                🔗 Paste a direct video link from your Wasabi storage (spaces will be auto-encoded on save)
+                🔗 Supports YouTube links and direct video files from Wasabi storage
               </p>
             </div>
 
@@ -300,20 +325,34 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
                       <p className="text-sm text-destructive">Unable to load video. Please check the URL.</p>
                     </div>
                   )}
-                  <video
-                    key={formData.videoUrl}
-                    controls
-                    className={`w-full ${videoLoading || videoError ? 'hidden' : ''}`}
-                    onLoadedMetadata={() => setVideoLoading(false)}
-                    onError={() => {
-                      setVideoError(true);
-                      setVideoLoading(false);
-                    }}
-                  >
-                    <source src={encodeVideoUrl(formData.videoUrl)} type="video/mp4" />
-                    <source src={encodeVideoUrl(formData.videoUrl)} type="video/webm" />
-                    Your browser does not support the video tag.
-                  </video>
+                  {isYouTubeUrl(formData.videoUrl) ? (
+                    <iframe
+                      src={getYouTubeEmbedUrl(formData.videoUrl) || ''}
+                      className={`w-full aspect-video ${videoLoading || videoError ? 'hidden' : ''}`}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      onLoad={() => setVideoLoading(false)}
+                      onError={() => {
+                        setVideoError(true);
+                        setVideoLoading(false);
+                      }}
+                    />
+                  ) : (
+                    <video
+                      key={formData.videoUrl}
+                      controls
+                      className={`w-full ${videoLoading || videoError ? 'hidden' : ''}`}
+                      onLoadedMetadata={() => setVideoLoading(false)}
+                      onError={() => {
+                        setVideoError(true);
+                        setVideoLoading(false);
+                      }}
+                    >
+                      <source src={encodeVideoUrl(formData.videoUrl)} type="video/mp4" />
+                      <source src={encodeVideoUrl(formData.videoUrl)} type="video/webm" />
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
                 </div>
               </div>
             )}
