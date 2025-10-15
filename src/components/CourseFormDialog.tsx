@@ -90,6 +90,8 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
   const [loading, setLoading] = useState(false);
   const [videoLoading, setVideoLoading] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string>("");
   const [formData, setFormData] = useState({
     title: "",
     shortDescription: "",
@@ -106,6 +108,18 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
     videoUrl: "",
     videoDuration: "",
   });
+
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setThumbnailFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setThumbnailPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = async (status: "draft" | "published") => {
     if (!formData.title || !formData.shortDescription) {
@@ -170,6 +184,8 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
       videoUrl: "",
       videoDuration: "",
     });
+    setThumbnailFile(null);
+    setThumbnailPreview("");
   };
 
   return (
@@ -183,10 +199,26 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Thumbnail</Label>
-              <div className="border-2 border-dashed rounded-lg p-8 text-center hover:bg-accent/50 cursor-pointer">
-                <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">Drag & drop or click to upload</p>
-              </div>
+              <input
+                type="file"
+                id="thumbnail-upload"
+                accept="image/*"
+                className="hidden"
+                onChange={handleThumbnailChange}
+              />
+              <label
+                htmlFor="thumbnail-upload"
+                className="border-2 border-dashed rounded-lg p-8 text-center hover:bg-accent/50 cursor-pointer flex flex-col items-center justify-center min-h-[200px]"
+              >
+                {thumbnailPreview ? (
+                  <img src={thumbnailPreview} alt="Thumbnail preview" className="max-h-[180px] rounded" />
+                ) : (
+                  <>
+                    <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground">Drag & drop or click to upload</p>
+                  </>
+                )}
+              </label>
             </div>
 
             <div className="space-y-4">
