@@ -4,16 +4,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { BookOpen } from "lucide-react";
+import { BookOpen, GraduationCap, Users } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userRole, setUserRole] = useState<"student" | "instructor">("student");
 
   useEffect(() => {
     // Check if user is already logged in
@@ -30,7 +32,19 @@ const Auth = () => {
         if (roles) {
           navigate("/admin");
         } else {
-          navigate("/student");
+          // Check if user is instructor
+          const { data: instructorRole } = await supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", session.user.id)
+            .eq("role", "instructor")
+            .maybeSingle();
+
+          if (instructorRole) {
+            navigate("/instructor");
+          } else {
+            navigate("/student");
+          }
         }
       }
     });
@@ -49,7 +63,19 @@ const Auth = () => {
           if (roles) {
             navigate("/admin");
           } else {
-            navigate("/student");
+            // Check if user is instructor
+            const { data: instructorRole } = await supabase
+              .from("user_roles")
+              .select("role")
+              .eq("user_id", session.user.id)
+              .eq("role", "instructor")
+              .maybeSingle();
+
+            if (instructorRole) {
+              navigate("/instructor");
+            } else {
+              navigate("/student");
+            }
           }
         }, 0);
       }
@@ -62,19 +88,37 @@ const Auth = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    const { error } = await supabase.auth.signUp({
+    const redirectUrl = userRole === "student" ? `${window.location.origin}/student` : `${window.location.origin}/instructor`;
+
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/student`
+        emailRedirectTo: redirectUrl
       }
     });
 
     if (error) {
       toast.error(error.message);
-    } else {
+      setIsLoading(false);
+      return;
+    }
+
+    if (data.user) {
+      // Insert the user role
+      const { error: roleError } = await supabase
+        .from("user_roles")
+        .insert({ user_id: data.user.id, role: userRole });
+
+      if (roleError) {
+        toast.error("Failed to set user role. Please contact support.");
+        setIsLoading(false);
+        return;
+      }
+
       toast.success("Account created! Please check your email to verify.");
     }
+    
     setIsLoading(false);
   };
 
@@ -146,6 +190,31 @@ const Auth = () => {
 
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
+                <div className="space-y-3">
+                  <Label>I am a</Label>
+                  <RadioGroup value={userRole} onValueChange={(value) => setUserRole(value as "student" | "instructor")}>
+                    <div className="flex items-center space-x-2 rounded-lg border p-4 cursor-pointer hover:bg-accent/50 transition-colors">
+                      <RadioGroupItem value="student" id="student" />
+                      <Label htmlFor="student" className="flex items-center gap-2 cursor-pointer flex-1">
+                        <GraduationCap className="h-5 w-5 text-primary" />
+                        <div>
+                          <div className="font-semibold">Student</div>
+                          <div className="text-sm text-muted-foreground">I want to learn and take courses</div>
+                        </div>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 rounded-lg border p-4 cursor-pointer hover:bg-accent/50 transition-colors">
+                      <RadioGroupItem value="instructor" id="instructor" />
+                      <Label htmlFor="instructor" className="flex items-center gap-2 cursor-pointer flex-1">
+                        <Users className="h-5 w-5 text-primary" />
+                        <div>
+                          <div className="font-semibold">Instructor</div>
+                          <div className="text-sm text-muted-foreground">I want to create and teach courses</div>
+                        </div>
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
                   <Input
