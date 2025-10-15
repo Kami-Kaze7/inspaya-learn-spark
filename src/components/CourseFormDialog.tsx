@@ -30,18 +30,8 @@ interface CourseFormDialogProps {
 const encodeVideoUrl = (url: string): string => {
   if (!url) return url;
   
-  try {
-    // Parse the URL to encode only the path part
-    const urlObj = new URL(url);
-    // Decode first to avoid double-encoding, then encode
-    const pathParts = decodeURIComponent(urlObj.pathname).split('/');
-    const encodedParts = pathParts.map(part => encodeURIComponent(part));
-    urlObj.pathname = encodedParts.join('/');
-    return urlObj.toString();
-  } catch {
-    // If URL parsing fails, just return the original
-    return url;
-  }
+  // Simply replace spaces with %20 - don't over-engineer it
+  return url.replace(/ /g, '%20');
 };
 
 export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDialogProps) {
