@@ -90,32 +90,20 @@ const Auth = () => {
 
     const redirectUrl = userRole === "student" ? `${window.location.origin}/student` : `${window.location.origin}/instructor`;
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: redirectUrl
+        emailRedirectTo: redirectUrl,
+        data: {
+          role: userRole
+        }
       }
     });
 
     if (error) {
       toast.error(error.message);
-      setIsLoading(false);
-      return;
-    }
-
-    if (data.user) {
-      // Insert the user role
-      const { error: roleError } = await supabase
-        .from("user_roles")
-        .insert({ user_id: data.user.id, role: userRole });
-
-      if (roleError) {
-        toast.error("Failed to set user role. Please contact support.");
-        setIsLoading(false);
-        return;
-      }
-
+    } else {
       toast.success("Account created! Please check your email to verify.");
     }
     
