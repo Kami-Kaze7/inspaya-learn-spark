@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -20,10 +20,31 @@ import { Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  short_description?: string;
+  category?: string;
+  difficulty?: string;
+  language?: string;
+  price?: number;
+  duration_hours?: number;
+  duration_minutes?: number;
+  video_url?: string;
+  video_duration?: string;
+  thumbnail_url?: string;
+  status: string;
+  tags?: string;
+  requirements?: string;
+  what_you_learn?: string;
+}
+
 interface CourseFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
+  course?: Course | null;
 }
 
 // Helper function to encode URL properly (spaces and special chars)
@@ -86,7 +107,7 @@ const isYouTubeUrl = (url: string): boolean => {
   return url.includes('youtube.com') || url.includes('youtu.be');
 };
 
-export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDialogProps) {
+export function CourseFormDialog({ open, onOpenChange, onSuccess, course }: CourseFormDialogProps) {
   const [loading, setLoading] = useState(false);
   const [videoLoading, setVideoLoading] = useState(false);
   const [videoError, setVideoError] = useState(false);
@@ -108,6 +129,30 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
     videoUrl: "",
     videoDuration: "",
   });
+
+  useEffect(() => {
+    if (course && open) {
+      setFormData({
+        title: course.title,
+        shortDescription: course.short_description || "",
+        fullDescription: course.description,
+        category: course.category || "",
+        difficulty: course.difficulty || "",
+        language: course.language || "English",
+        price: course.price?.toString() || "",
+        durationHours: course.duration_hours?.toString() || "",
+        durationMinutes: course.duration_minutes?.toString() || "",
+        tags: course.tags || "",
+        requirements: course.requirements || "",
+        whatYouLearn: course.what_you_learn || "",
+        videoUrl: course.video_url || "",
+        videoDuration: course.video_duration || "",
+      });
+      setThumbnailPreview(course.thumbnail_url || "");
+    } else if (!open) {
+      resetForm();
+    }
+  }, [course, open]);
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -134,7 +179,33 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
       // Encode video URL only when saving
       const encodedVideoUrl = formData.videoUrl ? encodeVideoUrl(formData.videoUrl) : null;
       
-      const { error } = await supabase.from("courses").insert({
+      if (course) {
+        // Update existing course
+        const { error } = await supabase.from("courses").update({
+          title: formData.title,
+          description: formData.fullDescription || formData.shortDescription,
+          short_description: formData.shortDescription,
+          status: status,
+          category: formData.category,
+          difficulty: formData.difficulty,
+          language: formData.language,
+          price: formData.price ? parseFloat(formData.price) : null,
+          duration_hours: formData.durationHours ? parseInt(formData.durationHours) : null,
+          duration_minutes: formData.durationMinutes ? parseInt(formData.durationMinutes) : null,
+          tags: formData.tags,
+          requirements: formData.requirements,
+          what_you_learn: formData.whatYouLearn,
+          video_url: encodedVideoUrl,
+          video_duration: formData.videoDuration,
+          thumbnail_url: thumbnailPreview || null,
+        }).eq("id", course.id);
+
+        if (error) throw error;
+
+        toast.success(`Course ${status === "draft" ? "updated as draft" : "updated and published"} successfully`);
+      } else {
+        // Create new course
+        const { error } = await supabase.from("courses").insert({
         title: formData.title,
         description: formData.fullDescription || formData.shortDescription,
         short_description: formData.shortDescription,
@@ -150,13 +221,14 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
         requirements: formData.requirements,
         what_you_learn: formData.whatYouLearn,
         video_url: encodedVideoUrl,
-        video_duration: formData.videoDuration,
-        thumbnail_url: thumbnailPreview || null,
-      });
+          video_duration: formData.videoDuration,
+          thumbnail_url: thumbnailPreview || null,
+        });
 
-      if (error) throw error;
+        if (error) throw error;
 
-      toast.success(`Course ${status === "draft" ? "saved as draft" : "published"} successfully`);
+        toast.success(`Course ${status === "draft" ? "saved as draft" : "published"} successfully`);
+      }
       onSuccess();
       onOpenChange(false);
       resetForm();
@@ -193,7 +265,7 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create/Edit Course</DialogTitle>
+          <DialogTitle>{course ? "Edit Course" : "Create New Course"}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">

@@ -18,6 +18,7 @@ import { Edit, List, Trash2, Play } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { CourseFormDialog } from "@/components/CourseFormDialog";
+import { LessonManagementDialog } from "@/components/LessonManagementDialog";
 
 interface Course {
   id: string;
@@ -42,6 +43,9 @@ export default function Courses() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+  const [lessonDialogOpen, setLessonDialogOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<{ id: string; title: string } | null>(null);
   const [stats, setStats] = useState({
     total: 0,
     published: 0,
@@ -167,7 +171,10 @@ export default function Courses() {
               <SidebarTrigger />
               <h1 className="text-2xl font-bold">Course Management</h1>
             </div>
-            <Button onClick={() => setDialogOpen(true)}>+ Create New Course</Button>
+            <Button onClick={() => {
+              setEditingCourse(null);
+              setDialogOpen(true);
+            }}>+ Create New Course</Button>
           </header>
 
           <main className="flex-1 p-6 space-y-6">
@@ -287,10 +294,24 @@ export default function Courses() {
                                 <Play className="h-4 w-4" />
                               </Button>
                             )}
-                            <Button size="sm" variant="ghost">
+                            <Button 
+                              size="sm" 
+                              variant="ghost"
+                              onClick={() => {
+                                setEditingCourse(course);
+                                setDialogOpen(true);
+                              }}
+                            >
                               <Edit className="h-4 w-4" />
                             </Button>
-                            <Button size="sm" variant="ghost">
+                            <Button 
+                              size="sm" 
+                              variant="ghost"
+                              onClick={() => {
+                                setSelectedCourse({ id: course.id, title: course.title });
+                                setLessonDialogOpen(true);
+                              }}
+                            >
                               <List className="h-4 w-4" />
                             </Button>
                             <Button size="sm" variant="ghost" onClick={() => handleDelete(course.id)}>
@@ -310,9 +331,22 @@ export default function Courses() {
 
       <CourseFormDialog 
         open={dialogOpen} 
-        onOpenChange={setDialogOpen}
+        onOpenChange={(open) => {
+          setDialogOpen(open);
+          if (!open) setEditingCourse(null);
+        }}
         onSuccess={fetchCourses}
+        course={editingCourse}
       />
+
+      {selectedCourse && (
+        <LessonManagementDialog
+          open={lessonDialogOpen}
+          onOpenChange={setLessonDialogOpen}
+          courseId={selectedCourse.id}
+          courseTitle={selectedCourse.title}
+        />
+      )}
     </SidebarProvider>
   );
 }
