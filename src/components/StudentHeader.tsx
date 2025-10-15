@@ -26,7 +26,7 @@ export const StudentHeader = () => {
       if (session) {
         const { data: profile } = await supabase
           .from("profiles")
-          .select("full_name")
+          .select("first_name, last_name, full_name")
           .eq("id", session.user.id)
           .single();
         

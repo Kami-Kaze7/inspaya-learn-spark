@@ -19,12 +19,12 @@ const StudentDashboard = () => {
         // Get user profile
         const { data: profile } = await supabase
           .from("profiles")
-          .select("full_name")
+          .select("first_name, last_name")
           .eq("id", session.user.id)
           .single();
         
-        if (profile?.full_name) {
-          setUserName(profile.full_name);
+        if (profile?.first_name) {
+          setUserName(profile.first_name);
         }
       }
     };

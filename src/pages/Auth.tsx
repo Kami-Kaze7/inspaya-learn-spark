@@ -15,6 +15,8 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [userRole, setUserRole] = useState<"student" | "instructor">("student");
 
   useEffect(() => {
@@ -96,7 +98,9 @@ const Auth = () => {
       options: {
         emailRedirectTo: redirectUrl,
         data: {
-          role: userRole
+          role: userRole,
+          first_name: firstName,
+          last_name: lastName
         }
       }
     });
@@ -202,6 +206,30 @@ const Auth = () => {
                       </Label>
                     </div>
                   </RadioGroup>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-firstname">First Name</Label>
+                    <Input
+                      id="signup-firstname"
+                      type="text"
+                      placeholder="John"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-lastname">Last Name</Label>
+                    <Input
+                      id="signup-lastname"
+                      type="text"
+                      placeholder="Doe"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      required
+                    />
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
