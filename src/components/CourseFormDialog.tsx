@@ -28,6 +28,8 @@ interface CourseFormDialogProps {
 
 export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDialogProps) {
   const [loading, setLoading] = useState(false);
+  const [videoLoading, setVideoLoading] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     shortDescription: "",
@@ -255,19 +257,55 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="videoUrl">Video URL</Label>
               <Input
                 id="videoUrl"
-                placeholder="YouTube, Vimeo, Wistia, or direct video URL"
+                placeholder="Paste your Wasabi video URL here"
                 value={formData.videoUrl}
-                onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
+                onChange={(e) => {
+                  setFormData({ ...formData, videoUrl: e.target.value });
+                  setVideoError(false);
+                  setVideoLoading(true);
+                }}
               />
               <p className="text-xs text-muted-foreground">
-                🔗 Supports YouTube, Vimeo, Wistia, and direct video links
+                🔗 Paste a direct video link from your Wasabi storage
               </p>
             </div>
+
+            {formData.videoUrl && (
+              <div className="space-y-2">
+                <Label>Video Preview</Label>
+                <div className="border rounded-lg overflow-hidden bg-muted">
+                  {videoLoading && !videoError && (
+                    <div className="aspect-video flex items-center justify-center">
+                      <p className="text-sm text-muted-foreground">Loading video...</p>
+                    </div>
+                  )}
+                  {videoError && (
+                    <div className="aspect-video flex items-center justify-center">
+                      <p className="text-sm text-destructive">Unable to load video. Please check the URL.</p>
+                    </div>
+                  )}
+                  <video
+                    key={formData.videoUrl}
+                    controls
+                    className={`w-full ${videoLoading || videoError ? 'hidden' : ''}`}
+                    onLoadedMetadata={() => setVideoLoading(false)}
+                    onError={() => {
+                      setVideoError(true);
+                      setVideoLoading(false);
+                    }}
+                  >
+                    <source src={formData.videoUrl} type="video/mp4" />
+                    <source src={formData.videoUrl} type="video/webm" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="videoDuration">Video Duration</Label>
