@@ -75,6 +75,9 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
     try {
       const { data: { session } } = await supabase.auth.getSession();
       
+      // Encode video URL only when saving
+      const encodedVideoUrl = formData.videoUrl ? encodeVideoUrl(formData.videoUrl) : null;
+      
       const { error } = await supabase.from("courses").insert({
         title: formData.title,
         description: formData.fullDescription || formData.shortDescription,
@@ -90,7 +93,7 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
         tags: formData.tags,
         requirements: formData.requirements,
         what_you_learn: formData.whatYouLearn,
-        video_url: formData.videoUrl,
+        video_url: encodedVideoUrl,
         video_duration: formData.videoDuration,
       });
 
@@ -283,14 +286,13 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
                 placeholder="Paste your Wasabi video URL here"
                 value={formData.videoUrl}
                 onChange={(e) => {
-                  const encodedUrl = encodeVideoUrl(e.target.value);
-                  setFormData({ ...formData, videoUrl: encodedUrl });
+                  setFormData({ ...formData, videoUrl: e.target.value });
                   setVideoError(false);
                   setVideoLoading(true);
                 }}
               />
               <p className="text-xs text-muted-foreground">
-                🔗 Paste a direct video link from your Wasabi storage (spaces will be auto-encoded)
+                🔗 Paste a direct video link from your Wasabi storage (spaces will be auto-encoded on save)
               </p>
             </div>
 
@@ -318,8 +320,8 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
                       setVideoLoading(false);
                     }}
                   >
-                    <source src={formData.videoUrl} type="video/mp4" />
-                    <source src={formData.videoUrl} type="video/webm" />
+                    <source src={encodeVideoUrl(formData.videoUrl)} type="video/mp4" />
+                    <source src={encodeVideoUrl(formData.videoUrl)} type="video/webm" />
                     Your browser does not support the video tag.
                   </video>
                 </div>
