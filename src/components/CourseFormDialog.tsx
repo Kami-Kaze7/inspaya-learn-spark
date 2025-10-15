@@ -30,8 +30,35 @@ interface CourseFormDialogProps {
 const encodeVideoUrl = (url: string): string => {
   if (!url) return url;
   
-  // Simply replace spaces with %20 - don't over-engineer it
-  return url.replace(/ /g, '%20');
+  try {
+    // Parse the URL
+    const urlObj = new URL(url);
+    
+    // Split path into segments and encode each one
+    const pathSegments = urlObj.pathname.split('/');
+    const encodedSegments = pathSegments.map(segment => {
+      // Decode first in case it's already partially encoded
+      try {
+        const decoded = decodeURIComponent(segment);
+        return encodeURIComponent(decoded);
+      } catch {
+        // If decode fails, just encode as-is
+        return encodeURIComponent(segment);
+      }
+    });
+    
+    // Reconstruct the URL with encoded path
+    urlObj.pathname = encodedSegments.join('/');
+    
+    const finalUrl = urlObj.toString();
+    console.log('Original URL:', url);
+    console.log('Encoded URL:', finalUrl);
+    return finalUrl;
+  } catch (error) {
+    console.error('Failed to encode URL:', error);
+    // Fallback: just replace spaces
+    return url.replace(/ /g, '%20');
+  }
 };
 
 // Helper function to get YouTube embed URL
@@ -342,8 +369,18 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
                       key={formData.videoUrl}
                       controls
                       className={`w-full ${videoLoading || videoError ? 'hidden' : ''}`}
-                      onLoadedMetadata={() => setVideoLoading(false)}
-                      onError={() => {
+                      onLoadedMetadata={() => {
+                        console.log('Video loaded successfully');
+                        setVideoLoading(false);
+                      }}
+                      onError={(e) => {
+                        const video = e.currentTarget;
+                        const error = video.error;
+                        console.error('Video error:', {
+                          code: error?.code,
+                          message: error?.message,
+                          src: video.currentSrc
+                        });
                         setVideoError(true);
                         setVideoLoading(false);
                       }}
