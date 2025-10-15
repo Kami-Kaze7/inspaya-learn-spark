@@ -284,14 +284,25 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
                       <p className="text-sm text-muted-foreground">Loading video...</p>
                     </div>
                   )}
-                  <iframe
+                  {videoError && (
+                    <div className="aspect-video flex items-center justify-center">
+                      <p className="text-sm text-destructive">Unable to load video. Please check the URL.</p>
+                    </div>
+                  )}
+                  <video
                     key={formData.videoUrl}
-                    src={formData.videoUrl.replace(/ /g, '%20')}
-                    className={`w-full aspect-video ${videoLoading ? 'hidden' : ''}`}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    onLoad={() => setVideoLoading(false)}
-                  />
+                    controls
+                    className={`w-full ${videoLoading || videoError ? 'hidden' : ''}`}
+                    onLoadedMetadata={() => setVideoLoading(false)}
+                    onError={() => {
+                      setVideoError(true);
+                      setVideoLoading(false);
+                    }}
+                  >
+                    <source src={formData.videoUrl} type="video/mp4" />
+                    <source src={formData.videoUrl} type="video/webm" />
+                    Your browser does not support the video tag.
+                  </video>
                 </div>
               </div>
             )}
