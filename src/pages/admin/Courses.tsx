@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Edit, List, Trash2, Play } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { CourseFormDialog } from "@/components/CourseFormDialog";
 
 interface Course {
   id: string;
@@ -30,6 +31,7 @@ export default function Courses() {
   const navigate = useNavigate();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [stats, setStats] = useState({
     total: 0,
     published: 0,
@@ -127,7 +129,7 @@ export default function Courses() {
               <SidebarTrigger />
               <h1 className="text-2xl font-bold">Course Management</h1>
             </div>
-            <Button>+ Create New Course</Button>
+            <Button onClick={() => setDialogOpen(true)}>+ Create New Course</Button>
           </header>
 
           <main className="flex-1 p-6 space-y-6">
@@ -229,6 +231,12 @@ export default function Courses() {
           </main>
         </div>
       </div>
+
+      <CourseFormDialog 
+        open={dialogOpen} 
+        onOpenChange={setDialogOpen}
+        onSuccess={fetchCourses}
+      />
     </SidebarProvider>
   );
 }
