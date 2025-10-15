@@ -76,7 +76,7 @@ export default function Students() {
         return;
       }
 
-      // Get profiles and auth data for students
+      // Get profiles with emails
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select("*")
@@ -84,22 +84,17 @@ export default function Students() {
 
       if (profilesError) throw profilesError;
 
-      // Get email addresses from auth.users (we'll need to do this via a query)
-      const studentsWithEmails = await Promise.all(
-        (profiles || []).map(async (profile) => {
-          const { data: { user } } = await supabase.auth.admin.getUserById(profile.id);
-          return {
-            id: profile.id,
-            full_name: profile.full_name,
-            email: user?.email || "N/A",
-            created_at: profile.created_at,
-            learning_method: "Online", // Placeholder
-            status: "Active", // Placeholder
-          };
-        })
-      );
+      // Map profiles to student data
+      const studentsData = (profiles || []).map((profile) => ({
+        id: profile.id,
+        full_name: profile.full_name,
+        email: profile.email || "N/A",
+        created_at: profile.created_at,
+        learning_method: "Online", // Placeholder
+        status: "Active", // Placeholder
+      }));
 
-      setStudents(studentsWithEmails);
+      setStudents(studentsData);
     } catch (error: any) {
       toast.error("Failed to fetch students");
       console.error(error);
