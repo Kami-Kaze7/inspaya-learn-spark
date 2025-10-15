@@ -17,15 +17,41 @@ const Auth = () => {
 
   useEffect(() => {
     // Check if user is already logged in
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session) {
-        navigate("/student");
+        // Check if user is admin
+        const { data: roles } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", session.user.id)
+          .eq("role", "admin")
+          .maybeSingle();
+
+        if (roles) {
+          navigate("/admin");
+        } else {
+          navigate("/student");
+        }
       }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
-        navigate("/student");
+        // Defer the role check to avoid blocking auth state change
+        setTimeout(async () => {
+          const { data: roles } = await supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", session.user.id)
+            .eq("role", "admin")
+            .maybeSingle();
+
+          if (roles) {
+            navigate("/admin");
+          } else {
+            navigate("/student");
+          }
+        }, 0);
       }
     });
 
