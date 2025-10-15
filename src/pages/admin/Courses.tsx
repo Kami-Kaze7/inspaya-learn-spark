@@ -23,8 +23,18 @@ interface Course {
   id: string;
   title: string;
   description: string;
+  short_description?: string;
   status: string;
   created_at: string;
+  category?: string;
+  difficulty?: string;
+  language?: string;
+  price?: number;
+  duration_hours?: number;
+  duration_minutes?: number;
+  video_url?: string;
+  video_duration?: string;
+  thumbnail_url?: string;
 }
 
 export default function Courses() {
@@ -119,6 +129,34 @@ export default function Courses() {
     }
   };
 
+  const formatDuration = (hours?: number, minutes?: number) => {
+    if (hours || minutes) {
+      const h = hours || 0;
+      const m = minutes || 0;
+      return `${h}h ${m}m`;
+    }
+    return "N/A";
+  };
+
+  const getCategoryDisplay = (category?: string) => {
+    const categoryMap: Record<string, { label: string; className: string }> = {
+      "video-editing": { label: "Video Editing", className: "bg-green-100 text-green-800" },
+      "motion-graphics": { label: "Motion Graphics", className: "bg-blue-100 text-blue-800" },
+      "ai-courses": { label: "AI Courses", className: "bg-purple-100 text-purple-800" },
+    };
+    
+    const categoryInfo = categoryMap[category || ""] || { 
+      label: "N/A", 
+      className: "bg-gray-100 text-gray-800" 
+    };
+    
+    return (
+      <Badge className={categoryInfo.className}>
+        {categoryInfo.label}
+      </Badge>
+    );
+  };
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
@@ -190,27 +228,65 @@ export default function Courses() {
                     courses.map((course) => (
                       <TableRow key={course.id}>
                         <TableCell>
-                          <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded" />
+                          {course.video_url ? (
+                            <div className="relative w-16 h-16 rounded overflow-hidden">
+                              <video 
+                                src={course.video_url} 
+                                className="w-full h-full object-cover"
+                                preload="metadata"
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded" />
+                          )}
                         </TableCell>
                         <TableCell>
-                          <div className="font-semibold text-blue-600">{course.title}</div>
-                          <div className="text-sm text-muted-foreground">{course.description}</div>
+                          <div className="font-semibold text-blue-600 cursor-pointer hover:underline">
+                            {course.title} ▶
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {course.short_description || course.description}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {course.difficulty} • {course.language}
+                          </div>
+                          {course.video_url && (
+                            <div className="text-xs text-green-600 flex items-center gap-1 mt-1">
+                              🎥 Click title to preview video
+                            </div>
+                          )}
                         </TableCell>
                         <TableCell>
-                          <Badge variant="secondary">General</Badge>
+                          {getCategoryDisplay(course.category)}
                         </TableCell>
-                        <TableCell>$99.00</TableCell>
-                        <TableCell>8h 45m</TableCell>
                         <TableCell>
-                          <Badge variant={course.status === "published" ? "default" : "secondary"}>
+                          {course.price ? `$${course.price.toFixed(2)}` : "Free"}
+                        </TableCell>
+                        <TableCell>
+                          {formatDuration(course.duration_hours, course.duration_minutes)}
+                        </TableCell>
+                        <TableCell>
+                          <Badge 
+                            className={
+                              course.status === "published" 
+                                ? "bg-green-100 text-green-800" 
+                                : "bg-gray-100 text-gray-800"
+                            }
+                          >
                             {course.status}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1">
-                            <Button size="sm" variant="ghost">
-                              <Play className="h-4 w-4" />
-                            </Button>
+                            {course.video_url && (
+                              <Button 
+                                size="sm" 
+                                variant="ghost"
+                                onClick={() => window.open(course.video_url, '_blank')}
+                              >
+                                <Play className="h-4 w-4" />
+                              </Button>
+                            )}
                             <Button size="sm" variant="ghost">
                               <Edit className="h-4 w-4" />
                             </Button>

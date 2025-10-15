@@ -57,9 +57,21 @@ export function CourseFormDialog({ open, onOpenChange, onSuccess }: CourseFormDi
       
       const { error } = await supabase.from("courses").insert({
         title: formData.title,
-        description: formData.shortDescription,
+        description: formData.fullDescription || formData.shortDescription,
+        short_description: formData.shortDescription,
         status: status,
         instructor_id: session?.user.id,
+        category: formData.category,
+        difficulty: formData.difficulty,
+        language: formData.language,
+        price: formData.price ? parseFloat(formData.price) : null,
+        duration_hours: formData.durationHours ? parseInt(formData.durationHours) : null,
+        duration_minutes: formData.durationMinutes ? parseInt(formData.durationMinutes) : null,
+        tags: formData.tags,
+        requirements: formData.requirements,
+        what_you_learn: formData.whatYouLearn,
+        video_url: formData.videoUrl,
+        video_duration: formData.videoDuration,
       });
 
       if (error) throw error;

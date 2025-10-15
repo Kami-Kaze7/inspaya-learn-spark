@@ -75,31 +75,70 @@ export type Database = {
       }
       courses: {
         Row: {
+          category: string | null
           created_at: string | null
           description: string | null
+          difficulty: string | null
+          duration_hours: number | null
+          duration_minutes: number | null
           id: string
           instructor_id: string | null
+          language: string | null
+          price: number | null
+          requirements: string | null
+          short_description: string | null
           status: Database["public"]["Enums"]["course_status"] | null
+          tags: string | null
+          thumbnail_url: string | null
           title: string
           updated_at: string | null
+          video_duration: string | null
+          video_url: string | null
+          what_you_learn: string | null
         }
         Insert: {
+          category?: string | null
           created_at?: string | null
           description?: string | null
+          difficulty?: string | null
+          duration_hours?: number | null
+          duration_minutes?: number | null
           id?: string
           instructor_id?: string | null
+          language?: string | null
+          price?: number | null
+          requirements?: string | null
+          short_description?: string | null
           status?: Database["public"]["Enums"]["course_status"] | null
+          tags?: string | null
+          thumbnail_url?: string | null
           title: string
           updated_at?: string | null
+          video_duration?: string | null
+          video_url?: string | null
+          what_you_learn?: string | null
         }
         Update: {
+          category?: string | null
           created_at?: string | null
           description?: string | null
+          difficulty?: string | null
+          duration_hours?: number | null
+          duration_minutes?: number | null
           id?: string
           instructor_id?: string | null
+          language?: string | null
+          price?: number | null
+          requirements?: string | null
+          short_description?: string | null
           status?: Database["public"]["Enums"]["course_status"] | null
+          tags?: string | null
+          thumbnail_url?: string | null
           title?: string
           updated_at?: string | null
+          video_duration?: string | null
+          video_url?: string | null
+          what_you_learn?: string | null
         }
         Relationships: []
       }
