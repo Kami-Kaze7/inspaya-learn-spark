@@ -172,12 +172,13 @@ export function CourseContentManager({ open, onOpenChange, courseId, courseTitle
                       
                       {/* Video Player */}
                       {course.video_url && (
-                        <div className="rounded-lg overflow-hidden bg-muted">
+                        <div className="rounded-lg overflow-hidden bg-muted border">
                           <div className="aspect-video relative">
                             {course.video_url.includes("youtube.com") || course.video_url.includes("youtu.be") ? (
                               <iframe
-                                src={course.video_url.replace("watch?v=", "embed/")}
-                                className="w-full h-full"
+                                src={course.video_url.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
+                                className="w-full h-full absolute inset-0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen
                                 title="Course Preview"
                               />
@@ -185,7 +186,8 @@ export function CourseContentManager({ open, onOpenChange, courseId, courseTitle
                               <video
                                 src={course.video_url}
                                 controls
-                                className="w-full h-full object-cover"
+                                className="w-full h-full absolute inset-0 object-contain bg-black"
+                                title="Course Preview Video"
                               />
                             )}
                           </div>
