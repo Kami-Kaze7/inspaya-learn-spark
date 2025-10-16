@@ -38,6 +38,7 @@ interface Course {
   price: number;
   thumbnail_url: string;
   video_duration: string;
+  video_url?: string;
 }
 
 const CourseDetail = () => {
@@ -105,7 +106,9 @@ const CourseDetail = () => {
         .flatMap((m: Module) => m.lessons)
         .find((l: Lesson) => l.is_free);
       if (firstFreeLesson) {
-        setSelectedLesson(firstFreeLesson);
+        // Use lesson video URL if available, otherwise fall back to course video URL
+        const videoUrl = firstFreeLesson.video_url || courseData?.video_url;
+        setSelectedLesson({ ...firstFreeLesson, video_url: videoUrl });
       }
     } catch (error: any) {
       toast({
@@ -165,7 +168,9 @@ const CourseDetail = () => {
 
   const handleLessonClick = (lesson: Lesson) => {
     if (lesson.is_free || isEnrolled) {
-      setSelectedLesson(lesson);
+      // Use lesson video URL if available, otherwise fall back to course video URL
+      const videoUrl = lesson.video_url || course?.video_url;
+      setSelectedLesson({ ...lesson, video_url: videoUrl });
     } else {
       toast({
         title: "Locked",
