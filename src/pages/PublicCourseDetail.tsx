@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { BookOpen, Clock, DollarSign, Globe, Award, Users, PlayCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { BookOpen, Clock, DollarSign, Globe, Award, Users, PlayCircle, Building2, UsersRound, Handshake, Check, MapPin } from "lucide-react";
 
 interface Course {
   id: string;
@@ -47,6 +48,7 @@ const PublicCourseDetail = () => {
   const [modules, setModules] = useState<Module[]>([]);
   const [lessons, setLessons] = useState<Record<string, Lesson[]>>({});
   const [loading, setLoading] = useState(true);
+  const [showPhysicalDialog, setShowPhysicalDialog] = useState(false);
 
   useEffect(() => {
     fetchCourseDetails();
@@ -180,11 +182,13 @@ const PublicCourseDetail = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3">
-                <Link to="/auth">
-                  <Button size="lg" className="bg-green-600 hover:bg-green-700 w-full sm:w-auto">
-                    Enroll as Physical Student
-                  </Button>
-                </Link>
+                <Button 
+                  size="lg" 
+                  className="bg-green-600 hover:bg-green-700 w-full sm:w-auto"
+                  onClick={() => setShowPhysicalDialog(true)}
+                >
+                  Enroll as Physical Student
+                </Button>
                 <Link to="/auth">
                   <Button size="lg" variant="outline" className="w-full sm:w-auto border-green-600 text-green-600 hover:bg-green-50">
                     Enroll as Online Student
@@ -352,11 +356,12 @@ const PublicCourseDetail = () => {
                 )}
               </CardContent>
               <CardContent className="pt-0 space-y-3">
-                <Link to="/auth">
-                  <Button className="w-full bg-green-600 hover:bg-green-700">
-                    Enroll as Physical Student
-                  </Button>
-                </Link>
+                <Button 
+                  className="w-full bg-green-600 hover:bg-green-700"
+                  onClick={() => setShowPhysicalDialog(true)}
+                >
+                  Enroll as Physical Student
+                </Button>
                 <Link to="/auth">
                   <Button variant="outline" className="w-full border-green-600 text-green-600 hover:bg-green-50">
                     Enroll as Online Student
@@ -367,6 +372,125 @@ const PublicCourseDetail = () => {
           </div>
         </div>
       </section>
+
+      {/* Physical Learning Centers Dialog */}
+      <Dialog open={showPhysicalDialog} onOpenChange={setShowPhysicalDialog}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Building2 className="h-5 w-5 text-primary" />
+              Physical Learning Centers
+            </DialogTitle>
+          </DialogHeader>
+
+          {/* Feature Icons */}
+          <div className="grid grid-cols-3 gap-4 py-6">
+            <div className="text-center space-y-2">
+              <div className="mx-auto w-16 h-16 rounded-lg bg-blue-100 flex items-center justify-center">
+                <Building2 className="h-8 w-8 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-sm">State-of-the-Art Facilities</h3>
+              <p className="text-xs text-muted-foreground">Modern classrooms and equipment</p>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="mx-auto w-16 h-16 rounded-lg bg-green-100 flex items-center justify-center">
+                <UsersRound className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="font-semibold text-sm">Expert Instructors</h3>
+              <p className="text-xs text-muted-foreground">Hands-on guidance from professionals</p>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="mx-auto w-16 h-16 rounded-lg bg-yellow-100 flex items-center justify-center">
+                <Handshake className="h-8 w-8 text-yellow-600" />
+              </div>
+              <h3 className="font-semibold text-sm">Networking Opportunities</h3>
+              <p className="text-xs text-muted-foreground">Connect with fellow learners</p>
+            </div>
+          </div>
+
+          {/* About Section */}
+          <div className="bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded">
+            <div className="flex items-start gap-2">
+              <div className="mt-0.5">
+                <div className="w-5 h-5 rounded-full bg-cyan-500 flex items-center justify-center flex-shrink-0">
+                  <span className="text-white text-xs font-bold">i</span>
+                </div>
+              </div>
+              <div>
+                <h4 className="font-semibold text-sm mb-1">About Our Physical Centers</h4>
+                <p className="text-sm text-muted-foreground">
+                  Our physical learning centers provide an immersive, hands-on learning experience with state-of-the-art facilities, expert instructors, and a collaborative environment. Students benefit from direct interaction with instructors, access to specialized equipment, and networking opportunities with peers.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Two Column Layout */}
+          <div className="grid md:grid-cols-2 gap-6 pt-4">
+            {/* What You'll Get */}
+            <div>
+              <h4 className="font-semibold mb-3">What You'll Get:</h4>
+              <div className="space-y-2">
+                <div className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm">Access to modern learning facilities</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm">Direct instructor guidance and support</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm">Hands-on practical experience</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm">Networking with industry professionals</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm">Structured learning schedule</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Center Locations */}
+            <div>
+              <h4 className="font-semibold mb-3">Center Locations:</h4>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                  <span className="text-sm">Lagos Main Center</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                  <span className="text-sm">Abuja Learning Hub</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                  <span className="text-sm">Port Harcourt Campus</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                  <span className="text-sm">Kano Training Center</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex justify-end gap-3 pt-4 border-t">
+            <Button variant="outline" onClick={() => setShowPhysicalDialog(false)}>
+              Close
+            </Button>
+            <Link to="/auth">
+              <Button className="bg-blue-600 hover:bg-blue-700">
+                Continue
+              </Button>
+            </Link>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
