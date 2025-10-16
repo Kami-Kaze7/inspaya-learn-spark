@@ -6,7 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { BookOpen, Clock, DollarSign, Globe, Award, Users, PlayCircle, Building2, UsersRound, Handshake, Check, MapPin } from "lucide-react";
+import { BookOpen, Clock, DollarSign, Globe, Award, Users, PlayCircle, Building2, UsersRound, Handshake, Check, MapPin, Copy, CreditCard, AlertCircle, AlertTriangle } from "lucide-react";
+import { toast } from "@/components/ui/use-toast";
 
 interface Course {
   id: string;
@@ -49,6 +50,7 @@ const PublicCourseDetail = () => {
   const [lessons, setLessons] = useState<Record<string, Lesson[]>>({});
   const [loading, setLoading] = useState(true);
   const [showPhysicalDialog, setShowPhysicalDialog] = useState(false);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
   useEffect(() => {
     fetchCourseDetails();
@@ -103,6 +105,19 @@ const PublicCourseDetail = () => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
     return match && match[2].length === 11 ? match[2] : null;
+  };
+
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied!",
+      description: `${label} copied to clipboard`,
+    });
+  };
+
+  const handleContinueToPayment = () => {
+    setShowPhysicalDialog(false);
+    setShowPaymentDialog(true);
   };
 
   if (loading) {
@@ -483,9 +498,121 @@ const PublicCourseDetail = () => {
             <Button variant="outline" onClick={() => setShowPhysicalDialog(false)}>
               Close
             </Button>
+            <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleContinueToPayment}>
+              Continue
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Payment Details Dialog */}
+      <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <CreditCard className="h-5 w-5 text-primary" />
+              Payment Details
+            </DialogTitle>
+          </DialogHeader>
+
+          {/* Bank Transfer Instructions */}
+          <div className="bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded">
+            <div className="flex items-start gap-2">
+              <AlertCircle className="h-5 w-5 text-cyan-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <h4 className="font-semibold text-sm mb-1">Bank Transfer Instructions</h4>
+                <p className="text-sm text-muted-foreground">
+                  Please make a bank transfer to the account details below to complete your physical student enrollment.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Account Details */}
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              {/* Account Number */}
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Account Number</label>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="flex-1 p-2 bg-muted rounded border">
+                    <span className="font-mono font-semibold">1215690464</span>
+                  </div>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={() => copyToClipboard("1215690464", "Account number")}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Account Name */}
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Account Name</label>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="flex-1 p-2 bg-muted rounded border">
+                    <span className="font-semibold">Crisp TV</span>
+                  </div>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={() => copyToClipboard("Crisp TV", "Account name")}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Bank Name */}
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">Bank Name</label>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="flex-1 p-2 bg-muted rounded border">
+                  <span className="font-semibold">Zenith Bank</span>
+                </div>
+                <Button
+                  size="icon"
+                  variant="outline"
+                  onClick={() => copyToClipboard("Zenith Bank", "Bank name")}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Important Notice */}
+          <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <h4 className="font-semibold text-sm mb-2">Important</h4>
+                <ul className="space-y-1 text-sm text-muted-foreground list-disc list-inside">
+                  <li>Please include your full name and course title in the transfer description</li>
+                  <li>Keep your transfer receipt for verification</li>
+                  <li>Payment verification may take 1-2 business days</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer Note */}
+          <div className="flex items-start gap-2 text-sm text-muted-foreground">
+            <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+            <p>After making a transfer, click on proceed to continue with your enrollment.</p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex justify-end gap-3 pt-2">
+            <Button variant="outline" onClick={() => setShowPaymentDialog(false)}>
+              Cancel
+            </Button>
             <Link to="/auth">
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                Continue
+              <Button className="bg-green-600 hover:bg-green-700">
+                Proceed
               </Button>
             </Link>
           </div>
