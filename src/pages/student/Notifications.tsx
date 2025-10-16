@@ -28,35 +28,45 @@ const Notifications = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchUserRole();
-    fetchAnnouncements();
-    
-    // Subscribe to real-time updates
-    const channel = supabase
-      .channel('announcements-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'announcements'
-        },
-        () => {
-          fetchAnnouncements();
-        }
-      )
-      .subscribe();
+  }, []);
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [userRole]);
+  useEffect(() => {
+    if (userRole && currentUserId) {
+      fetchAnnouncements();
+      markAnnouncementsAsViewed();
+      
+      // Subscribe to real-time updates
+      const channel = supabase
+        .channel('announcements-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'announcements'
+          },
+          () => {
+            fetchAnnouncements();
+            markAnnouncementsAsViewed();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+  }, [userRole, currentUserId]);
 
   const fetchUserRole = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
+
+    setCurrentUserId(user.id);
 
     const { data: roles } = await supabase
       .from("user_roles")
@@ -65,6 +75,37 @@ const Notifications = () => {
       .single();
 
     setUserRole(roles?.role || 'student');
+  };
+
+  const markAnnouncementsAsViewed = async () => {
+    if (!currentUserId || !userRole) return;
+
+    try {
+      const targetAudience = userRole === 'instructor' ? 'tutors' : userRole === 'admin' ? 'all' : 'students';
+      
+      // Fetch all visible announcements for this user
+      const { data: visibleAnnouncements } = await supabase
+        .from("announcements")
+        .select("id")
+        .or(`target_audience.eq.all,target_audience.eq.${targetAudience}`);
+
+      if (visibleAnnouncements && visibleAnnouncements.length > 0) {
+        // Mark all as viewed (upsert will handle duplicates)
+        const viewRecords = visibleAnnouncements.map(a => ({
+          user_id: currentUserId,
+          announcement_id: a.id
+        }));
+
+        await supabase
+          .from("announcement_views")
+          .upsert(viewRecords, { 
+            onConflict: 'user_id,announcement_id',
+            ignoreDuplicates: true 
+          });
+      }
+    } catch (error) {
+      console.error("Error marking announcements as viewed:", error);
+    }
   };
 
   const fetchAnnouncements = async () => {
