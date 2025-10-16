@@ -70,6 +70,7 @@ const CourseDetail = () => {
   const [modules, setModules] = useState<Module[]>([]);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
 
   useEffect(() => {
     fetchCourseDetails();
@@ -183,8 +184,15 @@ const CourseDetail = () => {
         description: "Please enroll to access this lesson",
         variant: "destructive",
       });
+      return;
     }
+    setSelectedLesson(lesson);
   };
+
+  // Determine what video to show
+  const currentVideo = selectedLesson?.video_url || course?.video_url;
+  const currentVideoTitle = selectedLesson ? selectedLesson.title : course?.title;
+  const currentVideoDescription = selectedLesson ? selectedLesson.description : course?.short_description;
 
   if (loading) {
     return (
@@ -222,23 +230,25 @@ const CourseDetail = () => {
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Video Player Section */}
           <div className="lg:col-span-2">
-            {/* Course Video */}
+            {/* Video Player */}
             <Card>
               <CardContent className="p-0">
-                <div className="aspect-video bg-black">
-                  {course.video_url ? (
-                    isYouTubeUrl(course.video_url) ? (
+                <div className="aspect-video bg-black relative">
+                  {currentVideo ? (
+                    isYouTubeUrl(currentVideo) ? (
                       <iframe
-                        src={getEmbedUrl(course.video_url)}
-                        className="h-full w-full"
+                        key={currentVideo}
+                        src={getEmbedUrl(currentVideo)}
+                        className="h-full w-full absolute inset-0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
                       />
                     ) : (
                       <video
-                        src={course.video_url}
+                        key={currentVideo}
+                        src={currentVideo}
                         controls
-                        className="h-full w-full"
+                        className="h-full w-full absolute inset-0 object-contain bg-black"
                       />
                     )
                   ) : (
@@ -252,6 +262,29 @@ const CourseDetail = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Video Info */}
+            {selectedLesson && (
+              <Card className="mt-4">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <PlayCircle className="h-5 w-5" />
+                    {currentVideoTitle}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {selectedLesson.video_duration && (
+                    <div className="flex items-center gap-2 mb-3 text-sm text-muted-foreground">
+                      <Clock className="h-4 w-4" />
+                      {selectedLesson.video_duration}
+                    </div>
+                  )}
+                  {currentVideoDescription && (
+                    <p className="text-muted-foreground">{currentVideoDescription}</p>
+                  )}
+                </CardContent>
+              </Card>
+            )}
 
             {/* Course Info */}
             <Card className="mt-6">
@@ -312,11 +345,12 @@ const CourseDetail = () => {
                         <div className="space-y-2">
                           {module.lessons.map((lesson) => {
                             const canAccess = lesson.is_free || isEnrolled;
+                            const isActive = selectedLesson?.id === lesson.id;
                             return (
                               <button
                                 key={lesson.id}
                                 onClick={() => handleLessonClick(lesson)}
-                                className={`w-full rounded-lg border p-3 text-left transition-colors hover:bg-accent ${!canAccess ? "opacity-60" : ""}`}
+                                className={`w-full rounded-lg border p-3 text-left transition-colors hover:bg-accent ${!canAccess ? "opacity-60" : ""} ${isActive ? "bg-accent border-primary" : ""}`}
                               >
                                 <div className="flex items-start justify-between">
                                   <div className="flex-1">
