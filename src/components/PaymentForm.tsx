@@ -14,16 +14,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { StripePaymentForm } from "./StripePaymentForm";
+import { PaystackPaymentForm } from "./PaystackPaymentForm";
 
 const formSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
@@ -45,7 +38,7 @@ interface PaymentFormProps {
 }
 
 export function PaymentForm({ courseId, amount, currency = "USD", onSuccess }: PaymentFormProps) {
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,68 +56,45 @@ export function PaymentForm({ courseId, amount, currency = "USD", onSuccess }: P
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      setIsProcessing(true);
-
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast.error("Please sign in to continue");
-        return;
-      }
-
-      const personalInfo = {
-        fullName: values.fullName,
-        email: values.email,
-        phone: values.phone,
-        address: values.address,
-        city: values.city,
-        state: values.state,
-        country: values.country,
-        postalCode: values.postalCode,
-      };
-
-      if (values.paymentMethod === "stripe") {
-        const { data, error } = await supabase.functions.invoke("create-stripe-checkout", {
-          body: {
-            courseId,
-            amount,
-            currency,
-            personalInfo,
-          },
-        });
-
-        if (error) throw error;
-
-        if (data?.url) {
-          window.open(data.url, "_blank");
-          toast.success("Redirecting to Stripe checkout...");
-          if (onSuccess) onSuccess();
-        }
-      } else {
-        const { data, error } = await supabase.functions.invoke("create-paystack-payment", {
-          body: {
-            courseId,
-            amount,
-            currency: currency === "USD" ? "NGN" : currency,
-            personalInfo,
-          },
-        });
-
-        if (error) throw error;
-
-        if (data?.url) {
-          window.open(data.url, "_blank");
-          toast.success("Redirecting to Paystack checkout...");
-          if (onSuccess) onSuccess();
-        }
-      }
-    } catch (error: any) {
-      console.error("Payment error:", error);
-      toast.error(error.message || "Failed to process payment");
-    } finally {
-      setIsProcessing(false);
-    }
+    setShowPaymentForm(true);
   };
+
+  if (showPaymentForm) {
+    const personalInfo = {
+      fullName: form.getValues("fullName"),
+      email: form.getValues("email"),
+      phone: form.getValues("phone"),
+      address: form.getValues("address"),
+      city: form.getValues("city"),
+      state: form.getValues("state"),
+      country: form.getValues("country"),
+      postalCode: form.getValues("postalCode"),
+    };
+
+    if (form.getValues("paymentMethod") === "stripe") {
+      return (
+        <StripePaymentForm
+          courseId={courseId}
+          amount={amount}
+          currency={currency}
+          personalInfo={personalInfo}
+          onSuccess={onSuccess || (() => {})}
+          onCancel={() => setShowPaymentForm(false)}
+        />
+      );
+    } else {
+      return (
+        <PaystackPaymentForm
+          courseId={courseId}
+          amount={amount}
+          currency={currency === "USD" ? "NGN" : currency}
+          personalInfo={personalInfo}
+          onSuccess={onSuccess || (() => {})}
+          onCancel={() => setShowPaymentForm(false)}
+        />
+      );
+    }
+  }
 
   return (
     <Form {...form}>
@@ -311,8 +281,8 @@ export function PaymentForm({ courseId, amount, currency = "USD", onSuccess }: P
           <div className="text-lg font-semibold">
             Total: ${amount.toFixed(2)}
           </div>
-          <Button type="submit" disabled={isProcessing} size="lg">
-            {isProcessing ? "Processing..." : "Proceed to Payment"}
+          <Button type="submit" size="lg">
+            Continue to Payment
           </Button>
         </div>
       </form>

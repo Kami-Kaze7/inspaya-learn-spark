@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
@@ -44,9 +45,9 @@ serve(async (req) => {
         state: personalInfo.state,
         country: personalInfo.country,
         postal_code: personalInfo.postalCode,
-        payment_method: "paystack",
+        payment_method: "stripe",
         amount,
-        currency: currency || "NGN",
+        currency: currency || "USD",
         status: "pending"
       })
       .select()
@@ -54,51 +55,34 @@ serve(async (req) => {
 
     if (paymentError) throw paymentError;
 
-    // Initialize Paystack transaction
-    const paystackResponse = await fetch("https://api.paystack.co/transaction/initialize", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${Deno.env.get("PAYSTACK_SECRET_KEY")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: personalInfo.email,
-        amount: Math.round(amount * 100), // Paystack expects amount in kobo (NGN) or cents
-        currency: currency || "NGN",
-        reference: `PAY-${payment.id}`,
-        callback_url: `${req.headers.get("origin")}/payment-success?payment_id=${payment.id}`,
-        metadata: {
-          payment_id: payment.id,
-          course_id: courseId,
-          student_id: user.id,
-          full_name: personalInfo.fullName,
-          phone: personalInfo.phone,
-        },
-      }),
+    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+      apiVersion: "2025-08-27.basil",
     });
 
-    const paystackData = await paystackResponse.json();
+    // Create a Payment Intent instead of a Checkout Session
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(amount * 100),
+      currency: (currency || "usd").toLowerCase(),
+      description: `Course Enrollment Payment`,
+      receipt_email: personalInfo.email,
+      metadata: {
+        payment_id: payment.id,
+        course_id: courseId,
+        student_id: user.id,
+      },
+    });
 
-    if (!paystackData.status) {
-      throw new Error(paystackData.message || "Failed to initialize Paystack payment");
-    }
-
-    // Update payment with Paystack details
+    // Update payment with Stripe payment intent ID
     await supabaseClient
       .from("payments")
-      .update({
-        paystack_reference: paystackData.data.reference,
-        paystack_access_code: paystackData.data.access_code,
-      })
+      .update({ stripe_payment_intent_id: paymentIntent.id })
       .eq("id", payment.id);
 
     return new Response(
-      JSON.stringify({
-        url: paystackData.data.authorization_url,
-        paymentId: payment.id,
-        reference: paystackData.data.reference,
-        accessCode: paystackData.data.access_code,
-      }),
+      JSON.stringify({ 
+        clientSecret: paymentIntent.client_secret, 
+        paymentId: payment.id 
+      }), 
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
