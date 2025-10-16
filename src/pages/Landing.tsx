@@ -149,49 +149,53 @@ const Landing = () => {
         ) : (
           <div className="space-y-16">
             {Object.entries(coursesByCategory).map(([category, categoryCourses]) => (
-              <div key={category} className="w-full">
+              <div key={category} className="w-full overflow-hidden">
                 <h3 className="mb-6 text-2xl font-semibold">{category}</h3>
-                <div className="flex flex-row gap-6 overflow-x-auto pb-4" style={{ display: 'flex', flexWrap: 'nowrap' }}>
-                  {categoryCourses.map((course) => (
-                    <Card key={course.id} className="group flex-none w-[300px] overflow-hidden transition-all hover:shadow-lg" style={{ flexShrink: 0 }}>
-                      {course.thumbnail_url && (
-                        <div className="aspect-video overflow-hidden">
-                          <img 
-                            src={course.thumbnail_url} 
-                            alt={course.title}
-                            className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                          />
-                        </div>
-                      )}
-                      <CardHeader>
-                        <div className="flex items-start justify-between gap-2">
-                          <CardTitle className="line-clamp-2">{course.title}</CardTitle>
-                          {course.price !== null && (
-                            <span className="shrink-0 text-lg font-bold text-primary">
-                              ${course.price}
-                            </span>
+                <div className="relative">
+                  <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4">
+                    {categoryCourses.map((course) => (
+                      <div key={course.id} className="flex-shrink-0 w-[300px]">
+                        <Card className="group h-full overflow-hidden transition-all hover:shadow-lg">
+                          {course.thumbnail_url && (
+                            <div className="aspect-video overflow-hidden">
+                              <img 
+                                src={course.thumbnail_url} 
+                                alt={course.title}
+                                className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                              />
+                            </div>
                           )}
-                        </div>
-                        <CardDescription className="line-clamp-2">
-                          {course.short_description || course.description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex items-center justify-between">
-                          {course.difficulty && (
-                            <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
-                              {course.difficulty}
-                            </span>
-                          )}
-                          <Link to="/auth">
-                            <Button variant="ghost" size="sm">
-                              View Course
-                            </Button>
-                          </Link>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                          <CardHeader>
+                            <div className="flex items-start justify-between gap-2">
+                              <CardTitle className="line-clamp-2">{course.title}</CardTitle>
+                              {course.price !== null && (
+                                <span className="shrink-0 text-lg font-bold text-primary">
+                                  ${course.price}
+                                </span>
+                              )}
+                            </div>
+                            <CardDescription className="line-clamp-2">
+                              {course.short_description || course.description}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="flex items-center justify-between">
+                              {course.difficulty && (
+                                <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
+                                  {course.difficulty}
+                                </span>
+                              )}
+                              <Link to="/auth">
+                                <Button variant="ghost" size="sm">
+                                  View Course
+                                </Button>
+                              </Link>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
