@@ -70,20 +70,27 @@ export default function Enrollments() {
         .from("enrollments")
         .select(`
           *,
-          student:profiles!enrollments_student_id_fkey(full_name, email),
-          course:courses(title, price)
+          profiles!inner(full_name, email),
+          courses!inner(title, price)
         `)
         .order("enrolled_at", { ascending: false });
 
       if (error) throw error;
 
-      setEnrollments(data || []);
-      const active = data?.filter(e => e.status === "active").length || 0;
-      const completed = data?.filter(e => e.status === "completed").length || 0;
-      const pending = data?.filter(e => e.status === "pending").length || 0;
+      // Transform the data to match expected structure
+      const transformedData = data?.map(enrollment => ({
+        ...enrollment,
+        student: enrollment.profiles,
+        course: enrollment.courses
+      })) || [];
+
+      setEnrollments(transformedData);
+      const active = transformedData.filter(e => e.status === "active").length;
+      const completed = transformedData.filter(e => e.status === "completed").length;
+      const pending = transformedData.filter(e => e.status === "pending").length;
       
       setStats({
-        total: data?.length || 0,
+        total: transformedData.length,
         active,
         completed,
         pending,
