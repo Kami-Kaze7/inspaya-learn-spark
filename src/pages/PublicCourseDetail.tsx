@@ -8,6 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { BookOpen, Clock, DollarSign, Globe, Award, Users, PlayCircle, Building2, UsersRound, Handshake, Check, MapPin, Copy, CreditCard, AlertCircle, AlertTriangle } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { enrollmentIntent } from "@/lib/enrollmentIntent";
 
 interface Course {
   id: string;
@@ -152,9 +153,10 @@ const PublicCourseDetail = () => {
           <Link to="/" className="text-2xl font-bold text-primary">
             Inspaya
           </Link>
-          <Link to="/auth">
-            <Button>Enroll Now</Button>
-          </Link>
+          <Button onClick={() => {
+            if (courseId) enrollmentIntent.set(courseId);
+            navigate("/auth");
+          }}>Enroll Now</Button>
         </div>
       </header>
 
@@ -205,11 +207,17 @@ const PublicCourseDetail = () => {
                 >
                   Enroll as Physical Student
                 </Button>
-                <Link to="/auth">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-green-600 text-green-600 hover:bg-green-50">
-                    Enroll as Online Student
-                  </Button>
-                </Link>
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="w-full sm:w-auto border-green-600 text-green-600 hover:bg-green-50"
+                  onClick={() => {
+                    if (courseId) enrollmentIntent.set(courseId);
+                    navigate("/auth");
+                  }}
+                >
+                  Enroll as Online Student
+                </Button>
               </div>
             </div>
 
@@ -378,11 +386,16 @@ const PublicCourseDetail = () => {
                 >
                   Enroll as Physical Student
                 </Button>
-                <Link to="/auth">
-                  <Button variant="outline" className="w-full border-green-600 text-green-600 hover:bg-green-50">
-                    Enroll as Online Student
-                  </Button>
-                </Link>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-green-600 text-green-600 hover:bg-green-50"
+                  onClick={() => {
+                    if (courseId) enrollmentIntent.set(courseId);
+                    navigate("/auth");
+                  }}
+                >
+                  Enroll as Online Student
+                </Button>
               </CardContent>
             </Card>
           </div>

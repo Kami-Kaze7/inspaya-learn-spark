@@ -11,6 +11,7 @@ import { Lock, PlayCircle, Clock, BookOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { PaymentForm } from "@/components/PaymentForm";
+import { enrollmentIntent } from "@/lib/enrollmentIntent";
 
 // Helper function to convert YouTube URL to embed URL
 const getEmbedUrl = (url: string) => {
@@ -74,11 +75,73 @@ const CourseDetail = () => {
   const [loading, setLoading] = useState(true);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const [user, setUser] = useState<any>(undefined);
 
   useEffect(() => {
     fetchCourseDetails();
     checkEnrollment();
+    fetchUser();
   }, [courseId]);
+
+  const fetchUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    setUser(user);
+  };
+
+  // Handle pending enrollment after signup
+  useEffect(() => {
+    const handlePendingEnrollment = async () => {
+      const pendingCourseId = enrollmentIntent.get();
+      
+      if (pendingCourseId && pendingCourseId === courseId && course && user) {
+        // Clear the intent first
+        enrollmentIntent.clear();
+        
+        // Check if already enrolled
+        if (isEnrolled) {
+          toast({
+            title: "Already Enrolled",
+            description: "You're already enrolled in this course!",
+          });
+          return;
+        }
+
+        // For free courses, auto-enroll
+        if (!course.price || course.price === 0) {
+          try {
+            const { error } = await supabase
+              .from('enrollments')
+              .insert({
+                student_id: user.id,
+                course_id: courseId,
+              });
+
+            if (error) throw error;
+            
+            toast({
+              title: "Success",
+              description: "Successfully enrolled in this free course!",
+            });
+            setIsEnrolled(true);
+          } catch (error: any) {
+            console.error('Auto-enrollment error:', error);
+            toast({
+              title: "Error",
+              description: "Failed to enroll. Please try again.",
+              variant: "destructive",
+            });
+          }
+        } else {
+          // For paid courses, auto-open payment dialog
+          setShowPaymentDialog(true);
+        }
+      }
+    };
+
+    if (course && user !== undefined) {
+      handlePendingEnrollment();
+    }
+  }, [course, user, courseId, isEnrolled]);
 
   const fetchCourseDetails = async () => {
     try {

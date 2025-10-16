@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { BookOpen, GraduationCap, Users } from "lucide-react";
+import { enrollmentIntent } from "@/lib/enrollmentIntent";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -76,7 +77,13 @@ const Auth = () => {
             if (instructorRole) {
               navigate("/instructor");
             } else {
-              navigate("/student");
+              // Check for pending enrollment
+              const pendingCourseId = enrollmentIntent.get();
+              if (pendingCourseId) {
+                navigate(`/student/course/${pendingCourseId}`);
+              } else {
+                navigate("/student");
+              }
             }
           }
         }, 0);
@@ -109,31 +116,7 @@ const Auth = () => {
       toast.error(error.message);
     } else {
       toast.success("Account created! Please check your email to verify.");
-      
-      // Handle pending enrollment if exists
-      const pendingEnrollment = localStorage.getItem("pending_enrollment");
-      if (pendingEnrollment && data.user) {
-        try {
-          const { courseId } = JSON.parse(pendingEnrollment);
-          const { error: enrollError } = await supabase
-            .from("enrollments")
-            .insert({
-              student_id: data.user.id,
-              course_id: courseId,
-              status: "pending",
-              payment_verified: false
-            });
-          
-          if (enrollError) {
-            console.error("Enrollment error:", enrollError);
-          } else {
-            localStorage.removeItem("pending_enrollment");
-            toast.success("Enrollment request submitted for review!");
-          }
-        } catch (err) {
-          console.error("Error processing pending enrollment:", err);
-        }
-      }
+      // Navigation is handled by onAuthStateChange with enrollment intent check
     }
     
     setIsLoading(false);
