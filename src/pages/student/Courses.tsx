@@ -1,10 +1,76 @@
+import { useEffect, useState } from "react";
 import { StudentHeader } from "@/components/StudentHeader";
 import { StudentSidebar } from "@/components/StudentSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { BookOpen } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+
+interface Enrollment {
+  id: string;
+  enrolled_at: string;
+  status: string;
+  progress: number;
+  course: {
+    id: string;
+    title: string;
+    price: number;
+    instructor: {
+      full_name: string;
+    };
+  };
+}
 
 const Courses = () => {
+  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchEnrollments();
+  }, []);
+
+  const fetchEnrollments = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from("enrollments")
+      .select(`
+        id,
+        enrolled_at,
+        status,
+        progress,
+        course:courses (
+          id,
+          title,
+          price,
+          instructor:profiles!courses_instructor_id_fkey (
+            full_name
+          )
+        )
+      `)
+      .eq("student_id", user.id)
+      .order("enrolled_at", { ascending: false });
+
+    if (!error && data) {
+      setEnrollments(data as any);
+    }
+    setLoading(false);
+  };
+
+  const getStatusBadge = (status: string) => {
+    const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
+      active: "default",
+      completed: "secondary",
+      cancelled: "destructive",
+    };
+    return <Badge variant={variants[status] || "outline"}>{status}</Badge>;
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <StudentHeader />
@@ -14,7 +80,7 @@ const Courses = () => {
         
         <Card className="mt-6">
           <CardHeader>
-            <CardTitle>Total Courses Registered</CardTitle>
+            <CardTitle>Total Courses Registered: {enrollments.length}</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -28,17 +94,39 @@ const Courses = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
-                  <TableCell colSpan={5} className="h-[400px] text-center">
-                    <div className="flex flex-col items-center justify-center">
-                      <BookOpen className="mb-4 h-16 w-16 text-muted-foreground" />
-                      <h3 className="mb-2 text-lg font-semibold">No Registered Courses</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Enroll in courses to see them here
-                      </p>
-                    </div>
-                  </TableCell>
-                </TableRow>
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-[200px] text-center">
+                      Loading...
+                    </TableCell>
+                  </TableRow>
+                ) : enrollments.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-[400px] text-center">
+                      <div className="flex flex-col items-center justify-center">
+                        <BookOpen className="mb-4 h-16 w-16 text-muted-foreground" />
+                        <h3 className="mb-2 text-lg font-semibold">No Registered Courses</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Enroll in courses to see them here
+                        </p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  enrollments.map((enrollment) => (
+                    <TableRow 
+                      key={enrollment.id}
+                      className="cursor-pointer hover:bg-accent"
+                      onClick={() => navigate(`/student/course/${enrollment.course.id}`)}
+                    >
+                      <TableCell className="font-medium">{enrollment.course.title}</TableCell>
+                      <TableCell>{enrollment.course.instructor.full_name}</TableCell>
+                      <TableCell>${enrollment.course.price}</TableCell>
+                      <TableCell>{getStatusBadge(enrollment.status)}</TableCell>
+                      <TableCell>{format(new Date(enrollment.enrolled_at), "MMM dd, yyyy")}</TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </CardContent>
