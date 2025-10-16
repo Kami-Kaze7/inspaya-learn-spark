@@ -179,11 +179,18 @@ const PublicCourseDetail = () => {
                 )}
               </div>
 
-              <Link to="/auth">
-                <Button size="lg" className="bg-green-600 hover:bg-green-700">
-                  Enroll Now
-                </Button>
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link to="/auth">
+                  <Button size="lg" className="bg-green-600 hover:bg-green-700 w-full sm:w-auto">
+                    Enroll as Physical Student
+                  </Button>
+                </Link>
+                <Link to="/auth">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-green-600 text-green-600 hover:bg-green-50">
+                    Enroll as Online Student
+                  </Button>
+                </Link>
+              </div>
             </div>
 
             {/* Video Preview */}
@@ -344,10 +351,15 @@ const PublicCourseDetail = () => {
                   </div>
                 )}
               </CardContent>
-              <CardContent className="pt-0">
+              <CardContent className="pt-0 space-y-3">
                 <Link to="/auth">
                   <Button className="w-full bg-green-600 hover:bg-green-700">
-                    Enroll Now
+                    Enroll as Physical Student
+                  </Button>
+                </Link>
+                <Link to="/auth">
+                  <Button variant="outline" className="w-full border-green-600 text-green-600 hover:bg-green-50">
+                    Enroll as Online Student
                   </Button>
                 </Link>
               </CardContent>
