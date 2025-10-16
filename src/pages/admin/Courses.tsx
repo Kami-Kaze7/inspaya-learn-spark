@@ -18,7 +18,7 @@ import { Edit, List, Trash2, Play } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { CourseFormDialog } from "@/components/CourseFormDialog";
-import { LessonManagementDialog } from "@/components/LessonManagementDialog";
+import { CourseContentManager } from "@/components/CourseContentManager";
 
 interface Course {
   id: string;
@@ -340,7 +340,7 @@ export default function Courses() {
       />
 
       {selectedCourse && (
-        <LessonManagementDialog
+        <CourseContentManager
           open={lessonDialogOpen}
           onOpenChange={setLessonDialogOpen}
           courseId={selectedCourse.id}
