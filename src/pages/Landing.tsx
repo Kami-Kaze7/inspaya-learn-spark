@@ -151,9 +151,9 @@ const Landing = () => {
             {Object.entries(coursesByCategory).map(([category, categoryCourses]) => (
               <div key={category}>
                 <h3 className="mb-6 text-2xl font-semibold">{category}</h3>
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory">
                   {categoryCourses.map((course) => (
-                    <Card key={course.id} className="group overflow-hidden transition-all hover:shadow-lg">
+                    <Card key={course.id} className="group min-w-[300px] max-w-[350px] flex-shrink-0 overflow-hidden transition-all hover:shadow-lg snap-start">
                       {course.thumbnail_url && (
                         <div className="aspect-video overflow-hidden">
                           <img 
