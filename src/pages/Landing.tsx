@@ -132,10 +132,12 @@ const Landing = () => {
       </section>
 
       {/* Featured Courses Section */}
-      <section className="container mx-auto px-4 py-20 bg-muted/30">
+      <section className="container mx-auto px-4 py-20">
         <div className="mb-12 text-center">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">Featured Courses</h2>
-          <p className="text-muted-foreground">Explore our most popular courses across different categories</p>
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl text-red-700">Featured Courses</h2>
+          <p className="text-base text-muted-foreground max-w-3xl mx-auto">
+            Hand-picked courses from industry experts, designed to fast-track your career growth
+          </p>
         </div>
 
         {loading ? (
@@ -147,58 +149,66 @@ const Landing = () => {
             <p className="text-muted-foreground">No courses available yet</p>
           </div>
         ) : (
-          <div className="space-y-16">
-            {Object.entries(coursesByCategory).map(([category, categoryCourses]) => (
-              <div key={category} className="w-full overflow-hidden">
-                <h3 className="mb-6 text-2xl font-semibold">{category}</h3>
-                <div className="relative">
-                  <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4">
-                    {categoryCourses.map((course) => (
-                      <div key={course.id} className="flex-shrink-0 w-[300px]">
-                        <Card className="group h-full overflow-hidden transition-all hover:shadow-lg">
-                          {course.thumbnail_url && (
-                            <div className="aspect-video overflow-hidden">
-                              <img 
-                                src={course.thumbnail_url} 
-                                alt={course.title}
-                                className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                              />
-                            </div>
-                          )}
-                          <CardHeader>
-                            <div className="flex items-start justify-between gap-2">
-                              <CardTitle className="line-clamp-2">{course.title}</CardTitle>
-                              {course.price !== null && (
-                                <span className="shrink-0 text-lg font-bold text-primary">
-                                  ${course.price}
-                                </span>
-                              )}
-                            </div>
-                            <CardDescription className="line-clamp-2">
-                              {course.short_description || course.description}
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="flex items-center justify-between">
-                              {course.difficulty && (
-                                <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
-                                  {course.difficulty}
-                                </span>
-                              )}
-                              <Link to="/auth">
-                                <Button variant="ghost" size="sm">
-                                  View Course
-                                </Button>
-                              </Link>
-                            </div>
-                          </CardContent>
-                        </Card>
+          <div className="relative">
+            <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+              {courses.map((course) => (
+                <div key={course.id} className="flex-shrink-0 w-[350px] snap-start">
+                  <Card className="group h-full overflow-hidden transition-all hover:shadow-xl border-2">
+                    <div className="relative aspect-[4/3] overflow-hidden">
+                      {course.thumbnail_url && (
+                        <img 
+                          src={course.thumbnail_url} 
+                          alt={course.title}
+                          className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                        />
+                      )}
+                      <div className="absolute top-3 left-3 flex gap-2">
+                        {course.category && (
+                          <span className="px-3 py-1 text-xs font-semibold rounded bg-red-600 text-white">
+                            {course.category}
+                          </span>
+                        )}
+                        {course.difficulty && (
+                          <span className="px-3 py-1 text-xs font-semibold rounded bg-background/90">
+                            {course.difficulty}
+                          </span>
+                        )}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                    
+                    <CardHeader className="space-y-2">
+                      <CardTitle className="text-xl font-bold line-clamp-2">
+                        {course.title}
+                      </CardTitle>
+                      <p className="text-sm text-muted-foreground">by Inspaya Team</p>
+                      
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground pt-2">
+                        <div className="flex items-center gap-1">
+                          <span className="text-yellow-500">★</span>
+                          <span className="font-medium">4.8</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Users className="h-4 w-4" />
+                          <span>12,350</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span>Multiple</span>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent>
+                      <Link to="/auth">
+                        <Button className="w-full group-hover:bg-green-600 transition-colors bg-green-600 hover:bg-green-700 text-white">
+                          Browse
+                          <span className="ml-2">→</span>
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
       </section>
