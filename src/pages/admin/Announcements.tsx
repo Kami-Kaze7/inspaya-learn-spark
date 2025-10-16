@@ -62,16 +62,15 @@ export default function Announcements() {
           title,
           content,
           author_id: session?.user.id,
+          priority,
+          target_audience: targetAudience,
+          expires_at: expiresAt || null,
         });
 
       if (error) throw error;
 
       toast.success("Announcement created successfully");
-      setTitle("");
-      setContent("");
-      setPriority("medium");
-      setTargetAudience("all");
-      setExpiresAt("");
+      handleReset();
     } catch (error: any) {
       toast.error("Failed to create announcement");
       console.error(error);

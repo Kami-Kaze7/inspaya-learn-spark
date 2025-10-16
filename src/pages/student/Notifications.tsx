@@ -69,23 +69,36 @@ const Notifications = () => {
 
   const fetchAnnouncements = async () => {
     try {
-      const { data, error } = await supabase
+      const { data: announcementsData, error } = await supabase
         .from("announcements")
-        .select(`
-          *,
-          profiles:author_id (first_name, last_name)
-        `)
+        .select("*")
         .order("created_at", { ascending: false });
 
       if (error) throw error;
 
+      // Get unique author IDs
+      const authorIds = [...new Set(announcementsData?.map(a => a.author_id) || [])];
+
+      // Fetch profiles for all authors
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, first_name, last_name")
+        .in("id", authorIds);
+
+      const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+
+      const enriched: Announcement[] = announcementsData?.map(announcement => ({
+        ...announcement,
+        profiles: profileMap.get(announcement.author_id),
+      })) || [];
+
       // Filter announcements based on user role
-      const filtered = data?.filter((announcement) => {
+      const filtered = enriched.filter((announcement) => {
         if (announcement.target_audience === 'all') return true;
         if (userRole === 'student' && announcement.target_audience === 'students') return true;
         if (userRole === 'instructor' && announcement.target_audience === 'tutors') return true;
         return false;
-      }) || [];
+      });
 
       setAnnouncements(filtered);
     } catch (error) {
