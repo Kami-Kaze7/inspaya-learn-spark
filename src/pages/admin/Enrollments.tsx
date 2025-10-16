@@ -66,31 +66,40 @@ export default function Enrollments() {
 
   const fetchEnrollments = async () => {
     try {
-      const { data, error } = await supabase
+      const { data: enrollmentsData, error } = await supabase
         .from("enrollments")
-        .select(`
-          *,
-          profiles!inner(full_name, email),
-          courses!inner(title, price)
-        `)
+        .select("*")
         .order("enrolled_at", { ascending: false });
 
       if (error) throw error;
 
-      // Transform the data to match expected structure
-      const transformedData = data?.map(enrollment => ({
+      // Fetch related profiles and courses
+      const studentIds = [...new Set(enrollmentsData?.map(e => e.student_id))];
+      const courseIds = [...new Set(enrollmentsData?.map(e => e.course_id))];
+
+      const [profilesResult, coursesResult] = await Promise.all([
+        supabase.from("profiles").select("id, full_name, email").in("id", studentIds),
+        supabase.from("courses").select("id, title, price").in("id", courseIds)
+      ]);
+
+      // Create lookup maps
+      const profilesMap = new Map(profilesResult.data?.map(p => [p.id, p]) || []);
+      const coursesMap = new Map(coursesResult.data?.map(c => [c.id, c]) || []);
+
+      // Combine the data
+      const enrichedData = enrollmentsData?.map(enrollment => ({
         ...enrollment,
-        student: enrollment.profiles,
-        course: enrollment.courses
+        student: profilesMap.get(enrollment.student_id),
+        course: coursesMap.get(enrollment.course_id)
       })) || [];
 
-      setEnrollments(transformedData);
-      const active = transformedData.filter(e => e.status === "active").length;
-      const completed = transformedData.filter(e => e.status === "completed").length;
-      const pending = transformedData.filter(e => e.status === "pending").length;
+      setEnrollments(enrichedData);
+      const active = enrichedData.filter(e => e.status === "active").length;
+      const completed = enrichedData.filter(e => e.status === "completed").length;
+      const pending = enrichedData.filter(e => e.status === "pending").length;
       
       setStats({
-        total: transformedData.length,
+        total: enrichedData.length,
         active,
         completed,
         pending,
