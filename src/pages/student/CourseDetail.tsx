@@ -69,7 +69,6 @@ const CourseDetail = () => {
   const [course, setCourse] = useState<Course | null>(null);
   const [modules, setModules] = useState<Module[]>([]);
   const [isEnrolled, setIsEnrolled] = useState(false);
-  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -121,16 +120,6 @@ const CourseDetail = () => {
       }));
 
       setModules(formattedModules);
-
-      // Auto-select first free lesson
-      const firstFreeLesson = formattedModules
-        .flatMap((m: Module) => m.lessons)
-        .find((l: Lesson) => l.is_free);
-      if (firstFreeLesson) {
-        // Use lesson video URL if available, otherwise fall back to course video URL
-        const videoUrl = firstFreeLesson.video_url || courseData?.video_url;
-        setSelectedLesson({ ...firstFreeLesson, video_url: videoUrl });
-      }
     } catch (error: any) {
       toast({
         title: "Error",
@@ -188,11 +177,7 @@ const CourseDetail = () => {
   };
 
   const handleLessonClick = (lesson: Lesson) => {
-    if (lesson.is_free || isEnrolled) {
-      // Use lesson video URL if available, otherwise fall back to course video URL
-      const videoUrl = lesson.video_url || course?.video_url;
-      setSelectedLesson({ ...lesson, video_url: videoUrl });
-    } else {
+    if (!lesson.is_free && !isEnrolled) {
       toast({
         title: "Locked",
         description: "Please enroll to access this lesson",
@@ -237,45 +222,34 @@ const CourseDetail = () => {
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Video Player Section */}
           <div className="lg:col-span-2">
+            {/* Course Video */}
             <Card>
               <CardContent className="p-0">
-                {selectedLesson ? (
-                  <div className="space-y-4">
-                    <div className="aspect-video bg-black">
-                      {selectedLesson.video_url ? (
-                        isYouTubeUrl(selectedLesson.video_url) ? (
-                          <iframe
-                            src={getEmbedUrl(selectedLesson.video_url)}
-                            className="h-full w-full"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                          />
-                        ) : (
-                          <video
-                            src={selectedLesson.video_url}
-                            controls
-                            className="h-full w-full"
-                          />
-                        )
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-white">
-                          No video available
-                        </div>
-                      )}
+                <div className="aspect-video bg-black">
+                  {course.video_url ? (
+                    isYouTubeUrl(course.video_url) ? (
+                      <iframe
+                        src={getEmbedUrl(course.video_url)}
+                        className="h-full w-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <video
+                        src={course.video_url}
+                        controls
+                        className="h-full w-full"
+                      />
+                    )
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-white">
+                      <div className="text-center">
+                        <PlayCircle className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
+                        <p className="text-muted-foreground">No preview video available</p>
+                      </div>
                     </div>
-                    <div className="p-6">
-                      <h2 className="mb-2 text-2xl font-bold">{selectedLesson.title}</h2>
-                      <p className="text-muted-foreground">{selectedLesson.description}</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="aspect-video flex items-center justify-center bg-muted">
-                    <div className="text-center">
-                      <PlayCircle className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
-                      <p className="text-muted-foreground">Select a lesson to start watching</p>
-                    </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </CardContent>
             </Card>
 
@@ -342,11 +316,7 @@ const CourseDetail = () => {
                               <button
                                 key={lesson.id}
                                 onClick={() => handleLessonClick(lesson)}
-                                className={`w-full rounded-lg border p-3 text-left transition-colors ${
-                                  selectedLesson?.id === lesson.id
-                                    ? "border-primary bg-primary/10"
-                                    : "hover:bg-accent"
-                                } ${!canAccess ? "opacity-60" : ""}`}
+                                className={`w-full rounded-lg border p-3 text-left transition-colors hover:bg-accent ${!canAccess ? "opacity-60" : ""}`}
                               >
                                 <div className="flex items-start justify-between">
                                   <div className="flex-1">
