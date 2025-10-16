@@ -10,6 +10,27 @@ import { supabase } from "@/integrations/supabase/client";
 import { Lock, PlayCircle, Clock, BookOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+// Helper function to convert YouTube URL to embed URL
+const getEmbedUrl = (url: string) => {
+  if (!url) return null;
+  
+  // Check if it's a YouTube URL
+  const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+  const match = url.match(youtubeRegex);
+  
+  if (match && match[1]) {
+    return `https://www.youtube.com/embed/${match[1]}`;
+  }
+  
+  // If not YouTube, return original URL (for direct video files)
+  return url;
+};
+
+const isYouTubeUrl = (url: string) => {
+  if (!url) return false;
+  return url.includes('youtube.com') || url.includes('youtu.be');
+};
+
 interface Module {
   id: string;
   title: string;
@@ -222,11 +243,20 @@ const CourseDetail = () => {
                   <div className="space-y-4">
                     <div className="aspect-video bg-black">
                       {selectedLesson.video_url ? (
-                        <video
-                          src={selectedLesson.video_url}
-                          controls
-                          className="h-full w-full"
-                        />
+                        isYouTubeUrl(selectedLesson.video_url) ? (
+                          <iframe
+                            src={getEmbedUrl(selectedLesson.video_url)}
+                            className="h-full w-full"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        ) : (
+                          <video
+                            src={selectedLesson.video_url}
+                            controls
+                            className="h-full w-full"
+                          />
+                        )
                       ) : (
                         <div className="flex h-full items-center justify-center text-white">
                           No video available
