@@ -19,21 +19,30 @@ export type Database = {
           author_id: string | null
           content: string
           created_at: string | null
+          expires_at: string | null
           id: string
+          priority: string | null
+          target_audience: string
           title: string
         }
         Insert: {
           author_id?: string | null
           content: string
           created_at?: string | null
+          expires_at?: string | null
           id?: string
+          priority?: string | null
+          target_audience?: string
           title: string
         }
         Update: {
           author_id?: string | null
           content?: string
           created_at?: string | null
+          expires_at?: string | null
           id?: string
+          priority?: string | null
+          target_audience?: string
           title?: string
         }
         Relationships: []
