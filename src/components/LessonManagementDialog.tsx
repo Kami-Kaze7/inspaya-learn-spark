@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +39,7 @@ export function LessonManagementDialog({ open, onOpenChange, courseId, courseTit
   const [modules, setModules] = useState<Module[]>([]);
   const [loading, setLoading] = useState(false);
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
+  const updateTimeouts = useRef<{ [key: string]: NodeJS.Timeout }>({});
 
   useEffect(() => {
     if (open && courseId) {
@@ -102,22 +103,32 @@ export function LessonManagementDialog({ open, onOpenChange, courseId, courseTit
     }
   };
 
-  const updateModule = async (moduleId: string, field: string, value: string) => {
-    try {
-      const { error } = await supabase
-        .from("course_modules")
-        .update({ [field]: value })
-        .eq("id", moduleId);
+  const updateModule = (moduleId: string, field: string, value: string) => {
+    // Update state immediately for responsive UI
+    setModules(modules.map(m => 
+      m.id === moduleId ? { ...m, [field]: value } : m
+    ));
 
-      if (error) throw error;
-
-      setModules(modules.map(m => 
-        m.id === moduleId ? { ...m, [field]: value } : m
-      ));
-    } catch (error: any) {
-      toast.error("Failed to update module");
-      console.error(error);
+    // Clear existing timeout
+    const timeoutKey = `module-${moduleId}-${field}`;
+    if (updateTimeouts.current[timeoutKey]) {
+      clearTimeout(updateTimeouts.current[timeoutKey]);
     }
+
+    // Debounce database update
+    updateTimeouts.current[timeoutKey] = setTimeout(async () => {
+      try {
+        const { error } = await supabase
+          .from("course_modules")
+          .update({ [field]: value })
+          .eq("id", moduleId);
+
+        if (error) throw error;
+      } catch (error: any) {
+        toast.error("Failed to update module");
+        console.error(error);
+      }
+    }, 500);
   };
 
   const deleteModule = async (moduleId: string) => {
@@ -167,29 +178,39 @@ export function LessonManagementDialog({ open, onOpenChange, courseId, courseTit
     }
   };
 
-  const updateLesson = async (lessonId: string, moduleId: string, field: string, value: any) => {
-    try {
-      const { error } = await supabase
-        .from("course_lessons")
-        .update({ [field]: value })
-        .eq("id", lessonId);
+  const updateLesson = (lessonId: string, moduleId: string, field: string, value: any) => {
+    // Update state immediately for responsive UI
+    setModules(modules.map(m => 
+      m.id === moduleId 
+        ? { 
+            ...m, 
+            lessons: m.lessons.map(l => 
+              l.id === lessonId ? { ...l, [field]: value } : l
+            )
+          }
+        : m
+    ));
 
-      if (error) throw error;
-
-      setModules(modules.map(m => 
-        m.id === moduleId 
-          ? { 
-              ...m, 
-              lessons: m.lessons.map(l => 
-                l.id === lessonId ? { ...l, [field]: value } : l
-              )
-            }
-          : m
-      ));
-    } catch (error: any) {
-      toast.error("Failed to update lesson");
-      console.error(error);
+    // Clear existing timeout
+    const timeoutKey = `lesson-${lessonId}-${field}`;
+    if (updateTimeouts.current[timeoutKey]) {
+      clearTimeout(updateTimeouts.current[timeoutKey]);
     }
+
+    // Debounce database update
+    updateTimeouts.current[timeoutKey] = setTimeout(async () => {
+      try {
+        const { error } = await supabase
+          .from("course_lessons")
+          .update({ [field]: value })
+          .eq("id", lessonId);
+
+        if (error) throw error;
+      } catch (error: any) {
+        toast.error("Failed to update lesson");
+        console.error(error);
+      }
+    }, 500);
   };
 
   const deleteLesson = async (lessonId: string, moduleId: string) => {
