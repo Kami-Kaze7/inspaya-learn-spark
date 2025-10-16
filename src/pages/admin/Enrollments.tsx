@@ -28,11 +28,12 @@ import { toast } from "sonner";
 export default function Enrollments() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [enrollments, setEnrollments] = useState<any[]>([]);
   const [stats, setStats] = useState({
     total: 0,
     active: 0,
     completed: 0,
-    inProgress: 0,
+    pending: 0,
   });
 
   useEffect(() => {
@@ -67,24 +68,63 @@ export default function Enrollments() {
     try {
       const { data, error } = await supabase
         .from("enrollments")
-        .select("*");
+        .select(`
+          *,
+          student:profiles!enrollments_student_id_fkey(full_name, email),
+          course:courses(title, price)
+        `)
+        .order("enrolled_at", { ascending: false });
 
       if (error) throw error;
 
+      setEnrollments(data || []);
       const active = data?.filter(e => e.status === "active").length || 0;
       const completed = data?.filter(e => e.status === "completed").length || 0;
+      const pending = data?.filter(e => e.status === "pending").length || 0;
       
       setStats({
         total: data?.length || 0,
         active,
         completed,
-        inProgress: active,
+        pending,
       });
     } catch (error: any) {
       toast.error("Failed to fetch enrollments");
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleApprove = async (enrollmentId: string) => {
+    try {
+      const { error } = await supabase
+        .from("enrollments")
+        .update({ status: "active", payment_verified: true })
+        .eq("id", enrollmentId);
+
+      if (error) throw error;
+      toast.success("Enrollment approved!");
+      fetchEnrollments();
+    } catch (error: any) {
+      toast.error("Failed to approve enrollment");
+      console.error(error);
+    }
+  };
+
+  const handleReject = async (enrollmentId: string) => {
+    try {
+      const { error } = await supabase
+        .from("enrollments")
+        .delete()
+        .eq("id", enrollmentId);
+
+      if (error) throw error;
+      toast.success("Enrollment rejected!");
+      fetchEnrollments();
+    } catch (error: any) {
+      toast.error("Failed to reject enrollment");
+      console.error(error);
     }
   };
 
@@ -145,10 +185,10 @@ export default function Enrollments() {
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-4xl font-bold text-cyan-600">{stats.inProgress}</div>
-                      <div className="text-sm font-medium mt-2">In Progress</div>
+                      <div className="text-4xl font-bold text-orange-600">{stats.pending}</div>
+                      <div className="text-sm font-medium mt-2">Pending Approval</div>
                     </div>
-                    <Clock className="h-12 w-12 text-cyan-600" />
+                    <Clock className="h-12 w-12 text-orange-600" />
                   </div>
                 </CardContent>
               </Card>
@@ -178,6 +218,7 @@ export default function Enrollments() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
                     <SelectItem value="active">Active</SelectItem>
                     <SelectItem value="completed">Completed</SelectItem>
                   </SelectContent>
@@ -206,13 +247,69 @@ export default function Enrollments() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-16">
-                      <GraduationCap className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-                      <div className="font-semibold text-lg">No Enrollments Found</div>
-                      <div className="text-sm text-muted-foreground">Enrollments will appear here</div>
-                    </TableCell>
-                  </TableRow>
+                  {loading ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-16">
+                        Loading enrollments...
+                      </TableCell>
+                    </TableRow>
+                  ) : enrollments.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-16">
+                        <GraduationCap className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
+                        <div className="font-semibold text-lg">No Enrollments Found</div>
+                        <div className="text-sm text-muted-foreground">Enrollments will appear here</div>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    enrollments.map((enrollment) => (
+                      <TableRow key={enrollment.id}>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">{enrollment.student?.full_name || "N/A"}</div>
+                            <div className="text-sm text-muted-foreground">{enrollment.student?.email || "N/A"}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>{enrollment.course?.title || "N/A"}</TableCell>
+                        <TableCell>{new Date(enrollment.enrolled_at).toLocaleDateString()}</TableCell>
+                        <TableCell>
+                          <Badge variant={
+                            enrollment.status === "pending" ? "secondary" :
+                            enrollment.status === "active" ? "default" :
+                            "outline"
+                          }>
+                            {enrollment.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>${enrollment.course?.price?.toFixed(2) || "0.00"}</TableCell>
+                        <TableCell>{new Date(enrollment.enrolled_at).toLocaleDateString()}</TableCell>
+                        <TableCell className="text-right">
+                          {enrollment.status === "pending" ? (
+                            <div className="flex gap-2 justify-end">
+                              <Button 
+                                size="sm" 
+                                onClick={() => handleApprove(enrollment.id)}
+                                className="bg-green-600 hover:bg-green-700"
+                              >
+                                Approve
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="destructive"
+                                onClick={() => handleReject(enrollment.id)}
+                              >
+                                Reject
+                              </Button>
+                            </div>
+                          ) : (
+                            <Badge variant="outline">
+                              {enrollment.payment_verified ? "Verified" : "Unverified"}
+                            </Badge>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </div>

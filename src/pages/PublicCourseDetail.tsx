@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -45,6 +45,7 @@ interface Lesson {
 
 const PublicCourseDetail = () => {
   const { courseId } = useParams();
+  const navigate = useNavigate();
   const [course, setCourse] = useState<Course | null>(null);
   const [modules, setModules] = useState<Module[]>([]);
   const [lessons, setLessons] = useState<Record<string, Lesson[]>>({});
@@ -607,14 +608,27 @@ const PublicCourseDetail = () => {
 
           {/* Action Buttons */}
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="outline" onClick={() => setShowPaymentDialog(false)}>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setShowPaymentDialog(false);
+                localStorage.removeItem("pending_enrollment");
+              }}
+            >
               Cancel
             </Button>
-            <Link to="/auth">
-              <Button className="bg-green-600 hover:bg-green-700">
-                Proceed
-              </Button>
-            </Link>
+            <Button 
+              className="bg-green-600 hover:bg-green-700"
+              onClick={() => {
+                localStorage.setItem("pending_enrollment", JSON.stringify({
+                  courseId,
+                  enrollmentType: "physical"
+                }));
+                navigate("/auth");
+              }}
+            >
+              Proceed
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

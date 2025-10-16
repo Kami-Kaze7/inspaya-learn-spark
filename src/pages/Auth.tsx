@@ -92,7 +92,7 @@ const Auth = () => {
 
     const redirectUrl = userRole === "student" ? `${window.location.origin}/student` : `${window.location.origin}/instructor`;
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -109,6 +109,31 @@ const Auth = () => {
       toast.error(error.message);
     } else {
       toast.success("Account created! Please check your email to verify.");
+      
+      // Handle pending enrollment if exists
+      const pendingEnrollment = localStorage.getItem("pending_enrollment");
+      if (pendingEnrollment && data.user) {
+        try {
+          const { courseId } = JSON.parse(pendingEnrollment);
+          const { error: enrollError } = await supabase
+            .from("enrollments")
+            .insert({
+              student_id: data.user.id,
+              course_id: courseId,
+              status: "pending",
+              payment_verified: false
+            });
+          
+          if (enrollError) {
+            console.error("Enrollment error:", enrollError);
+          } else {
+            localStorage.removeItem("pending_enrollment");
+            toast.success("Enrollment request submitted for review!");
+          }
+        } catch (err) {
+          console.error("Error processing pending enrollment:", err);
+        }
+      }
     }
     
     setIsLoading(false);

@@ -274,6 +274,7 @@ export type Database = {
           course_id: string
           enrolled_at: string | null
           id: string
+          payment_verified: boolean | null
           progress: number | null
           status: Database["public"]["Enums"]["enrollment_status"] | null
           student_id: string
@@ -283,6 +284,7 @@ export type Database = {
           course_id: string
           enrolled_at?: string | null
           id?: string
+          payment_verified?: boolean | null
           progress?: number | null
           status?: Database["public"]["Enums"]["enrollment_status"] | null
           student_id: string
@@ -292,6 +294,7 @@ export type Database = {
           course_id?: string
           enrolled_at?: string | null
           id?: string
+          payment_verified?: boolean | null
           progress?: number | null
           status?: Database["public"]["Enums"]["enrollment_status"] | null
           student_id?: string
@@ -406,7 +409,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "student" | "instructor"
       course_status: "draft" | "published" | "archived"
-      enrollment_status: "active" | "completed" | "dropped"
+      enrollment_status: "active" | "completed" | "dropped" | "pending"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -536,7 +539,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "student", "instructor"],
       course_status: ["draft", "published", "archived"],
-      enrollment_status: ["active", "completed", "dropped"],
+      enrollment_status: ["active", "completed", "dropped", "pending"],
     },
   },
 } as const
