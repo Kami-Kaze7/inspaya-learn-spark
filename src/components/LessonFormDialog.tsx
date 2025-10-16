@@ -178,6 +178,33 @@ export function LessonFormDialog({
             </div>
           </div>
 
+          {/* Video Preview */}
+          {videoUrl && (
+            <div className="space-y-2">
+              <Label>Video Preview</Label>
+              <div className="rounded-lg overflow-hidden bg-muted border">
+                <div className="aspect-video relative">
+                  {videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be") ? (
+                    <iframe
+                      src={videoUrl.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
+                      className="w-full h-full absolute inset-0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      title="Lesson Video Preview"
+                    />
+                  ) : (
+                    <video
+                      src={videoUrl}
+                      controls
+                      className="w-full h-full absolute inset-0 object-contain bg-black"
+                      title="Lesson Video Preview"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center space-x-2">
             <Checkbox
               id="is-free"
