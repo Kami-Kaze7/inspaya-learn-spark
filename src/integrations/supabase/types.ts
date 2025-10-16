@@ -339,6 +339,99 @@ export type Database = {
         }
         Relationships: []
       }
+      payments: {
+        Row: {
+          address: string | null
+          amount: number
+          city: string | null
+          completed_at: string | null
+          country: string
+          course_id: string
+          created_at: string | null
+          currency: string
+          email: string
+          enrollment_id: string | null
+          full_name: string
+          id: string
+          payment_method: string
+          paystack_access_code: string | null
+          paystack_reference: string | null
+          phone: string
+          postal_code: string | null
+          state: string | null
+          status: string
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+          student_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          amount: number
+          city?: string | null
+          completed_at?: string | null
+          country: string
+          course_id: string
+          created_at?: string | null
+          currency?: string
+          email: string
+          enrollment_id?: string | null
+          full_name: string
+          id?: string
+          payment_method: string
+          paystack_access_code?: string | null
+          paystack_reference?: string | null
+          phone: string
+          postal_code?: string | null
+          state?: string | null
+          status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          student_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          amount?: number
+          city?: string | null
+          completed_at?: string | null
+          country?: string
+          course_id?: string
+          created_at?: string | null
+          currency?: string
+          email?: string
+          enrollment_id?: string | null
+          full_name?: string
+          id?: string
+          payment_method?: string
+          paystack_access_code?: string | null
+          paystack_reference?: string | null
+          phone?: string
+          postal_code?: string | null
+          state?: string | null
+          status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          student_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null

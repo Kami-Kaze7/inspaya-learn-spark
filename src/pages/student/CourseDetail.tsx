@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Lock, PlayCircle, Clock, BookOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { PaymentForm } from "@/components/PaymentForm";
 
 // Helper function to convert YouTube URL to embed URL
 const getEmbedUrl = (url: string) => {
@@ -71,6 +73,7 @@ const CourseDetail = () => {
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
   useEffect(() => {
     fetchCourseDetails();
@@ -153,27 +156,33 @@ const CourseDetail = () => {
       return;
     }
 
-    try {
-      const { error } = await supabase
-        .from("enrollments")
-        .insert({
-          student_id: user.id,
-          course_id: courseId,
+    // If course is free (price is 0 or null), enroll directly
+    if (!course?.price || course.price === 0) {
+      try {
+        const { error } = await supabase
+          .from("enrollments")
+          .insert({
+            student_id: user.id,
+            course_id: courseId,
+          });
+
+        if (error) throw error;
+
+        toast({
+          title: "Success",
+          description: "Enrolled successfully!",
         });
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Enrolled successfully!",
-      });
-      setIsEnrolled(true);
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+        setIsEnrolled(true);
+      } catch (error: any) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } else {
+      // If course is paid, show payment dialog
+      setShowPaymentDialog(true);
     }
   };
 
@@ -305,10 +314,34 @@ const CourseDetail = () => {
                 {!isEnrolled && (
                   <div className="mt-6 flex items-center justify-between rounded-lg border p-4">
                     <div>
-                      <p className="text-2xl font-bold">${course.price}</p>
-                      <p className="text-sm text-muted-foreground">One-time payment</p>
+                      <p className="text-2xl font-bold">${course.price || "Free"}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {course.price && course.price > 0 ? "One-time payment" : "Free enrollment"}
+                      </p>
                     </div>
-                    <Button onClick={handleEnroll}>Enroll Now</Button>
+                    {course.price && course.price > 0 ? (
+                      <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
+                        <DialogTrigger asChild>
+                          <Button onClick={handleEnroll}>Enroll Now</Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                          <DialogHeader>
+                            <DialogTitle>Complete Your Enrollment</DialogTitle>
+                          </DialogHeader>
+                          <PaymentForm 
+                            courseId={courseId!}
+                            amount={course.price}
+                            currency="USD"
+                            onSuccess={() => {
+                              setShowPaymentDialog(false);
+                              checkEnrollment();
+                            }}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    ) : (
+                      <Button onClick={handleEnroll}>Enroll Now</Button>
+                    )}
                   </div>
                 )}
                 {isEnrolled && (
