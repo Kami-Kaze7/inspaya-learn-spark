@@ -198,7 +198,7 @@ const Landing = () => {
                     </CardHeader>
                     
                     <CardContent>
-                      <Link to="/auth">
+                      <Link to={`/course/${course.id}`}>
                         <Button className="w-full group-hover:bg-green-600 transition-colors bg-green-600 hover:bg-green-700 text-white">
                           Browse
                           <span className="ml-2">→</span>
