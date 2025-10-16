@@ -17,6 +17,7 @@ import Assignments from "./pages/admin/Assignments";
 import StudentCourses from "./pages/student/Courses";
 import StudentCertificates from "./pages/student/Certificates";
 import StudentEnroll from "./pages/student/Enroll";
+import StudentCourseDetail from "./pages/student/CourseDetail";
 import StudentNotifications from "./pages/student/Notifications";
 import StudentAssignments from "./pages/student/Assignments";
 import StudentMessages from "./pages/student/Messages";
@@ -37,6 +38,7 @@ const App = () => (
           <Route path="/student/courses" element={<StudentCourses />} />
           <Route path="/student/certificates" element={<StudentCertificates />} />
           <Route path="/student/enroll" element={<StudentEnroll />} />
+          <Route path="/student/course/:courseId" element={<StudentCourseDetail />} />
           <Route path="/student/notifications" element={<StudentNotifications />} />
           <Route path="/student/assignments" element={<StudentAssignments />} />
           <Route path="/student/messages" element={<StudentMessages />} />
