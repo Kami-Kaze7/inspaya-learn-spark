@@ -149,11 +149,11 @@ const Landing = () => {
         ) : (
           <div className="space-y-16">
             {Object.entries(coursesByCategory).map(([category, categoryCourses]) => (
-              <div key={category}>
+              <div key={category} className="w-full">
                 <h3 className="mb-6 text-2xl font-semibold">{category}</h3>
-                <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory">
+                <div className="flex flex-row gap-6 overflow-x-auto pb-4" style={{ display: 'flex', flexWrap: 'nowrap' }}>
                   {categoryCourses.map((course) => (
-                    <Card key={course.id} className="group min-w-[300px] max-w-[350px] flex-shrink-0 overflow-hidden transition-all hover:shadow-lg snap-start">
+                    <Card key={course.id} className="group flex-none w-[300px] overflow-hidden transition-all hover:shadow-lg" style={{ flexShrink: 0 }}>
                       {course.thumbnail_url && (
                         <div className="aspect-video overflow-hidden">
                           <img 
