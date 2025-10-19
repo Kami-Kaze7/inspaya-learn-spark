@@ -334,6 +334,72 @@ const Landing = () => {
               </div>
             </CardContent>
           </Card>
+
+          <Card className="bg-card hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <div className="mb-4 flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="mb-6 text-muted-foreground">
+                "As a busy professional, I appreciated the flexible learning schedule. The course quality is exceptional and worth every penny!"
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground font-semibold">
+                  DT
+                </div>
+                <div>
+                  <div className="font-semibold">David Thompson</div>
+                  <div className="text-sm text-muted-foreground">Product Manager</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <div className="mb-4 flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="mb-6 text-muted-foreground">
+                "The hands-on projects and real-world applications made learning enjoyable. I gained practical skills that I use daily in my job."
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">
+                  AR
+                </div>
+                <div>
+                  <div className="font-semibold">Aisha Rahman</div>
+                  <div className="text-sm text-muted-foreground">UX Designer</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <div className="mb-4 flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="mb-6 text-muted-foreground">
+                "From beginner to confident professional - this platform made it possible. The instructors are knowledgeable and always ready to help."
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground font-semibold">
+                  JL
+                </div>
+                <div>
+                  <div className="font-semibold">James Lee</div>
+                  <div className="text-sm text-muted-foreground">Software Engineer</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </div>
