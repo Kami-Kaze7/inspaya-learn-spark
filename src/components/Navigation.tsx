@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Search, ShoppingCart, GraduationCap, Award } from "lucide-react";
+import { BookOpen, Search, ShoppingCart, GraduationCap, Award, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AuthModal } from "./AuthModal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navigation = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -26,10 +32,30 @@ const Navigation = () => {
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link to="/courses" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
-                <GraduationCap className="h-4 w-4" />
-                Courses
-              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors outline-none">
+                  <GraduationCap className="h-4 w-4" />
+                  Courses
+                  <ChevronDown className="h-3 w-3" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-background z-50">
+                  <DropdownMenuItem asChild>
+                    <Link to="/courses/ai" className="cursor-pointer">
+                      AI COURSES
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/courses/motion-graphics" className="cursor-pointer">
+                      MOTION GRAPHICS
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/courses/video-editing" className="cursor-pointer">
+                      VIDEO EDITING
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Link to="/student-works" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
                 <Award className="h-4 w-4" />
                 View Our Students Works
