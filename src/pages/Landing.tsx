@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, Users, Award, TrendingUp } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { BookOpen, Users, Award, TrendingUp, Play, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -54,28 +55,60 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/5 to-background" />
+      <section className="relative overflow-hidden" style={{ background: 'var(--gradient-hero-red)' }}>
         <div className="container relative mx-auto px-4 py-20 md:py-32">
-          <div className="mx-auto max-w-4xl text-center">
-            <h1 className="mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-5xl font-bold text-transparent md:text-7xl">
-              Welcome to Inspaya
+          <div className="mx-auto max-w-5xl text-center">
+            <h1 className="mb-6 text-5xl font-bold text-white md:text-6xl lg:text-7xl">
+              Master New Skills
+              <br />
+              with Expert-Led Courses
             </h1>
-            <p className="mb-8 text-xl text-muted-foreground md:text-2xl">
-              Transform your learning journey with our innovative online platform. 
-              Master new skills, connect with experts, and achieve your goals.
+            <p className="mb-8 text-lg text-white/90 md:text-xl">
+              Join thousands of learners advancing their careers with our course collection
             </p>
-            <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              <Link to="/auth">
-                <Button size="lg" className="w-full sm:w-auto shadow-lg hover:shadow-xl transition-shadow">
-                  Get Started
+            
+            {/* Search Bar */}
+            <div className="mx-auto max-w-3xl mb-16">
+              <div className="flex gap-2">
+                <Input 
+                  type="text" 
+                  placeholder="Search for courses, skills, or topics..."
+                  className="h-14 bg-white text-foreground placeholder:text-muted-foreground"
+                />
+                <Button 
+                  size="lg" 
+                  className="h-14 px-8 bg-[hsl(0,75%,55%)] hover:bg-[hsl(0,75%,50%)] text-white"
+                >
+                  Search
                 </Button>
-              </Link>
-              <Link to="/auth">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                  Sign In
-                </Button>
-              </Link>
+              </div>
+            </div>
+
+            {/* Stats Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                <Users className="h-10 w-10 mx-auto mb-3" />
+                <div className="text-3xl font-bold mb-1">50K+</div>
+                <div className="text-sm text-white/80">Active Students</div>
+              </div>
+              
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                <Play className="h-10 w-10 mx-auto mb-3" />
+                <div className="text-3xl font-bold mb-1">1000+</div>
+                <div className="text-sm text-white/80">Video Courses</div>
+              </div>
+              
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                <Award className="h-10 w-10 mx-auto mb-3" />
+                <div className="text-3xl font-bold mb-1">25K+</div>
+                <div className="text-sm text-white/80">Certificates Issued</div>
+              </div>
+              
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                <Star className="h-10 w-10 mx-auto mb-3" />
+                <div className="text-3xl font-bold mb-1">4.9</div>
+                <div className="text-sm text-white/80">Average Rating</div>
+              </div>
             </div>
           </div>
         </div>

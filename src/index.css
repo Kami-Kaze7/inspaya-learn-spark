@@ -40,6 +40,7 @@ All colors MUST be HSL.
     
     --gradient-hero: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(280 80% 50%) 100%);
     --gradient-card: linear-gradient(135deg, hsl(262 83% 58% / 0.05) 0%, hsl(280 80% 50% / 0.05) 100%);
+    --gradient-hero-red: linear-gradient(135deg, hsl(345 60% 35%) 0%, hsl(350 55% 30%) 100%);
     --shadow-glow: 0 10px 40px -10px hsl(262 83% 58% / 0.3);
 
     --sidebar-background: 0 0% 98%;
@@ -90,6 +91,7 @@ All colors MUST be HSL.
     
     --gradient-hero: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(280 80% 50%) 100%);
     --gradient-card: linear-gradient(135deg, hsl(262 83% 58% / 0.1) 0%, hsl(280 80% 50% / 0.1) 100%);
+    --gradient-hero-red: linear-gradient(135deg, hsl(345 60% 35%) 0%, hsl(350 55% 30%) 100%);
     --shadow-glow: 0 10px 40px -10px hsl(262 83% 58% / 0.5);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
