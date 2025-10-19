@@ -25,6 +25,7 @@ import StudentMessages from "./pages/student/Messages";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancelled from "./pages/PaymentCancelled";
 import NotFound from "./pages/NotFound";
+import StudentWorks from "./pages/StudentWorks";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/course/:courseId" element={<PublicCourseDetail />} />
+          <Route path="/student-works" element={<StudentWorks />} />
           <Route path="/student" element={<StudentDashboard />} />
           <Route path="/student/courses" element={<StudentCourses />} />
           <Route path="/student/certificates" element={<StudentCertificates />} />
