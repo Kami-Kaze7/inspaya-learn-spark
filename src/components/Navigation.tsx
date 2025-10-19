@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Search, ShoppingCart } from "lucide-react";
+import { BookOpen, Search, ShoppingCart, GraduationCap, Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AuthModal } from "./AuthModal";
 
@@ -26,10 +26,12 @@ const Navigation = () => {
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link to="/courses" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link to="/courses" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
+                <GraduationCap className="h-4 w-4" />
                 Courses
               </Link>
-              <Link to="/student-works" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link to="/student-works" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
+                <Award className="h-4 w-4" />
                 View Our Students Works
               </Link>
             </div>
