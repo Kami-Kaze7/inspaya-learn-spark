@@ -5,6 +5,8 @@ import { BookOpen, Users, Award, TrendingUp, Play, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 interface Course {
   id: string;
@@ -54,64 +56,211 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden" style={{ background: 'var(--gradient-hero-red)' }}>
-        <div className="container relative mx-auto px-4 py-20 md:py-32">
-          <div className="mx-auto max-w-5xl text-center">
-            <h1 className="mb-6 text-5xl font-bold text-white md:text-6xl lg:text-7xl">
-              Master New Skills
-              <br />
-              with Expert-Led Courses
-            </h1>
-            <p className="mb-8 text-lg text-white/90 md:text-xl">
-              Join thousands of learners advancing their careers with our course collection
-            </p>
-            
-            {/* Search Bar */}
-            <div className="mx-auto max-w-3xl mb-16">
-              <div className="flex gap-2">
-                <Input 
-                  type="text" 
-                  placeholder="Search for courses, skills, or topics..."
-                  className="h-14 bg-white text-foreground placeholder:text-muted-foreground"
-                />
-                <Button 
-                  size="lg" 
-                  className="h-14 px-8 bg-[hsl(0,75%,55%)] hover:bg-[hsl(0,75%,50%)] text-white"
-                >
-                  Search
-                </Button>
-              </div>
-            </div>
+      {/* Hero Carousel Section */}
+      <section className="relative overflow-hidden">
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          plugins={[
+            Autoplay({
+              delay: 5000,
+            }),
+          ]}
+          className="w-full"
+        >
+          <CarouselContent>
+            {/* Slide 1 */}
+            <CarouselItem>
+              <div className="relative" style={{ background: 'var(--gradient-hero-red)' }}>
+                <div className="container relative mx-auto px-4 py-20 md:py-32">
+                  <div className="mx-auto max-w-5xl text-center">
+                    <h1 className="mb-6 text-5xl font-bold text-white md:text-6xl lg:text-7xl">
+                      Master New Skills
+                      <br />
+                      with Expert-Led Courses
+                    </h1>
+                    <p className="mb-8 text-lg text-white/90 md:text-xl">
+                      Join thousands of learners advancing their careers with our course collection
+                    </p>
+                    
+                    {/* Search Bar */}
+                    <div className="mx-auto max-w-3xl mb-16">
+                      <div className="flex gap-2">
+                        <Input 
+                          type="text" 
+                          placeholder="Search for courses, skills, or topics..."
+                          className="h-14 bg-white text-foreground placeholder:text-muted-foreground"
+                        />
+                        <Button 
+                          size="lg" 
+                          className="h-14 px-8 bg-[hsl(0,75%,55%)] hover:bg-[hsl(0,75%,50%)] text-white"
+                        >
+                          Search
+                        </Button>
+                      </div>
+                    </div>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
-                <Users className="h-10 w-10 mx-auto mb-3" />
-                <div className="text-3xl font-bold mb-1">50K+</div>
-                <div className="text-sm text-white/80">Active Students</div>
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                        <Users className="h-10 w-10 mx-auto mb-3" />
+                        <div className="text-3xl font-bold mb-1">50K+</div>
+                        <div className="text-sm text-white/80">Active Students</div>
+                      </div>
+                      
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                        <Play className="h-10 w-10 mx-auto mb-3" />
+                        <div className="text-3xl font-bold mb-1">1000+</div>
+                        <div className="text-sm text-white/80">Video Courses</div>
+                      </div>
+                      
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                        <Award className="h-10 w-10 mx-auto mb-3" />
+                        <div className="text-3xl font-bold mb-1">25K+</div>
+                        <div className="text-sm text-white/80">Certificates Issued</div>
+                      </div>
+                      
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                        <Star className="h-10 w-10 mx-auto mb-3" />
+                        <div className="text-3xl font-bold mb-1">4.9</div>
+                        <div className="text-sm text-white/80">Average Rating</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
-                <Play className="h-10 w-10 mx-auto mb-3" />
-                <div className="text-3xl font-bold mb-1">1000+</div>
-                <div className="text-sm text-white/80">Video Courses</div>
+            </CarouselItem>
+
+            {/* Slide 2 */}
+            <CarouselItem>
+              <div className="relative bg-gradient-to-br from-purple-600 to-blue-600">
+                <div className="container relative mx-auto px-4 py-20 md:py-32">
+                  <div className="mx-auto max-w-5xl text-center">
+                    <h1 className="mb-6 text-5xl font-bold text-white md:text-6xl lg:text-7xl">
+                      Earn Industry-Recognized
+                      <br />
+                      Certificates
+                    </h1>
+                    <p className="mb-8 text-lg text-white/90 md:text-xl">
+                      Boost your career with certifications trusted by top employers worldwide
+                    </p>
+                    
+                    {/* Search Bar */}
+                    <div className="mx-auto max-w-3xl mb-16">
+                      <div className="flex gap-2">
+                        <Input 
+                          type="text" 
+                          placeholder="Search for courses, skills, or topics..."
+                          className="h-14 bg-white text-foreground placeholder:text-muted-foreground"
+                        />
+                        <Button 
+                          size="lg" 
+                          className="h-14 px-8 bg-purple-700 hover:bg-purple-800 text-white"
+                        >
+                          Search
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                        <Award className="h-10 w-10 mx-auto mb-3" />
+                        <div className="text-3xl font-bold mb-1">25K+</div>
+                        <div className="text-sm text-white/80">Certificates Issued</div>
+                      </div>
+                      
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                        <TrendingUp className="h-10 w-10 mx-auto mb-3" />
+                        <div className="text-3xl font-bold mb-1">92%</div>
+                        <div className="text-sm text-white/80">Career Growth</div>
+                      </div>
+                      
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                        <Users className="h-10 w-10 mx-auto mb-3" />
+                        <div className="text-3xl font-bold mb-1">500+</div>
+                        <div className="text-sm text-white/80">Expert Instructors</div>
+                      </div>
+                      
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                        <Star className="h-10 w-10 mx-auto mb-3" />
+                        <div className="text-3xl font-bold mb-1">4.9</div>
+                        <div className="text-sm text-white/80">Average Rating</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
-                <Award className="h-10 w-10 mx-auto mb-3" />
-                <div className="text-3xl font-bold mb-1">25K+</div>
-                <div className="text-sm text-white/80">Certificates Issued</div>
+            </CarouselItem>
+
+            {/* Slide 3 */}
+            <CarouselItem>
+              <div className="relative bg-gradient-to-br from-orange-500 to-pink-600">
+                <div className="container relative mx-auto px-4 py-20 md:py-32">
+                  <div className="mx-auto max-w-5xl text-center">
+                    <h1 className="mb-6 text-5xl font-bold text-white md:text-6xl lg:text-7xl">
+                      Learn at Your Own Pace
+                      <br />
+                      Anytime, Anywhere
+                    </h1>
+                    <p className="mb-8 text-lg text-white/90 md:text-xl">
+                      Flexible learning designed to fit your schedule and lifestyle
+                    </p>
+                    
+                    {/* Search Bar */}
+                    <div className="mx-auto max-w-3xl mb-16">
+                      <div className="flex gap-2">
+                        <Input 
+                          type="text" 
+                          placeholder="Search for courses, skills, or topics..."
+                          className="h-14 bg-white text-foreground placeholder:text-muted-foreground"
+                        />
+                        <Button 
+                          size="lg" 
+                          className="h-14 px-8 bg-orange-600 hover:bg-orange-700 text-white"
+                        >
+                          Search
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                        <Play className="h-10 w-10 mx-auto mb-3" />
+                        <div className="text-3xl font-bold mb-1">24/7</div>
+                        <div className="text-sm text-white/80">Access</div>
+                      </div>
+                      
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                        <BookOpen className="h-10 w-10 mx-auto mb-3" />
+                        <div className="text-3xl font-bold mb-1">1000+</div>
+                        <div className="text-sm text-white/80">Courses</div>
+                      </div>
+                      
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                        <Users className="h-10 w-10 mx-auto mb-3" />
+                        <div className="text-3xl font-bold mb-1">50K+</div>
+                        <div className="text-sm text-white/80">Students</div>
+                      </div>
+                      
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
+                        <Award className="h-10 w-10 mx-auto mb-3" />
+                        <div className="text-3xl font-bold mb-1">100%</div>
+                        <div className="text-sm text-white/80">Flexible</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
-                <Star className="h-10 w-10 mx-auto mb-3" />
-                <div className="text-3xl font-bold mb-1">4.9</div>
-                <div className="text-sm text-white/80">Average Rating</div>
-              </div>
-            </div>
-          </div>
-        </div>
+            </CarouselItem>
+          </CarouselContent>
+          
+          <CarouselPrevious className="left-4 md:left-8" />
+          <CarouselNext className="right-4 md:right-8" />
+        </Carousel>
       </section>
 
       {/* Features Section */}
