@@ -260,6 +260,82 @@ const Landing = () => {
           </Link>
         </div>
       </section>
+
+      {/* Testimonials Section */}
+      <section className="container mx-auto px-4 py-20">
+        <div className="mb-12 text-center">
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">What Our Students Say</h2>
+          <p className="text-muted-foreground">Real stories from learners who transformed their careers</p>
+        </div>
+
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <Card className="bg-card hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <div className="mb-4 flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="mb-6 text-muted-foreground">
+                "The courses on Inspaya helped me transition into web development. The instructor explanations were clear and the projects were practical. Highly recommend!"
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">
+                  SJ
+                </div>
+                <div>
+                  <div className="font-semibold">Sarah Johnson</div>
+                  <div className="text-sm text-muted-foreground">Web Developer</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <div className="mb-4 flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="mb-6 text-muted-foreground">
+                "I've taken multiple courses here and each one exceeded my expectations. The content is up-to-date and the community support is amazing!"
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground font-semibold">
+                  MC
+                </div>
+                <div>
+                  <div className="font-semibold">Michael Chen</div>
+                  <div className="text-sm text-muted-foreground">Data Analyst</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <div className="mb-4 flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="mb-6 text-muted-foreground">
+                "Best investment in my career! The certificates are recognized by employers and the skills I learned landed me a promotion."
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">
+                  EP
+                </div>
+                <div>
+                  <div className="font-semibold">Emily Patel</div>
+                  <div className="text-sm text-muted-foreground">Marketing Manager</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
     </div>
   );
 };
