@@ -137,7 +137,7 @@ const Landing = () => {
 
             {/* Slide 2 - Earn Certificates */}
             <CarouselItem>
-              <div className="relative overflow-hidden h-full">
+              <div className="relative overflow-hidden min-h-[600px] md:min-h-[700px]">
                 <div 
                   className="absolute inset-0 bg-cover bg-center"
                   style={{ backgroundImage: `url(${heroCertificates})` }}
@@ -204,7 +204,7 @@ const Landing = () => {
 
             {/* Slide 3 - Learn at Your Pace */}
             <CarouselItem>
-              <div className="relative overflow-hidden h-full">
+              <div className="relative overflow-hidden min-h-[600px] md:min-h-[700px]">
                 <div 
                   className="absolute inset-0 bg-cover bg-center"
                   style={{ backgroundImage: `url(${heroFlexibility})` }}
