@@ -402,6 +402,111 @@ const Landing = () => {
           </Card>
         </div>
       </section>
+
+      {/* Statistics Bar */}
+      <section className="container mx-auto px-4 py-12">
+        <div className="rounded-3xl bg-[hsl(0,70%,60%)] p-8 md:p-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">98%</div>
+              <div className="text-sm md:text-base text-white/90">Student Satisfaction</div>
+            </div>
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">15K+</div>
+              <div className="text-sm md:text-base text-white/90">Success Stories</div>
+            </div>
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">92%</div>
+              <div className="text-sm md:text-base text-white/90">Job Placement Rate</div>
+            </div>
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">4.9/5</div>
+              <div className="text-sm md:text-base text-white/90">Average Rating</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="w-full" style={{ background: 'var(--gradient-hero-red)' }}>
+        <div className="container mx-auto px-4 py-16 text-center text-white">
+          <h2 className="mb-4 text-3xl md:text-4xl font-bold">Stay Updated</h2>
+          <p className="mb-8 text-lg text-white/90 max-w-2xl mx-auto">
+            Get the latest course updates, learning tips, and exclusive offers delivered to your inbox.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
+            <Input 
+              type="email" 
+              placeholder="Enter your email"
+              className="h-12 bg-white text-foreground placeholder:text-muted-foreground flex-1"
+            />
+            <Button 
+              size="lg" 
+              className="h-12 px-8 bg-white text-[hsl(0,70%,50%)] hover:bg-white/90"
+            >
+              Subscribe
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-[hsl(220,20%,12%)] text-white">
+        <div className="container mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            {/* Brand Section */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <BookOpen className="h-8 w-8 text-[hsl(0,70%,60%)]" />
+                <span className="text-xl font-bold">Inspaya</span>
+              </div>
+              <p className="text-white/70 mb-4">
+                Empowering learners worldwide with online courses and industry-recognized certifications.
+              </p>
+            </div>
+
+            {/* Quick Links */}
+            <div>
+              <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
+              <ul className="space-y-2 text-white/70">
+                <li><Link to="/courses" className="hover:text-white transition-colors">All Courses</Link></li>
+                <li><Link to="/courses" className="hover:text-white transition-colors">Popular Courses</Link></li>
+                <li><Link to="/courses" className="hover:text-white transition-colors">Free Courses</Link></li>
+                <li><Link to="/auth" className="hover:text-white transition-colors">Certifications</Link></li>
+              </ul>
+            </div>
+
+            {/* Categories */}
+            <div>
+              <h3 className="font-semibold text-lg mb-4">Categories</h3>
+              <ul className="space-y-2 text-white/70">
+                <li><Link to="/courses" className="hover:text-white transition-colors">Web Development</Link></li>
+                <li><Link to="/courses" className="hover:text-white transition-colors">Data Science</Link></li>
+                <li><Link to="/courses" className="hover:text-white transition-colors">Digital Marketing</Link></li>
+                <li><Link to="/courses" className="hover:text-white transition-colors">Design</Link></li>
+              </ul>
+            </div>
+
+            {/* Contact */}
+            <div>
+              <h3 className="font-semibold text-lg mb-4">Contact Us</h3>
+              <ul className="space-y-2 text-white/70">
+                <li>support@inspaya.com</li>
+                <li>+1 (555) 123-4567</li>
+                <li>San Francisco, CA</li>
+              </ul>
+              <div className="mt-4">
+                <div className="font-semibold mb-2">Support Hours</div>
+                <div className="text-sm text-white/70">Mon-Fri: 9:00 AM - 6:00 PM PST</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-white/10 pt-8 text-center text-white/60">
+            <p>&copy; 2025 Inspaya. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
