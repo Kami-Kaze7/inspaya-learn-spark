@@ -135,7 +135,7 @@ const Landing = () => {
 
             {/* Slide 2 */}
             <CarouselItem>
-              <div className="relative bg-gradient-to-br from-purple-600 to-blue-600">
+              <div className="relative" style={{ background: 'var(--gradient-hero-red)' }}>
                 <div className="container relative mx-auto px-4 py-20 md:py-32">
                   <div className="mx-auto max-w-5xl text-center">
                     <h1 className="mb-6 text-5xl font-bold text-white md:text-6xl lg:text-7xl">
@@ -157,7 +157,7 @@ const Landing = () => {
                         />
                         <Button 
                           size="lg" 
-                          className="h-14 px-8 bg-purple-700 hover:bg-purple-800 text-white"
+                          className="h-14 px-8 bg-[hsl(0,75%,55%)] hover:bg-[hsl(0,75%,50%)] text-white"
                         >
                           Search
                         </Button>
@@ -197,7 +197,7 @@ const Landing = () => {
 
             {/* Slide 3 */}
             <CarouselItem>
-              <div className="relative bg-gradient-to-br from-orange-500 to-pink-600">
+              <div className="relative" style={{ background: 'var(--gradient-hero-red)' }}>
                 <div className="container relative mx-auto px-4 py-20 md:py-32">
                   <div className="mx-auto max-w-5xl text-center">
                     <h1 className="mb-6 text-5xl font-bold text-white md:text-6xl lg:text-7xl">
@@ -219,7 +219,7 @@ const Landing = () => {
                         />
                         <Button 
                           size="lg" 
-                          className="h-14 px-8 bg-orange-600 hover:bg-orange-700 text-white"
+                          className="h-14 px-8 bg-[hsl(0,75%,55%)] hover:bg-[hsl(0,75%,50%)] text-white"
                         >
                           Search
                         </Button>
