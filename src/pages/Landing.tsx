@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import Navigation from "@/components/Navigation";
 
 interface Course {
   id: string;
@@ -56,6 +57,7 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Navigation />
       {/* Hero Carousel Section */}
       <section className="relative overflow-hidden">
         <Carousel
