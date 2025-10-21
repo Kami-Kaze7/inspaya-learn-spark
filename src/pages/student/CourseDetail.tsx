@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { PaymentForm } from "@/components/PaymentForm";
 import { enrollmentIntent } from "@/lib/enrollmentIntent";
+import { CourseVideoChat } from "@/components/CourseVideoChat";
 
 // Helper function to convert YouTube URL to embed URL
 const getEmbedUrl = (url: string) => {
@@ -484,6 +485,15 @@ const CourseDetail = () => {
             </Card>
           </div>
         </div>
+
+        {/* AI Chat Assistant - appears when viewing a lesson */}
+        {selectedLesson && isEnrolled && course && (
+          <CourseVideoChat
+            courseTitle={course.title}
+            lessonTitle={selectedLesson.title}
+            courseDescription={course.description}
+          />
+        )}
       </main>
     </div>
   );

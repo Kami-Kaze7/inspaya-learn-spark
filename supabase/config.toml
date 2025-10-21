@@ -2,3 +2,6 @@ project_id = "yvvveazxvxpdpskkyqvx"
 
 [functions.get-payment-config]
 verify_jwt = false
+
+[functions.course-chat]
+verify_jwt = false
