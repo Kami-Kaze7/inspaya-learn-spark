@@ -34,12 +34,30 @@ interface Assignment {
   };
 }
 
+interface Submission {
+  id: string;
+  assignment_id: string;
+  student_id: string;
+  submitted_at: string;
+  grade: number | null;
+  status: string;
+  feedback: string | null;
+  content: string | null;
+  file_url: string | null;
+  profiles: {
+    full_name: string;
+    email: string;
+  };
+}
+
 export default function Assignments() {
   const navigate = useNavigate();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState<Assignment | null>(null);
+  const [expandedAssignment, setExpandedAssignment] = useState<string | null>(null);
 
   useEffect(() => {
     checkAuth();
@@ -83,6 +101,29 @@ export default function Assignments() {
       if (error) throw error;
 
       setAssignments(data || []);
+      
+      // Fetch all submissions with student profiles
+      const { data: submissionsData, error: submissionsError } = await supabase
+        .from("assignment_submissions")
+        .select("*")
+        .order("submitted_at", { ascending: false });
+
+      if (submissionsError) throw submissionsError;
+
+      // Fetch profiles for all students who submitted
+      const studentIds = [...new Set(submissionsData?.map(s => s.student_id) || [])];
+      const { data: profilesData } = await supabase
+        .from("profiles")
+        .select("id, full_name, email")
+        .in("id", studentIds);
+
+      // Combine submissions with profiles
+      const submissionsWithProfiles = submissionsData?.map(submission => ({
+        ...submission,
+        profiles: profilesData?.find(p => p.id === submission.student_id) || { full_name: "Unknown", email: "N/A" }
+      })) || [];
+
+      setSubmissions(submissionsWithProfiles as Submission[]);
     } catch (error: any) {
       toast.error("Failed to fetch assignments");
       console.error(error);
@@ -160,41 +201,104 @@ export default function Assignments() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    assignments.map((assignment) => (
-                      <TableRow key={assignment.id}>
-                        <TableCell className="font-medium">{assignment.title}</TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">{assignment.courses?.title || "N/A"}</Badge>
-                        </TableCell>
-                        <TableCell className="max-w-[200px] truncate">
-                          {assignment.course_lessons?.title || "N/A"}
-                        </TableCell>
-                        <TableCell>
-                          {assignment.due_date ? format(new Date(assignment.due_date), "MMM dd, yyyy") : "No due date"}
-                        </TableCell>
-                        <TableCell>
-                          {format(new Date(assignment.created_at), "MMM dd, yyyy")}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            <Button 
-                              size="sm" 
-                              variant="ghost"
-                              onClick={() => handleEdit(assignment)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => handleDelete(assignment.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
+                    assignments.map((assignment) => {
+                      const assignmentSubmissions = submissions.filter(
+                        (sub) => sub.assignment_id === assignment.id
+                      );
+                      const isExpanded = expandedAssignment === assignment.id;
+
+                      return (
+                        <>
+                          <TableRow key={assignment.id}>
+                            <TableCell className="font-medium">{assignment.title}</TableCell>
+                            <TableCell>
+                              <Badge variant="secondary">{assignment.courses?.title || "N/A"}</Badge>
+                            </TableCell>
+                            <TableCell className="max-w-[200px] truncate">
+                              {assignment.course_lessons?.title || "N/A"}
+                            </TableCell>
+                            <TableCell>
+                              {assignment.due_date ? format(new Date(assignment.due_date), "MMM dd, yyyy") : "No due date"}
+                            </TableCell>
+                            <TableCell>
+                              {format(new Date(assignment.created_at), "MMM dd, yyyy")}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-2">
+                                {assignmentSubmissions.length > 0 && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => setExpandedAssignment(isExpanded ? null : assignment.id)}
+                                  >
+                                    <Eye className="h-4 w-4 mr-1" />
+                                    {assignmentSubmissions.length}
+                                  </Button>
+                                )}
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost"
+                                  onClick={() => handleEdit(assignment)}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => handleDelete(assignment.id)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                          {isExpanded && assignmentSubmissions.length > 0 && (
+                            <TableRow>
+                              <TableCell colSpan={6} className="bg-muted/50">
+                                <div className="p-4 space-y-3">
+                                  <h4 className="font-semibold">Submissions</h4>
+                                  {assignmentSubmissions.map((submission) => (
+                                    <div key={submission.id} className="border rounded-lg p-3 bg-background">
+                                      <div className="flex justify-between items-start mb-2">
+                                        <div>
+                                          <p className="font-medium">{submission.profiles?.full_name}</p>
+                                          <p className="text-sm text-muted-foreground">{submission.profiles?.email}</p>
+                                        </div>
+                                        <Badge variant={submission.grade ? "default" : "secondary"}>
+                                          {submission.grade ? `Grade: ${submission.grade}` : submission.status}
+                                        </Badge>
+                                      </div>
+                                      <p className="text-sm text-muted-foreground mb-2">
+                                        Submitted: {format(new Date(submission.submitted_at), "MMM dd, yyyy HH:mm")}
+                                      </p>
+                                      {submission.content && (
+                                        <p className="text-sm mb-2">{submission.content}</p>
+                                      )}
+                                      {submission.file_url && (
+                                        <a 
+                                          href={submission.file_url} 
+                                          target="_blank" 
+                                          rel="noopener noreferrer"
+                                          className="text-sm text-primary hover:underline"
+                                        >
+                                          View Attachment
+                                        </a>
+                                      )}
+                                      {submission.feedback && (
+                                        <div className="mt-2 pt-2 border-t">
+                                          <p className="text-sm font-medium">Feedback:</p>
+                                          <p className="text-sm text-muted-foreground">{submission.feedback}</p>
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </>
+                      );
+                    })
                   )}
                 </TableBody>
               </Table>
