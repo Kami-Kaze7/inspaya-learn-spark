@@ -7,7 +7,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Lock, PlayCircle, Clock, BookOpen } from "lucide-react";
+import { Lock, PlayCircle, Clock, BookOpen, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { PaymentForm } from "@/components/PaymentForm";
@@ -77,6 +77,7 @@ const CourseDetail = () => {
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [user, setUser] = useState<any>(undefined);
+  const [lessonAssignment, setLessonAssignment] = useState<any>(null);
 
   useEffect(() => {
     fetchCourseDetails();
@@ -250,7 +251,7 @@ const CourseDetail = () => {
     }
   };
 
-  const handleLessonClick = (lesson: Lesson) => {
+  const handleLessonClick = async (lesson: Lesson) => {
     if (!lesson.is_free && !isEnrolled) {
       toast({
         title: "Locked",
@@ -260,6 +261,21 @@ const CourseDetail = () => {
       return;
     }
     setSelectedLesson(lesson);
+    
+    // Check if this lesson has an assignment
+    if (isEnrolled) {
+      const { data, error } = await supabase
+        .from("assignments")
+        .select("*")
+        .eq("lesson_id", lesson.id)
+        .maybeSingle();
+      
+      if (!error && data) {
+        setLessonAssignment(data);
+      } else {
+        setLessonAssignment(null);
+      }
+    }
   };
 
   // Determine what video to show
@@ -353,7 +369,19 @@ const CourseDetail = () => {
                     </div>
                   )}
                   {currentVideoDescription && (
-                    <p className="text-muted-foreground">{currentVideoDescription}</p>
+                    <p className="text-muted-foreground mb-4">{currentVideoDescription}</p>
+                  )}
+                  
+                  {/* Assignment Button */}
+                  {lessonAssignment && isEnrolled && (
+                    <Button 
+                      onClick={() => navigate(`/student/assignments?lesson=${selectedLesson.id}`)}
+                      className="w-full"
+                      variant="outline"
+                    >
+                      <FileText className="mr-2 h-4 w-4" />
+                      View Assignment
+                    </Button>
                   )}
                 </CardContent>
               </Card>

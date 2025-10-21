@@ -76,6 +76,56 @@ export type Database = {
         }
         Relationships: []
       }
+      assignment_submissions: {
+        Row: {
+          assignment_id: string
+          content: string | null
+          created_at: string | null
+          feedback: string | null
+          file_url: string | null
+          grade: number | null
+          id: string
+          status: string | null
+          student_id: string
+          submitted_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          assignment_id: string
+          content?: string | null
+          created_at?: string | null
+          feedback?: string | null
+          file_url?: string | null
+          grade?: number | null
+          id?: string
+          status?: string | null
+          student_id: string
+          submitted_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          assignment_id?: string
+          content?: string | null
+          created_at?: string | null
+          feedback?: string | null
+          file_url?: string | null
+          grade?: number | null
+          id?: string
+          status?: string | null
+          student_id?: string
+          submitted_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assignment_submissions_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "assignments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assignments: {
         Row: {
           course_id: string
@@ -83,6 +133,7 @@ export type Database = {
           description: string | null
           due_date: string | null
           id: string
+          lesson_id: string | null
           title: string
         }
         Insert: {
@@ -91,6 +142,7 @@ export type Database = {
           description?: string | null
           due_date?: string | null
           id?: string
+          lesson_id?: string | null
           title: string
         }
         Update: {
@@ -99,6 +151,7 @@ export type Database = {
           description?: string | null
           due_date?: string | null
           id?: string
+          lesson_id?: string | null
           title?: string
         }
         Relationships: [
@@ -107,6 +160,13 @@ export type Database = {
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assignments_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "course_lessons"
             referencedColumns: ["id"]
           },
         ]

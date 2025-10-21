@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Edit, Trash2, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { AssignmentFormDialog } from "@/components/AssignmentFormDialog";
 
 interface Assignment {
   id: string;
@@ -24,12 +25,21 @@ interface Assignment {
   due_date: string;
   created_at: string;
   course_id: string;
+  lesson_id: string;
+  courses: {
+    title: string;
+  };
+  course_lessons: {
+    title: string;
+  };
 }
 
 export default function Assignments() {
   const navigate = useNavigate();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedAssignment, setSelectedAssignment] = useState<Assignment | null>(null);
 
   useEffect(() => {
     checkAuth();
@@ -63,7 +73,11 @@ export default function Assignments() {
     try {
       const { data, error } = await supabase
         .from("assignments")
-        .select("*")
+        .select(`
+          *,
+          courses(title),
+          course_lessons(title)
+        `)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -75,6 +89,16 @@ export default function Assignments() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCreate = () => {
+    setSelectedAssignment(null);
+    setDialogOpen(true);
+  };
+
+  const handleEdit = (assignment: Assignment) => {
+    setSelectedAssignment(assignment);
+    setDialogOpen(true);
   };
 
   const handleDelete = async (assignmentId: string) => {
@@ -106,7 +130,7 @@ export default function Assignments() {
               <SidebarTrigger />
               <h1 className="text-2xl font-bold">Assignments Management</h1>
             </div>
-            <Button>+ Create Assignment</Button>
+            <Button onClick={handleCreate}>+ Create Assignment</Button>
           </header>
 
           <main className="flex-1 p-6">
@@ -116,8 +140,8 @@ export default function Assignments() {
                   <TableRow>
                     <TableHead>Title</TableHead>
                     <TableHead>Course</TableHead>
+                    <TableHead>Lesson</TableHead>
                     <TableHead>Due Date</TableHead>
-                    <TableHead>Status</TableHead>
                     <TableHead>Created</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -140,23 +164,24 @@ export default function Assignments() {
                       <TableRow key={assignment.id}>
                         <TableCell className="font-medium">{assignment.title}</TableCell>
                         <TableCell>
-                          <Badge variant="secondary">Course</Badge>
+                          <Badge variant="secondary">{assignment.courses?.title || "N/A"}</Badge>
+                        </TableCell>
+                        <TableCell className="max-w-[200px] truncate">
+                          {assignment.course_lessons?.title || "N/A"}
                         </TableCell>
                         <TableCell>
                           {assignment.due_date ? format(new Date(assignment.due_date), "MMM dd, yyyy") : "No due date"}
-                        </TableCell>
-                        <TableCell>
-                          <Badge>Active</Badge>
                         </TableCell>
                         <TableCell>
                           {format(new Date(assignment.created_at), "MMM dd, yyyy")}
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
-                            <Button size="sm" variant="ghost">
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="ghost">
+                            <Button 
+                              size="sm" 
+                              variant="ghost"
+                              onClick={() => handleEdit(assignment)}
+                            >
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button
@@ -177,6 +202,13 @@ export default function Assignments() {
           </main>
         </div>
       </div>
+
+      <AssignmentFormDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        assignment={selectedAssignment}
+        onSuccess={fetchAssignments}
+      />
     </SidebarProvider>
   );
 }
