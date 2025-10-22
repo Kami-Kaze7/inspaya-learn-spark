@@ -54,6 +54,19 @@ const PublicCourseDetail = () => {
   const [showPhysicalDialog, setShowPhysicalDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
+  // Calculate video ID - must be at top level before any early returns
+  const videoId = useMemo(() => {
+    if (!course) return null;
+    
+    const firstModule = modules[0];
+    const firstLesson = firstModule && lessons[firstModule.id] && lessons[firstModule.id].length > 0 
+      ? lessons[firstModule.id][0] 
+      : null;
+    const videoUrl = firstLesson?.video_url || course.video_url;
+    
+    return videoUrl ? getYouTubeVideoId(videoUrl) : null;
+  }, [course, modules, lessons]);
+
   useEffect(() => {
     fetchCourseDetails();
   }, [courseId]);
@@ -142,19 +155,6 @@ const PublicCourseDetail = () => {
       </div>
     );
   }
-
-  // Get the first lesson from the first module as the introduction video
-  const videoId = useMemo(() => {
-    if (!course) return null;
-    
-    const firstModule = modules[0];
-    const firstLesson = firstModule && lessons[firstModule.id] && lessons[firstModule.id].length > 0 
-      ? lessons[firstModule.id][0] 
-      : null;
-    const videoUrl = firstLesson?.video_url || course.video_url;
-    
-    return videoUrl ? getYouTubeVideoId(videoUrl) : null;
-  }, [course, modules, lessons]);
 
   return (
     <div className="min-h-screen bg-background">
