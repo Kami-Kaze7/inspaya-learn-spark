@@ -54,6 +54,12 @@ const PublicCourseDetail = () => {
   const [showPhysicalDialog, setShowPhysicalDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
+  // Helper function to check if URL is YouTube
+  const isYouTubeUrl = (url: string) => {
+    if (!url) return false;
+    return url.includes('youtube.com') || url.includes('youtu.be');
+  };
+
   // Helper function to extract YouTube video ID
   const getYouTubeVideoId = (url: string) => {
     if (!url) return null;
@@ -62,17 +68,29 @@ const PublicCourseDetail = () => {
     return match && match[2].length === 11 ? match[2] : null;
   };
 
-  // Calculate video ID - must be at top level before any early returns
-  const videoId = useMemo(() => {
-    if (!course) return null;
+  // Calculate video data - must be at top level before any early returns
+  const videoData = useMemo(() => {
+    if (!course) {
+      return { type: 'none', url: null, videoId: null };
+    }
     
     const firstModule = modules[0];
     const firstLesson = firstModule && lessons[firstModule.id] && lessons[firstModule.id].length > 0 
       ? lessons[firstModule.id][0] 
       : null;
+    
     const videoUrl = firstLesson?.video_url || course.video_url;
     
-    return videoUrl ? getYouTubeVideoId(videoUrl) : null;
+    if (!videoUrl) {
+      return { type: 'none', url: null, videoId: null };
+    }
+    
+    if (isYouTubeUrl(videoUrl)) {
+      const extractedId = getYouTubeVideoId(videoUrl);
+      return { type: 'youtube', url: videoUrl, videoId: extractedId };
+    }
+    
+    return { type: 'direct', url: videoUrl, videoId: null };
   }, [course, modules, lessons]);
 
   useEffect(() => {
@@ -236,16 +254,28 @@ const PublicCourseDetail = () => {
 
             {/* Video Preview */}
             <div>
-              {videoId ? (
+              {videoData.type === 'youtube' && videoData.videoId ? (
                 <div className="aspect-video rounded-lg overflow-hidden shadow-2xl">
                   <iframe
                     width="100%"
                     height="100%"
-                    src={`https://www.youtube.com/embed/${videoId}`}
+                    src={`https://www.youtube.com/embed/${videoData.videoId}`}
                     title={course.title}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
+                    className="w-full h-full"
                   />
+                </div>
+              ) : videoData.type === 'direct' && videoData.url ? (
+                <div className="aspect-video rounded-lg overflow-hidden shadow-2xl bg-black">
+                  <video
+                    controls
+                    className="w-full h-full"
+                    poster={course.thumbnail_url}
+                  >
+                    <source src={videoData.url} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
                 </div>
               ) : course.thumbnail_url ? (
                 <img
