@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -144,12 +144,17 @@ const PublicCourseDetail = () => {
   }
 
   // Get the first lesson from the first module as the introduction video
-  const firstModule = modules[0];
-  const firstLesson = firstModule && lessons[firstModule.id] && lessons[firstModule.id].length > 0 
-    ? lessons[firstModule.id][0] 
-    : null;
-  const videoUrl = firstLesson?.video_url || course.video_url;
-  const videoId = videoUrl ? getYouTubeVideoId(videoUrl) : null;
+  const videoId = useMemo(() => {
+    if (!course) return null;
+    
+    const firstModule = modules[0];
+    const firstLesson = firstModule && lessons[firstModule.id] && lessons[firstModule.id].length > 0 
+      ? lessons[firstModule.id][0] 
+      : null;
+    const videoUrl = firstLesson?.video_url || course.video_url;
+    
+    return videoUrl ? getYouTubeVideoId(videoUrl) : null;
+  }, [course, modules, lessons]);
 
   return (
     <div className="min-h-screen bg-background">
