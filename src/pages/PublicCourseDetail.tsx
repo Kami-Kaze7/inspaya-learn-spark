@@ -54,6 +54,14 @@ const PublicCourseDetail = () => {
   const [showPhysicalDialog, setShowPhysicalDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
+  // Helper function to extract YouTube video ID
+  const getYouTubeVideoId = (url: string) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  };
+
   // Calculate video ID - must be at top level before any early returns
   const videoId = useMemo(() => {
     if (!course) return null;
@@ -115,12 +123,6 @@ const PublicCourseDetail = () => {
     }
   };
 
-  const getYouTubeVideoId = (url: string) => {
-    if (!url) return null;
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    return match && match[2].length === 11 ? match[2] : null;
-  };
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
