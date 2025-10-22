@@ -26,6 +26,8 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancelled from "./pages/PaymentCancelled";
 import NotFound from "./pages/NotFound";
 import StudentWorks from "./pages/StudentWorks";
+import AdminProjects from "./pages/admin/Projects";
+import StudentProjects from "./pages/student/Projects";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +49,7 @@ const App = () => (
           <Route path="/student/course/:courseId" element={<StudentCourseDetail />} />
           <Route path="/student/notifications" element={<StudentNotifications />} />
           <Route path="/student/assignments" element={<StudentAssignments />} />
+          <Route path="/student/projects" element={<StudentProjects />} />
           <Route path="/student/messages" element={<StudentMessages />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-cancelled" element={<PaymentCancelled />} />
@@ -58,6 +61,7 @@ const App = () => (
           <Route path="/admin/announcements" element={<Announcements />} />
           <Route path="/admin/messages" element={<Messages />} />
           <Route path="/admin/assignments" element={<Assignments />} />
+          <Route path="/admin/projects" element={<AdminProjects />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

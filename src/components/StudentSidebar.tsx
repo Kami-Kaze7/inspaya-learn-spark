@@ -9,6 +9,7 @@ import {
   ClipboardList,
   MessageSquare,
   LogOut,
+  FolderKanban,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +25,7 @@ const menuItems = [
   { icon: List, label: "Take a course", path: "/student/enroll" },
   { icon: Bell, label: "Notifications", path: "/student/notifications" },
   { icon: ClipboardList, label: "Assignments", path: "/student/assignments" },
+  { icon: FolderKanban, label: "Projects", path: "/student/projects" },
   { icon: MessageSquare, label: "Messages", path: "/student/messages" },
 ];
 

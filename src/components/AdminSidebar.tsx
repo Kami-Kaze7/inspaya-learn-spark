@@ -33,6 +33,7 @@ const menuItems = [
   { title: "Announcements", url: "/admin/announcements", icon: Megaphone },
   { title: "Messages", url: "/admin/messages", icon: MessageSquare },
   { title: "Assignments", url: "/admin/assignments", icon: ClipboardList },
+  { title: "Projects", url: "/admin/projects", icon: ClipboardList },
 ];
 
 export function AdminSidebar() {
