@@ -145,9 +145,11 @@ const PublicCourseDetail = () => {
 
   // Get the first lesson from the first module as the introduction video
   const firstModule = modules[0];
-  const firstLesson = firstModule ? lessons[firstModule.id]?.[0] : null;
+  const firstLesson = firstModule && lessons[firstModule.id] && lessons[firstModule.id].length > 0 
+    ? lessons[firstModule.id][0] 
+    : null;
   const videoUrl = firstLesson?.video_url || course.video_url;
-  const videoId = getYouTubeVideoId(videoUrl);
+  const videoId = videoUrl ? getYouTubeVideoId(videoUrl) : null;
 
   return (
     <div className="min-h-screen bg-background">
