@@ -30,7 +30,42 @@ serve(async (req) => {
       throw new Error("Missing required fields");
     }
 
-    // Create payment record
+    let finalAmount = amount;
+    let finalCurrency = currency || "NGN";
+    let exchangeRate = 1;
+    let originalAmount = amount;
+    let originalCurrency = currency;
+
+    // If payment is in USD, convert to NGN using real-time exchange rate
+    if (currency === "USD") {
+      console.log("Converting USD to NGN for Paystack payment");
+      
+      try {
+        // Fetch real-time exchange rate from exchangerate-api.com (free, no API key needed)
+        const exchangeResponse = await fetch("https://api.exchangerate-api.com/v4/latest/USD");
+        const exchangeData = await exchangeResponse.json();
+        
+        if (exchangeData && exchangeData.rates && exchangeData.rates.NGN) {
+          exchangeRate = exchangeData.rates.NGN;
+          finalAmount = amount * exchangeRate;
+          finalCurrency = "NGN";
+          
+          console.log(`Exchange rate: 1 USD = ${exchangeRate} NGN`);
+          console.log(`Converted ${amount} USD to ${finalAmount} NGN`);
+        } else {
+          throw new Error("Failed to fetch exchange rate");
+        }
+      } catch (exchangeError) {
+        console.error("Exchange rate fetch error:", exchangeError);
+        // Fallback to a default rate if API fails (you can update this periodically)
+        exchangeRate = 1650; // Fallback rate
+        finalAmount = amount * exchangeRate;
+        finalCurrency = "NGN";
+        console.log(`Using fallback rate: ${exchangeRate} NGN per USD`);
+      }
+    }
+
+    // Create payment record with converted amount
     const { data: payment, error: paymentError } = await supabaseClient
       .from("payments")
       .insert({
@@ -45,8 +80,8 @@ serve(async (req) => {
         country: personalInfo.country,
         postal_code: personalInfo.postalCode,
         payment_method: "paystack",
-        amount,
-        currency: currency || "NGN",
+        amount: finalAmount,
+        currency: finalCurrency,
         status: "pending"
       })
       .select()
@@ -63,8 +98,8 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         email: personalInfo.email,
-        amount: Math.round(amount * 100), // Paystack expects amount in kobo (NGN) or cents
-        currency: currency || "NGN",
+        amount: Math.round(finalAmount * 100), // Paystack expects amount in kobo
+        currency: finalCurrency,
         reference: `PAY-${payment.id}`,
         callback_url: `${req.headers.get("origin")}/payment-success?payment_id=${payment.id}`,
         metadata: {
@@ -73,6 +108,9 @@ serve(async (req) => {
           student_id: user.id,
           full_name: personalInfo.fullName,
           phone: personalInfo.phone,
+          original_amount: originalAmount,
+          original_currency: originalCurrency,
+          exchange_rate: exchangeRate,
         },
       }),
     });
@@ -98,6 +136,11 @@ serve(async (req) => {
         paymentId: payment.id,
         reference: paystackData.data.reference,
         accessCode: paystackData.data.access_code,
+        convertedAmount: finalAmount,
+        convertedCurrency: finalCurrency,
+        exchangeRate: exchangeRate,
+        originalAmount: originalAmount,
+        originalCurrency: originalCurrency,
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },

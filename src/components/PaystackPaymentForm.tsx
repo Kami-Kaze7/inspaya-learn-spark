@@ -38,6 +38,8 @@ export function PaystackPaymentForm({
   const [isLoading, setIsLoading] = useState(true);
   const [paymentData, setPaymentData] = useState<any>(null);
   const [paystackKey, setPaystackKey] = useState<string>("");
+  const [convertedAmount, setConvertedAmount] = useState<number>(amount);
+  const [exchangeRate, setExchangeRate] = useState<number>(1);
 
   useEffect(() => {
     // Load Paystack script and get public key
@@ -81,6 +83,12 @@ export function PaystackPaymentForm({
         if (error) throw error;
 
         setPaymentData(data);
+        
+        // Set converted amount and exchange rate if available
+        if (data.convertedAmount) {
+          setConvertedAmount(data.convertedAmount);
+          setExchangeRate(data.exchangeRate);
+        }
       } catch (error: any) {
         console.error("Error initializing payment:", error);
         toast.error(error.message || "Failed to initialize payment");
@@ -102,8 +110,8 @@ export function PaystackPaymentForm({
     const handler = window.PaystackPop.setup({
       key: paystackKey,
       email: personalInfo.email,
-      amount: Math.round(amount * 100),
-      currency: currency,
+      amount: Math.round(convertedAmount * 100),
+      currency: paymentData.convertedCurrency || currency,
       ref: paymentData.reference,
       callback: function(response: any) {
         toast.success("Payment successful!");
@@ -129,9 +137,23 @@ export function PaystackPaymentForm({
     <div className="space-y-6">
       <div className="bg-muted p-4 rounded-lg">
         <p className="text-sm text-muted-foreground mb-2">Payment Details</p>
-        <p className="text-2xl font-bold">
-          {currency} {amount.toFixed(2)}
-        </p>
+        {currency === "USD" && exchangeRate > 1 ? (
+          <>
+            <p className="text-lg font-semibold text-muted-foreground">
+              ${amount.toFixed(2)} USD
+            </p>
+            <p className="text-2xl font-bold text-primary">
+              ₦{convertedAmount.toFixed(2)} NGN
+            </p>
+            <p className="text-xs text-muted-foreground mt-2">
+              Exchange rate: $1 = ₦{exchangeRate.toFixed(2)}
+            </p>
+          </>
+        ) : (
+          <p className="text-2xl font-bold">
+            {currency} {amount.toFixed(2)}
+          </p>
+        )}
       </div>
 
       <div className="flex gap-4">
