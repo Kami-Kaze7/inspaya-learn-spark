@@ -79,7 +79,7 @@ export default function Projects() {
 
     // Get projects for enrolled courses
     const { data, error } = await supabase
-      .from("projects")
+      .from("projects" as any)
       .select(`
         *,
         courses (
@@ -125,7 +125,7 @@ export default function Projects() {
       return;
     }
 
-    const { error } = await supabase.from("project_submissions").insert({
+    const { error } = await supabase.from("project_submissions" as any).insert({
       project_id: selectedProject,
       student_id: session.user.id,
       submission_type: submissionType,

@@ -58,7 +58,37 @@ export const AuthModal = ({ isOpen, onClose, defaultTab = "signin" }: AuthModalP
             if (instructorRole) {
               navigate("/instructor");
             } else {
-              // Check for pending enrollment
+              // Check for pending physical enrollment
+              const pendingEnrollmentStr = localStorage.getItem("pending_enrollment");
+              if (pendingEnrollmentStr) {
+                try {
+                  const pendingEnrollment = JSON.parse(pendingEnrollmentStr);
+                  if (pendingEnrollment.enrollmentType === "physical" && pendingEnrollment.courseId) {
+                    // Create pending enrollment
+                    const { error } = await supabase
+                      .from("enrollments")
+                      .insert({
+                        student_id: session.user.id,
+                        course_id: pendingEnrollment.courseId,
+                        status: "pending",
+                        payment_verified: false
+                      });
+
+                    localStorage.removeItem("pending_enrollment");
+
+                    if (!error) {
+                      toast.success("Enrollment request submitted! Awaiting admin approval.");
+                      navigate(`/student/course/${pendingEnrollment.courseId}`);
+                      return;
+                    }
+                  }
+                } catch (err) {
+                  console.error("Failed to process pending enrollment:", err);
+                  localStorage.removeItem("pending_enrollment");
+                }
+              }
+
+              // Check for pending online enrollment
               const pendingCourseId = enrollmentIntent.get();
               if (pendingCourseId) {
                 navigate(`/student/course/${pendingCourseId}`);

@@ -73,6 +73,7 @@ const CourseDetail = () => {
   const [course, setCourse] = useState<Course | null>(null);
   const [modules, setModules] = useState<Module[]>([]);
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [enrollmentStatus, setEnrollmentStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
@@ -206,12 +207,13 @@ const CourseDetail = () => {
 
     const { data } = await supabase
       .from("enrollments")
-      .select("id")
+      .select("id, status, payment_verified")
       .eq("student_id", user.id)
       .eq("course_id", courseId)
       .maybeSingle();
 
     setIsEnrolled(!!data);
+    setEnrollmentStatus(data?.status || null);
   };
 
   const handleEnroll = async () => {
@@ -252,6 +254,16 @@ const CourseDetail = () => {
   };
 
   const handleLessonClick = async (lesson: Lesson) => {
+    // If enrollment is pending, only allow access to free lessons
+    if (enrollmentStatus === "pending" && !lesson.is_free) {
+      toast({
+        title: "Pending Approval",
+        description: "Your enrollment is awaiting admin approval. You can only access free lessons for now.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!lesson.is_free && !isEnrolled) {
       toast({
         title: "Locked",
@@ -435,8 +447,16 @@ const CourseDetail = () => {
                       <Button onClick={handleEnroll}>Enroll Now</Button>
                     )}
                   </div>
-                )}
-                {isEnrolled && (
+                 )}
+                 {enrollmentStatus === "pending" && (
+                   <div className="mt-6 rounded-lg border border-orange-500 bg-orange-500/10 p-4">
+                     <p className="font-semibold text-orange-600">⏳ Enrollment Pending</p>
+                     <p className="text-sm text-muted-foreground mt-1">
+                       Your enrollment is awaiting admin approval. You can access free lessons only.
+                     </p>
+                   </div>
+                 )}
+                 {isEnrolled && enrollmentStatus === "active" && (
                   <div className="mt-6 rounded-lg border border-green-500 bg-green-500/10 p-4 text-center">
                     <p className="font-semibold text-green-600">✓ Enrolled</p>
                   </div>
@@ -467,11 +487,11 @@ const CourseDetail = () => {
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
-                        <div className="space-y-2">
-                          {module.lessons.map((lesson) => {
-                            const canAccess = lesson.is_free || isEnrolled;
-                            const isActive = selectedLesson?.id === lesson.id;
-                            return (
+                         <div className="space-y-2">
+                           {module.lessons.map((lesson) => {
+                             const canAccess = lesson.is_free || (isEnrolled && enrollmentStatus === "active");
+                             const isActive = selectedLesson?.id === lesson.id;
+                             return (
                               <button
                                 key={lesson.id}
                                 onClick={() => handleLessonClick(lesson)}

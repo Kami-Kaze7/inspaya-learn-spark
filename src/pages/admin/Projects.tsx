@@ -74,7 +74,7 @@ export default function Projects() {
   const fetchProjects = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from("projects")
+      .from("projects" as any)
       .select(`
         *,
         courses (
@@ -115,7 +115,7 @@ export default function Projects() {
       return;
     }
 
-    const { error } = await supabase.from("projects").insert({
+    const { error } = await supabase.from("projects" as any).insert({
       course_id: formData.course_id,
       title: formData.title,
       description: formData.description || null,
@@ -136,7 +136,7 @@ export default function Projects() {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this project?")) return;
 
-    const { error } = await supabase.from("projects").delete().eq("id", id);
+    const { error } = await supabase.from("projects" as any).delete().eq("id", id);
 
     if (error) {
       toast.error("Failed to delete project");

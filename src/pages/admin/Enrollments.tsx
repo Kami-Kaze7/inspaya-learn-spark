@@ -97,6 +97,7 @@ export default function Enrollments() {
       const active = enrichedData.filter(e => e.status === "active").length;
       const completed = enrichedData.filter(e => e.status === "completed").length;
       const pending = enrichedData.filter(e => e.status === "pending").length;
+      const dropped = enrichedData.filter(e => e.status === "dropped").length;
       
       setStats({
         total: enrichedData.length,
@@ -132,7 +133,7 @@ export default function Enrollments() {
     try {
       const { error } = await supabase
         .from("enrollments")
-        .delete()
+        .update({ status: "dropped" })
         .eq("id", enrollmentId);
 
       if (error) throw error;
@@ -140,6 +141,24 @@ export default function Enrollments() {
       fetchEnrollments();
     } catch (error: any) {
       toast.error("Failed to reject enrollment");
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (enrollmentId: string) => {
+    if (!confirm("Are you sure you want to delete this enrollment?")) return;
+
+    try {
+      const { error } = await supabase
+        .from("enrollments")
+        .delete()
+        .eq("id", enrollmentId);
+
+      if (error) throw error;
+      toast.success("Enrollment deleted!");
+      fetchEnrollments();
+    } catch (error: any) {
+      toast.error("Failed to delete enrollment");
       console.error(error);
     }
   };
@@ -299,30 +318,46 @@ export default function Enrollments() {
                         </TableCell>
                         <TableCell>${enrollment.course?.price?.toFixed(2) || "0.00"}</TableCell>
                         <TableCell>{new Date(enrollment.enrolled_at).toLocaleDateString()}</TableCell>
-                        <TableCell className="text-right">
-                          {enrollment.status === "pending" ? (
-                            <div className="flex gap-2 justify-end">
-                              <Button 
-                                size="sm" 
-                                onClick={() => handleApprove(enrollment.id)}
-                                className="bg-green-600 hover:bg-green-700"
-                              >
-                                Approve
-                              </Button>
-                              <Button 
-                                size="sm" 
-                                variant="destructive"
-                                onClick={() => handleReject(enrollment.id)}
-                              >
-                                Reject
-                              </Button>
-                            </div>
-                          ) : (
-                            <Badge variant="outline">
-                              {enrollment.payment_verified ? "Verified" : "Unverified"}
-                            </Badge>
-                          )}
-                        </TableCell>
+                         <TableCell className="text-right">
+                           {enrollment.status === "pending" ? (
+                             <div className="flex gap-2 justify-end">
+                               <Button 
+                                 size="sm" 
+                                 onClick={() => handleApprove(enrollment.id)}
+                                 className="bg-green-600 hover:bg-green-700"
+                               >
+                                 Approve
+                               </Button>
+                               <Button 
+                                 size="sm" 
+                                 variant="destructive"
+                                 onClick={() => handleReject(enrollment.id)}
+                               >
+                                 Reject
+                               </Button>
+                               <Button 
+                                 size="sm" 
+                                 variant="outline"
+                                 onClick={() => handleDelete(enrollment.id)}
+                               >
+                                 Delete
+                               </Button>
+                             </div>
+                           ) : (
+                             <div className="flex gap-2 justify-end items-center">
+                               <Badge variant="outline">
+                                 {enrollment.payment_verified ? "Verified" : "Unverified"}
+                               </Badge>
+                               <Button 
+                                 size="sm" 
+                                 variant="outline"
+                                 onClick={() => handleDelete(enrollment.id)}
+                               >
+                                 Delete
+                               </Button>
+                             </div>
+                           )}
+                         </TableCell>
                       </TableRow>
                     ))
                   )}
