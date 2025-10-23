@@ -337,59 +337,58 @@ const Landing = () => {
             <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
               {courses.map((course) => (
                 <div key={course.id} className="flex-shrink-0 w-[350px] snap-start">
-                  <Card className="group h-full overflow-hidden transition-all hover:shadow-xl border-2">
-                    <div className="relative aspect-[4/3] overflow-hidden">
-                      {course.thumbnail_url && (
-                        <img 
-                          src={course.thumbnail_url} 
-                          alt={course.title}
-                          className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                        />
-                      )}
-                      <div className="absolute top-3 left-3 flex gap-2">
-                        {course.category && (
-                          <span className="px-3 py-1 text-xs font-semibold rounded bg-red-600 text-white">
-                            {course.category}
-                          </span>
+                  <Link to={`/course/${course.id}`} className="block h-full">
+                    <Card className="group h-full overflow-hidden transition-all hover:shadow-xl border-2 cursor-pointer">
+                      <div className="relative aspect-[4/3] overflow-hidden">
+                        {course.thumbnail_url && (
+                          <img 
+                            src={course.thumbnail_url} 
+                            alt={course.title}
+                            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                          />
                         )}
-                        {course.difficulty && (
-                          <span className="px-3 py-1 text-xs font-semibold rounded bg-background/90">
-                            {course.difficulty}
-                          </span>
-                        )}
+                        <div className="absolute top-3 left-3 flex gap-2">
+                          {course.category && (
+                            <span className="px-3 py-1 text-xs font-semibold rounded bg-red-600 text-white">
+                              {course.category}
+                            </span>
+                          )}
+                          {course.difficulty && (
+                            <span className="px-3 py-1 text-xs font-semibold rounded bg-background/90">
+                              {course.difficulty}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    
-                    <CardHeader className="space-y-2">
-                      <CardTitle className="text-xl font-bold line-clamp-2">
-                        {course.title}
-                      </CardTitle>
-                      <p className="text-sm text-muted-foreground">by Inspaya Team</p>
                       
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground pt-2">
-                        <div className="flex items-center gap-1">
-                          <span className="text-yellow-500">★</span>
-                          <span className="font-medium">4.8</span>
+                      <CardHeader className="space-y-2">
+                        <CardTitle className="text-xl font-bold line-clamp-2">
+                          {course.title}
+                        </CardTitle>
+                        <p className="text-sm text-muted-foreground">by Inspaya Team</p>
+                        
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground pt-2">
+                          <div className="flex items-center gap-1">
+                            <span className="text-yellow-500">★</span>
+                            <span className="font-medium">4.8</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Users className="h-4 w-4" />
+                            <span>12,350</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span>Multiple</span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Users className="h-4 w-4" />
-                          <span>12,350</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <span>Multiple</span>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent>
-                      <Link to={`/course/${course.id}`}>
-                        <Button className="w-full group-hover:bg-green-600 transition-colors bg-green-600 hover:bg-green-700 text-white">
+                      </CardHeader>
+                      
+                      <CardContent>
+                        <Button size="lg" className="w-full bg-red-600 hover:bg-red-700 text-white">
                           Browse
-                          <span className="ml-2">→</span>
                         </Button>
-                      </Link>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 </div>
               ))}
             </div>
