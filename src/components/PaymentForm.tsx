@@ -87,7 +87,7 @@ export function PaymentForm({ courseId, amount, currency = "USD", onSuccess }: P
         <PaystackPaymentForm
           courseId={courseId}
           amount={amount}
-          currency={currency === "USD" ? "NGN" : currency}
+          currency={currency}
           personalInfo={personalInfo}
           onSuccess={onSuccess || (() => {})}
           onCancel={() => setShowPaymentForm(false)}
