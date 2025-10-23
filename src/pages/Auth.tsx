@@ -19,6 +19,11 @@ const Auth = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userRole, setUserRole] = useState<"student" | "instructor">("student");
+  
+  // Check for pending physical enrollment and set default tab
+  const pendingEnrollmentStr = localStorage.getItem("pending_enrollment");
+  const hasPendingPhysical = pendingEnrollmentStr ? JSON.parse(pendingEnrollmentStr).enrollmentType === "physical" : false;
+  const [defaultTab] = useState(hasPendingPhysical ? "signup" : "signin");
 
   useEffect(() => {
     // Check if user is already logged in
@@ -46,7 +51,43 @@ const Auth = () => {
           if (instructorRole) {
             navigate("/instructor");
           } else {
-            navigate("/student");
+            // Check for pending physical enrollment
+            const pendingEnrollmentStr = localStorage.getItem("pending_enrollment");
+            if (pendingEnrollmentStr) {
+              try {
+                const pendingEnrollment = JSON.parse(pendingEnrollmentStr);
+                if (pendingEnrollment.enrollmentType === "physical" && pendingEnrollment.courseId) {
+                  // Create pending enrollment
+                  const { error } = await supabase
+                    .from("enrollments")
+                    .insert({
+                      student_id: session.user.id,
+                      course_id: pendingEnrollment.courseId,
+                      status: "pending",
+                      payment_verified: false
+                    });
+
+                  localStorage.removeItem("pending_enrollment");
+
+                  if (!error) {
+                    toast.success("Enrollment request submitted! Awaiting admin approval.");
+                    navigate(`/student/course/${pendingEnrollment.courseId}`);
+                    return;
+                  }
+                }
+              } catch (err) {
+                console.error("Failed to process pending enrollment:", err);
+                localStorage.removeItem("pending_enrollment");
+              }
+            }
+
+            // Check for pending online enrollment
+            const pendingCourseId = enrollmentIntent.get();
+            if (pendingCourseId) {
+              navigate(`/student/course/${pendingCourseId}`);
+            } else {
+              navigate("/student");
+            }
           }
         }
       }
@@ -77,7 +118,37 @@ const Auth = () => {
             if (instructorRole) {
               navigate("/instructor");
             } else {
-              // Check for pending enrollment
+              // Check for pending physical enrollment
+              const pendingEnrollmentStr = localStorage.getItem("pending_enrollment");
+              if (pendingEnrollmentStr) {
+                try {
+                  const pendingEnrollment = JSON.parse(pendingEnrollmentStr);
+                  if (pendingEnrollment.enrollmentType === "physical" && pendingEnrollment.courseId) {
+                    // Create pending enrollment
+                    const { error } = await supabase
+                      .from("enrollments")
+                      .insert({
+                        student_id: session.user.id,
+                        course_id: pendingEnrollment.courseId,
+                        status: "pending",
+                        payment_verified: false
+                      });
+
+                    localStorage.removeItem("pending_enrollment");
+
+                    if (!error) {
+                      toast.success("Enrollment request submitted! Awaiting admin approval.");
+                      navigate(`/student/course/${pendingEnrollment.courseId}`);
+                      return;
+                    }
+                  }
+                } catch (err) {
+                  console.error("Failed to process pending enrollment:", err);
+                  localStorage.removeItem("pending_enrollment");
+                }
+              }
+
+              // Check for pending online enrollment
               const pendingCourseId = enrollmentIntent.get();
               if (pendingCourseId) {
                 navigate(`/student/course/${pendingCourseId}`);
@@ -152,7 +223,7 @@ const Auth = () => {
           <CardDescription>Sign in to continue your learning journey</CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="signin" className="w-full">
+          <Tabs defaultValue={defaultTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="signin">Sign In</TabsTrigger>
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
