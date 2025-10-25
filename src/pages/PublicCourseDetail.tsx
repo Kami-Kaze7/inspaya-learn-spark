@@ -212,7 +212,6 @@ const PublicCourseDetail = () => {
               <div className="flex flex-wrap gap-4 mb-6">
                 {course.price !== null && (
                   <div className="flex items-center gap-2">
-                    <DollarSign className="h-5 w-5 text-primary" />
                     <span className="text-2xl font-bold">${course.price}</span>
                   </div>
                 )}
