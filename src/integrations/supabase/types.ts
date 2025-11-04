@@ -173,41 +173,29 @@ export type Database = {
       }
       certificate_requests: {
         Row: {
-          approved_at: string | null
-          approved_by: string | null
+          awarded_at: string | null
           course_id: string
           created_at: string | null
           enrollment_id: string
           id: string
-          rejection_reason: string | null
-          requested_at: string | null
-          status: Database["public"]["Enums"]["certificate_status"] | null
           student_id: string
           updated_at: string | null
         }
         Insert: {
-          approved_at?: string | null
-          approved_by?: string | null
+          awarded_at?: string | null
           course_id: string
           created_at?: string | null
           enrollment_id: string
           id?: string
-          rejection_reason?: string | null
-          requested_at?: string | null
-          status?: Database["public"]["Enums"]["certificate_status"] | null
           student_id: string
           updated_at?: string | null
         }
         Update: {
-          approved_at?: string | null
-          approved_by?: string | null
+          awarded_at?: string | null
           course_id?: string
           created_at?: string | null
           enrollment_id?: string
           id?: string
-          rejection_reason?: string | null
-          requested_at?: string | null
-          status?: Database["public"]["Enums"]["certificate_status"] | null
           student_id?: string
           updated_at?: string | null
         }
@@ -771,7 +759,6 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "student" | "instructor"
-      certificate_status: "pending" | "approved" | "rejected"
       course_status: "draft" | "published" | "archived"
       enrollment_status: "active" | "completed" | "dropped" | "pending"
     }
@@ -902,7 +889,6 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "student", "instructor"],
-      certificate_status: ["pending", "approved", "rejected"],
       course_status: ["draft", "published", "archived"],
       enrollment_status: ["active", "completed", "dropped", "pending"],
     },

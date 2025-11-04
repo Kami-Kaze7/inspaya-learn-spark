@@ -1,75 +1,78 @@
 import { useState, useEffect } from "react";
-import { StudentHeader } from "@/components/StudentHeader";
-import { StudentSidebar } from "@/components/StudentSidebar";
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Award, Download, Clock, CheckCircle, XCircle } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Award, Download } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { StudentSidebar } from "@/components/StudentSidebar";
+import { StudentHeader } from "@/components/StudentHeader";
 
 interface CompletedCourse {
   id: string;
-  enrollment_id: string;
-  course: {
-    id: string;
-    title: string;
-    thumbnail_url: string | null;
-  };
+  title: string;
+  thumbnail_url: string | null;
   completed_at: string;
+  enrollment_id: string;
   certificate_request?: {
     id: string;
-    status: string;
-    rejection_reason: string | null;
+    awarded_at: string;
   };
-  certificate_url?: string;
+  certificate_image?: {
+    certificate_image_url: string;
+  };
 }
 
 const Certificates = () => {
   const [completedCourses, setCompletedCourses] = useState<CompletedCourse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [requesting, setRequesting] = useState<string | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchCompletedCourses();
-
-    const channel = supabase
-      .channel('certificate-updates')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'certificate_requests'
-      }, () => {
-        fetchCompletedCourses();
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    fetchCurrentUser();
   }, []);
 
+  useEffect(() => {
+    if (currentUserId) {
+      fetchCompletedCourses();
+
+      const channel = supabase
+        .channel('certificate-requests-student')
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'certificate_requests'
+        }, () => {
+          fetchCompletedCourses();
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+  }, [currentUserId]);
+
+  const fetchCurrentUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    setCurrentUserId(user?.id || null);
+  };
+
   const fetchCompletedCourses = async () => {
+    if (!currentUserId) return;
+
     setLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data: enrollments, error: enrollmentError } = await supabase
+      // Fetch completed enrollments
+      const { data: enrollments, error: enrollError } = await supabase
         .from('enrollments')
-        .select(`
-          id,
-          course_id,
-          completed_at,
-          progress,
-          courses(id, title, thumbnail_url)
-        `)
-        .eq('student_id', user.id)
-        .eq('progress', 100)
-        .not('completed_at', 'is', null);
+        .select('id, course_id, completed_at, progress')
+        .eq('student_id', currentUserId)
+        .eq('progress', 100);
 
-      if (enrollmentError) throw enrollmentError;
+      if (enrollError) throw enrollError;
 
       if (!enrollments || enrollments.length === 0) {
         setCompletedCourses([]);
@@ -77,36 +80,68 @@ const Certificates = () => {
         return;
       }
 
+      // Fetch course details
+      const courseIds = enrollments.map(e => e.course_id);
+      const { data: courses, error: courseError } = await supabase
+        .from('courses')
+        .select('id, title, thumbnail_url')
+        .in('id', courseIds);
+
+      if (courseError) throw courseError;
+
+      // Fetch certificate requests
       const enrollmentIds = enrollments.map(e => e.id);
-      const { data: requests } = await supabase
+      const { data: certRequests, error: certError } = await supabase
         .from('certificate_requests')
-        .select('*')
+        .select('id, enrollment_id, awarded_at')
         .in('enrollment_id', enrollmentIds);
 
-      const { data: certificates } = await supabase
-        .from('course_certificates')
-        .select('*')
-        .in('course_id', enrollments.map(e => e.course_id));
+      if (certError) throw certError;
 
-      const coursesWithCertificates = enrollments.map(enrollment => {
-        const request = requests?.find(r => r.enrollment_id === enrollment.id);
-        const certificate = certificates?.find(c => c.course_id === enrollment.course_id);
+      // Fetch course certificates (images)
+      const { data: courseCerts, error: courseCertError } = await supabase
+        .from('course_certificates')
+        .select('course_id, certificate_image_url')
+        .in('course_id', courseIds);
+
+      if (courseCertError) throw courseCertError;
+
+      // Combine data
+      const combined = enrollments.map(enrollment => {
+        const course = courses?.find(c => c.id === enrollment.course_id);
+        const certRequest = certRequests?.find(cr => cr.enrollment_id === enrollment.id);
+        const courseCert = courseCerts?.find(cc => cc.course_id === enrollment.course_id);
 
         return {
-          id: enrollment.course_id,
+          id: course?.id || '',
+          title: course?.title || 'Unknown Course',
+          thumbnail_url: course?.thumbnail_url || null,
+          completed_at: enrollment.completed_at || new Date().toISOString(),
           enrollment_id: enrollment.id,
-          course: enrollment.courses as any,
-          completed_at: enrollment.completed_at,
-          certificate_request: request ? {
-            id: request.id,
-            status: request.status,
-            rejection_reason: request.rejection_reason
+          certificate_request: certRequest ? {
+            id: certRequest.id,
+            awarded_at: certRequest.awarded_at
           } : undefined,
-          certificate_url: certificate?.certificate_image_url
+          certificate_image: courseCert ? {
+            certificate_image_url: courseCert.certificate_image_url
+          } : undefined
         };
       });
 
-      setCompletedCourses(coursesWithCertificates);
+      // Auto-award certificates for completed courses without certificate_request
+      for (const course of combined) {
+        if (!course.certificate_request && course.certificate_image) {
+          await awardCertificate(course.enrollment_id, course.id);
+        }
+      }
+
+      // Refetch after auto-awarding
+      if (combined.some(c => !c.certificate_request && c.certificate_image)) {
+        await fetchCompletedCourses();
+        return;
+      }
+
+      setCompletedCourses(combined);
     } catch (error) {
       console.error('Error fetching completed courses:', error);
       toast.error("Failed to load certificates");
@@ -115,192 +150,106 @@ const Certificates = () => {
     }
   };
 
-  const requestCertificate = async (courseId: string, enrollmentId: string) => {
-    setRequesting(courseId);
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+  const awardCertificate = async (enrollmentId: string, courseId: string) => {
+    if (!currentUserId) return;
 
+    try {
       const { error } = await supabase
         .from('certificate_requests')
         .insert({
-          student_id: user.id,
+          student_id: currentUserId,
           course_id: courseId,
-          enrollment_id: enrollmentId,
-          status: 'pending'
+          enrollment_id: enrollmentId
         });
 
       if (error) throw error;
-
-      toast.success("Certificate request submitted! Admin will review it shortly.");
-      fetchCompletedCourses();
     } catch (error) {
-      console.error('Error requesting certificate:', error);
-      toast.error("Failed to request certificate");
-    } finally {
-      setRequesting(null);
+      console.error('Error awarding certificate:', error);
     }
   };
 
   const downloadCertificate = (certificateUrl: string, courseName: string) => {
     window.open(certificateUrl, '_blank');
-    toast.success("Opening certificate...");
-  };
-
-  const getStatusBadge = (course: CompletedCourse) => {
-    if (!course.certificate_request) {
-      return <Badge variant="secondary">Eligible</Badge>;
-    }
-
-    switch (course.certificate_request.status) {
-      case 'pending':
-        return (
-          <Badge className="bg-yellow-500">
-            <Clock className="h-3 w-3 mr-1" />
-            Pending Approval
-          </Badge>
-        );
-      case 'approved':
-        return (
-          <Badge className="bg-green-500">
-            <CheckCircle className="h-3 w-3 mr-1" />
-            Approved
-          </Badge>
-        );
-      case 'rejected':
-        return (
-          <Badge variant="destructive">
-            <XCircle className="h-3 w-3 mr-1" />
-            Rejected
-          </Badge>
-        );
-      default:
-        return null;
-    }
-  };
-
-  const renderActionButton = (course: CompletedCourse) => {
-    if (!course.certificate_url) {
-      return (
-        <div className="text-center text-sm text-muted-foreground mt-4">
-          Certificate template not yet uploaded by admin
-        </div>
-      );
-    }
-
-    if (!course.certificate_request) {
-      return (
-        <Button
-          className="w-full"
-          onClick={() => requestCertificate(course.id, course.enrollment_id)}
-          disabled={requesting === course.id}
-        >
-          <Award className="h-4 w-4 mr-2" />
-          {requesting === course.id ? "Requesting..." : "Request Certificate"}
-        </Button>
-      );
-    }
-
-    switch (course.certificate_request.status) {
-      case 'pending':
-        return (
-          <Button className="w-full" disabled>
-            <Clock className="h-4 w-4 mr-2" />
-            Awaiting Admin Approval
-          </Button>
-        );
-      case 'approved':
-        return (
-          <Button
-            className="w-full"
-            onClick={() => downloadCertificate(course.certificate_url!, course.course.title)}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Download Certificate
-          </Button>
-        );
-      case 'rejected':
-        return (
-          <div className="space-y-2">
-            <p className="text-sm text-destructive">
-              Reason: {course.certificate_request.rejection_reason}
-            </p>
-            <Button
-              className="w-full"
-              variant="outline"
-              onClick={() => requestCertificate(course.id, course.enrollment_id)}
-              disabled={requesting === course.id}
-            >
-              Request Again
-            </Button>
-          </div>
-        );
-      default:
-        return null;
-    }
+    toast.success("Certificate opened!");
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <StudentHeader />
-      <StudentSidebar />
-      <main className="ml-64 mt-[73px] p-8">
-        <div className="mb-6">
-          <h1 className="mb-2 text-3xl font-bold text-primary">My Certificates</h1>
-          <p className="text-muted-foreground">
-            View and download certificates for completed courses
-          </p>
-        </div>
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full">
+        <StudentSidebar />
+        <div className="flex-1 flex flex-col">
+          <StudentHeader />
+          <main className="flex-1 p-8">
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold text-primary">My Certificates</h1>
+              <p className="text-muted-foreground">View and download your earned certificates</p>
+            </div>
 
-        {loading ? (
-          <div className="flex items-center justify-center min-h-[400px]">
-            <p className="text-muted-foreground">Loading certificates...</p>
-          </div>
-        ) : completedCourses.length === 0 ? (
-          <Card>
-            <CardContent className="flex min-h-[400px] flex-col items-center justify-center text-center">
-              <Award className="mb-4 h-16 w-16 text-muted-foreground" />
-              <h3 className="mb-2 text-lg font-semibold">No Certificates Yet</h3>
-              <p className="text-sm text-muted-foreground">
-                Complete courses to earn certificates and showcase your achievements
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {completedCourses.map((course) => (
-              <Card key={course.id} className="overflow-hidden">
-                <div className="relative h-48 bg-muted">
-                  {course.course.thumbnail_url ? (
-                    <img
-                      src={course.course.thumbnail_url}
-                      alt={course.course.title}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center">
-                      <Award className="h-16 w-16 text-muted-foreground" />
-                    </div>
-                  )}
-                  <div className="absolute top-2 right-2">
-                    {getStatusBadge(course)}
-                  </div>
-                </div>
-                <CardHeader>
-                  <CardTitle className="text-lg">{course.course.title}</CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    Completed: {format(new Date(course.completed_at), 'MMM d, yyyy')}
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  {renderActionButton(course)}
+            {loading ? (
+              <p className="text-center text-muted-foreground">Loading...</p>
+            ) : completedCourses.length === 0 ? (
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center py-12">
+                  <Award className="h-16 w-16 text-muted-foreground mb-4" />
+                  <p className="text-xl font-semibold mb-2">No Certificates Yet</p>
+                  <p className="text-muted-foreground">Complete courses to earn certificates!</p>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        )}
-      </main>
-    </div>
+            ) : (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {completedCourses.map((course) => (
+                  <Card key={course.id}>
+                    <CardHeader>
+                      {course.thumbnail_url && (
+                        <img
+                          src={course.thumbnail_url}
+                          alt={course.title}
+                          className="w-full h-32 object-cover rounded-t-lg mb-2"
+                        />
+                      )}
+                      <CardTitle className="text-lg">{course.title}</CardTitle>
+                      <p className="text-sm text-muted-foreground">
+                        Completed: {format(new Date(course.completed_at), 'MMM d, yyyy')}
+                      </p>
+                    </CardHeader>
+                    <CardContent>
+                      {course.certificate_image ? (
+                        course.certificate_request ? (
+                          <div className="space-y-2">
+                            <Badge variant="default" className="w-full justify-center py-2">
+                              <Award className="h-4 w-4 mr-2" />
+                              Certificate Awarded
+                            </Badge>
+                            <Button
+                              className="w-full"
+                              onClick={() => downloadCertificate(
+                                course.certificate_image!.certificate_image_url,
+                                course.title
+                              )}
+                            >
+                              <Download className="h-4 w-4 mr-2" />
+                              Download Certificate
+                            </Button>
+                          </div>
+                        ) : (
+                          <Badge variant="secondary" className="w-full justify-center py-2">
+                            Processing...
+                          </Badge>
+                        )
+                      ) : (
+                        <Badge variant="outline" className="w-full justify-center py-2">
+                          Certificate Not Available
+                        </Badge>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </main>
+        </div>
+      </div>
+    </SidebarProvider>
   );
 };
 

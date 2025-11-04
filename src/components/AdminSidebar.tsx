@@ -24,8 +24,6 @@ import {
 } from "@/components/ui/sidebar";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
-import { useEffect, useState } from "react";
 
 const menuItems = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
@@ -44,35 +42,6 @@ export function AdminSidebar() {
   const { state } = useSidebar();
   const navigate = useNavigate();
   const collapsed = state === "collapsed";
-  const [pendingCertificates, setPendingCertificates] = useState(0);
-
-  useEffect(() => {
-    fetchPendingCertificates();
-
-    const channel = supabase
-      .channel('certificate-requests-admin')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'certificate_requests'
-      }, () => {
-        fetchPendingCertificates();
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-
-  const fetchPendingCertificates = async () => {
-    const { count } = await supabase
-      .from('certificate_requests')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'pending');
-    
-    setPendingCertificates(count || 0);
-  };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -97,9 +66,6 @@ export function AdminSidebar() {
                     <NavLink to={item.url} end className={getNavCls}>
                       <item.icon className="h-4 w-4" />
                       {!collapsed && <span>{item.title}</span>}
-                      {item.title === "Certificates" && pendingCertificates > 0 && (
-                        <Badge className="ml-auto">{pendingCertificates}</Badge>
-                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
