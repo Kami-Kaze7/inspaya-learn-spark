@@ -171,6 +171,95 @@ export type Database = {
           },
         ]
       }
+      certificate_requests: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          course_id: string
+          created_at: string | null
+          enrollment_id: string
+          id: string
+          rejection_reason: string | null
+          requested_at: string | null
+          status: Database["public"]["Enums"]["certificate_status"] | null
+          student_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          course_id: string
+          created_at?: string | null
+          enrollment_id: string
+          id?: string
+          rejection_reason?: string | null
+          requested_at?: string | null
+          status?: Database["public"]["Enums"]["certificate_status"] | null
+          student_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          course_id?: string
+          created_at?: string | null
+          enrollment_id?: string
+          id?: string
+          rejection_reason?: string | null
+          requested_at?: string | null
+          status?: Database["public"]["Enums"]["certificate_status"] | null
+          student_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certificate_requests_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "certificate_requests_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: true
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_certificates: {
+        Row: {
+          certificate_image_url: string
+          course_id: string
+          created_at: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          certificate_image_url: string
+          course_id: string
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          certificate_image_url?: string
+          course_id?: string
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_certificates_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: true
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_lessons: {
         Row: {
           content: string | null
@@ -682,6 +771,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "student" | "instructor"
+      certificate_status: "pending" | "approved" | "rejected"
       course_status: "draft" | "published" | "archived"
       enrollment_status: "active" | "completed" | "dropped" | "pending"
     }
@@ -812,6 +902,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "student", "instructor"],
+      certificate_status: ["pending", "approved", "rejected"],
       course_status: ["draft", "published", "archived"],
       enrollment_status: ["active", "completed", "dropped", "pending"],
     },

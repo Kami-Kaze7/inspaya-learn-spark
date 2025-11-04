@@ -7,7 +7,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Lock, PlayCircle, Clock, BookOpen, FileText } from "lucide-react";
+import { Lock, PlayCircle, Clock, BookOpen, FileText, Award } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { PaymentForm } from "@/components/PaymentForm";
@@ -74,6 +74,7 @@ const CourseDetail = () => {
   const [modules, setModules] = useState<Module[]>([]);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [enrollmentStatus, setEnrollmentStatus] = useState<string | null>(null);
+  const [enrollmentProgress, setEnrollmentProgress] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
@@ -207,13 +208,14 @@ const CourseDetail = () => {
 
     const { data } = await supabase
       .from("enrollments")
-      .select("id, status, payment_verified")
+      .select("id, status, payment_verified, progress")
       .eq("student_id", user.id)
       .eq("course_id", courseId)
       .maybeSingle();
 
     setIsEnrolled(!!data);
     setEnrollmentStatus(data?.status || null);
+    setEnrollmentProgress(data?.progress || 0);
   };
 
   const handleEnroll = async () => {
@@ -327,6 +329,34 @@ const CourseDetail = () => {
         <Button variant="ghost" onClick={() => navigate("/student/enroll")} className="mb-4">
           ← Back to Courses
         </Button>
+
+        {/* Course Completion Banner */}
+        {isEnrolled && enrollmentProgress === 100 && (
+          <Card className="mb-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
+            <CardContent className="py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Award className="h-10 w-10 text-green-500" />
+                  <div>
+                    <h3 className="text-lg font-semibold text-green-700 dark:text-green-400">
+                      🎉 Congratulations! You've completed this course
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      You can now request your certificate
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  onClick={() => navigate("/student/certificates")}
+                  variant="default"
+                >
+                  <Award className="h-4 w-4 mr-2" />
+                  View Certificate
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Video Player Section */}

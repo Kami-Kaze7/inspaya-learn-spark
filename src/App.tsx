@@ -15,6 +15,7 @@ import Enrollments from "./pages/admin/Enrollments";
 import Announcements from "./pages/admin/Announcements";
 import Messages from "./pages/admin/Messages";
 import Assignments from "./pages/admin/Assignments";
+import AdminCertificates from "./pages/admin/Certificates";
 import StudentCourses from "./pages/student/Courses";
 import StudentCertificates from "./pages/student/Certificates";
 import StudentEnroll from "./pages/student/Enroll";
@@ -62,6 +63,7 @@ const App = () => (
           <Route path="/admin/messages" element={<Messages />} />
           <Route path="/admin/assignments" element={<Assignments />} />
           <Route path="/admin/projects" element={<AdminProjects />} />
+          <Route path="/admin/certificates" element={<AdminCertificates />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
