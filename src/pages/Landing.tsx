@@ -316,7 +316,7 @@ const Landing = () => {
       </section>
 
       {/* Featured Courses Section */}
-      <section className="container mx-auto px-4 py-20">
+      <section id="courses-section" className="container mx-auto px-4 py-20">
         <div className="mb-12 text-center">
           <h2 className="mb-4 text-3xl font-bold md:text-4xl text-red-700">Featured Courses</h2>
           <p className="text-base text-muted-foreground max-w-3xl mx-auto">

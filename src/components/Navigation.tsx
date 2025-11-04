@@ -19,6 +19,13 @@ const Navigation = () => {
     setIsAuthModalOpen(true);
   };
 
+  const scrollToCourses = () => {
+    const coursesSection = document.querySelector('#courses-section');
+    if (coursesSection) {
+      coursesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <>
       <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -39,25 +46,17 @@ const Navigation = () => {
                   <ChevronDown className="h-3 w-3" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-background z-50">
-                  <DropdownMenuItem asChild>
-                    <Link to="/" className="cursor-pointer">
-                      All Courses
-                    </Link>
+                  <DropdownMenuItem onClick={scrollToCourses}>
+                    <span className="cursor-pointer">All Courses</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/" className="cursor-pointer">
-                      AI COURSES
-                    </Link>
+                  <DropdownMenuItem onClick={scrollToCourses}>
+                    <span className="cursor-pointer">AI COURSES</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/" className="cursor-pointer">
-                      MOTION GRAPHICS
-                    </Link>
+                  <DropdownMenuItem onClick={scrollToCourses}>
+                    <span className="cursor-pointer">MOTION GRAPHICS</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/" className="cursor-pointer">
-                      VIDEO EDITING
-                    </Link>
+                  <DropdownMenuItem onClick={scrollToCourses}>
+                    <span className="cursor-pointer">VIDEO EDITING</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
