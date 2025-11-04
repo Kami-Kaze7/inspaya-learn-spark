@@ -79,7 +79,7 @@ const PublicCourseDetail = () => {
       ? lessons[firstModule.id][0] 
       : null;
     
-    const videoUrl = firstLesson?.video_url || course.video_url;
+    const videoUrl = course.video_url || firstLesson?.video_url;
     
     if (!videoUrl) {
       return { type: 'none', url: null, videoId: null };
