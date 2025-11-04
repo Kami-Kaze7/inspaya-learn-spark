@@ -638,10 +638,9 @@ const Landing = () => {
             <div>
               <h3 className="font-semibold text-lg mb-4">Categories</h3>
               <ul className="space-y-2 text-white/70">
-                <li><Link to="/courses" className="hover:text-white transition-colors">Web Development</Link></li>
-                <li><Link to="/courses" className="hover:text-white transition-colors">Data Science</Link></li>
-                <li><Link to="/courses" className="hover:text-white transition-colors">Digital Marketing</Link></li>
-                <li><Link to="/courses" className="hover:text-white transition-colors">Design</Link></li>
+                <li><Link to="/courses" className="hover:text-white transition-colors">Video Editing</Link></li>
+                <li><Link to="/courses" className="hover:text-white transition-colors">Motion Graphics</Link></li>
+                <li><Link to="/courses" className="hover:text-white transition-colors">Ai courses</Link></li>
               </ul>
             </div>
 
@@ -649,13 +648,13 @@ const Landing = () => {
             <div>
               <h3 className="font-semibold text-lg mb-4">Contact Us</h3>
               <ul className="space-y-2 text-white/70">
-                <li>support@inspaya.com</li>
+                <li>support@inspaya.net</li>
                 <li>+1 (555) 123-4567</li>
-                <li>San Francisco, CA</li>
+                <li>9b nza street enugu state</li>
               </ul>
               <div className="mt-4">
                 <div className="font-semibold mb-2">Support Hours</div>
-                <div className="text-sm text-white/70">Mon-Fri: 9:00 AM - 6:00 PM PST</div>
+                <div className="text-sm text-white/70">Mon-Fri: 9:00 AM - 5:00 PM PST</div>
               </div>
             </div>
           </div>
