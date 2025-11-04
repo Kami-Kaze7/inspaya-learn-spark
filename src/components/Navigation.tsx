@@ -49,14 +49,20 @@ const Navigation = () => {
                   <DropdownMenuItem onClick={scrollToCourses}>
                     <span className="cursor-pointer">All Courses</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={scrollToCourses}>
-                    <span className="cursor-pointer">AI COURSES</span>
+                  <DropdownMenuItem asChild>
+                    <Link to="/course/baf3b789-4056-4b86-ac15-1dc661efe5a8" className="cursor-pointer">
+                      AI COURSES
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={scrollToCourses}>
-                    <span className="cursor-pointer">MOTION GRAPHICS</span>
+                  <DropdownMenuItem asChild>
+                    <Link to="/course/e1d9d470-84aa-437b-9ad8-ea3dec41eca5" className="cursor-pointer">
+                      MOTION GRAPHICS
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={scrollToCourses}>
-                    <span className="cursor-pointer">VIDEO EDITING</span>
+                  <DropdownMenuItem asChild>
+                    <Link to="/course/64f73d33-3b79-4628-8662-cc3b73a25388" className="cursor-pointer">
+                      VIDEO EDITING
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
