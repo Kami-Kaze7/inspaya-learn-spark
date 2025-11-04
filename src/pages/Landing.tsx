@@ -352,7 +352,7 @@ const Landing = () => {
                           <img 
                             src={course.thumbnail_url} 
                             alt={course.title}
-                            className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105"
+                            className="absolute inset-0 h-full w-full min-w-full min-h-full max-w-none object-cover object-center transition-transform group-hover:scale-105"
                           />
                         )}
                         <div className="absolute top-3 left-3 flex gap-2">

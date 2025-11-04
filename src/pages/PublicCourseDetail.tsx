@@ -281,7 +281,7 @@ const PublicCourseDetail = () => {
                   <img
                     src={course.thumbnail_url}
                     alt={course.title}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full min-w-full min-h-full max-w-none object-cover object-center"
                   />
                 </div>
               ) : null}
