@@ -305,7 +305,7 @@ export const StudentHeader = () => {
     <header className="fixed top-0 z-50 w-full border-b bg-card">
       <div className="flex h-[73px] items-center justify-between px-6">
         {/* Logo */}
-        <Link to="/student" className="flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
             <BookOpen className="h-6 w-6 text-primary-foreground" />
           </div>
