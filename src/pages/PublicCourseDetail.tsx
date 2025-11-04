@@ -252,7 +252,7 @@ const PublicCourseDetail = () => {
             </div>
 
             {/* Video Preview */}
-            <div>
+            <div className="w-full">
               {videoData.type === 'youtube' && videoData.videoId ? (
                 <div className="aspect-video rounded-lg overflow-hidden shadow-2xl">
                   <iframe
