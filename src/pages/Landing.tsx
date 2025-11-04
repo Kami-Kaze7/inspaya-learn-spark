@@ -30,6 +30,7 @@ const Landing = () => {
 
   const fetchCourses = async () => {
     try {
+      console.log("Fetching courses...");
       const { data, error } = await supabase
         .from("courses")
         .select("*")
@@ -37,7 +38,14 @@ const Landing = () => {
         .order("created_at", { ascending: false })
         .limit(6);
 
-      if (error) throw error;
+      console.log("Query result:", { data, error });
+      
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
+      
+      console.log("Courses fetched:", data?.length || 0);
       setCourses(data || []);
     } catch (error) {
       console.error("Error fetching courses:", error);
