@@ -277,11 +277,11 @@ const PublicCourseDetail = () => {
                   </video>
                 </div>
               ) : course.thumbnail_url ? (
-                <div className="aspect-video rounded-lg overflow-hidden shadow-2xl bg-muted">
+                <div className="relative aspect-video rounded-lg overflow-hidden shadow-2xl bg-muted">
                   <img
                     src={course.thumbnail_url}
                     alt={course.title}
-                    className="w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
                 </div>
               ) : null}
