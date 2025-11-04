@@ -525,6 +525,91 @@ export type Database = {
         }
         Relationships: []
       }
+      project_submissions: {
+        Row: {
+          content: string | null
+          feedback: string | null
+          file_url: string | null
+          grade: number | null
+          id: string
+          project_id: string
+          status: string
+          student_id: string
+          submission_type: string
+          submitted_at: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          feedback?: string | null
+          file_url?: string | null
+          grade?: number | null
+          id?: string
+          project_id: string
+          status?: string
+          student_id: string
+          submission_type: string
+          submitted_at?: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          feedback?: string | null
+          file_url?: string | null
+          grade?: number | null
+          id?: string
+          project_id?: string
+          status?: string
+          student_id?: string
+          submission_type?: string
+          submitted_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_submissions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          course_id: string
+          created_at: string
+          description: string | null
+          due_date: string | null
+          id: string
+          title: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          title: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string | null
