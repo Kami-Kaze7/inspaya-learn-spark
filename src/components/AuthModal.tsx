@@ -32,6 +32,9 @@ export const AuthModal = ({ isOpen, onClose, defaultTab = "signin" }: AuthModalP
   }, [defaultTab, isOpen]);
 
   useEffect(() => {
+    // Only set up auth listener when modal is open
+    if (!isOpen) return;
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         onClose();
@@ -102,7 +105,7 @@ export const AuthModal = ({ isOpen, onClose, defaultTab = "signin" }: AuthModalP
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate, onClose]);
+  }, [navigate, onClose, isOpen]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
