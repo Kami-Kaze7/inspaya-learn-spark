@@ -1,22 +1,72 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Search, ShoppingCart, GraduationCap, Award, ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom";
+import { BookOpen, Search, ShoppingCart, GraduationCap, Award, ChevronDown, LayoutDashboard, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthModal } from "./AuthModal";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 const Navigation = () => {
+  const navigate = useNavigate();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [defaultTab, setDefaultTab] = useState<"signin" | "signup">("signin");
+  const [user, setUser] = useState<any>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchUserRole(session.user.id);
+      }
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchUserRole(session.user.id);
+      } else {
+        setUserRole(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchUserRole = async (userId: string) => {
+    const { data } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .maybeSingle();
+    
+    setUserRole(data?.role ?? "student");
+  };
 
   const handleOpenAuth = (tab: "signin" | "signup") => {
     setDefaultTab(tab);
     setIsAuthModalOpen(true);
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    toast.success("Signed out successfully");
+    navigate("/");
+  };
+
+  const getDashboardLink = () => {
+    if (userRole === "admin") return "/admin";
+    if (userRole === "instructor") return "/instructor";
+    return "/student";
   };
 
   const scrollToCourses = () => {
@@ -79,19 +129,46 @@ const Navigation = () => {
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
               </Button>
-              <Button 
-                variant="ghost" 
-                onClick={() => handleOpenAuth("signin")}
-                className="hidden sm:inline-flex"
-              >
-                Sign In
-              </Button>
-              <Button 
-                onClick={() => handleOpenAuth("signup")}
-                className="bg-[hsl(0,75%,55%)] hover:bg-[hsl(0,75%,50%)] text-white"
-              >
-                Sign Up
-              </Button>
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center gap-2">
+                      <LayoutDashboard className="h-4 w-4" />
+                      <span className="hidden sm:inline">My Account</span>
+                      <ChevronDown className="h-3 w-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="bg-background z-50">
+                    <DropdownMenuItem asChild>
+                      <Link to={getDashboardLink()} className="cursor-pointer flex items-center gap-2">
+                        <LayoutDashboard className="h-4 w-4" />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer flex items-center gap-2 text-destructive">
+                      <LogOut className="h-4 w-4" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <>
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => handleOpenAuth("signin")}
+                    className="hidden sm:inline-flex"
+                  >
+                    Sign In
+                  </Button>
+                  <Button 
+                    onClick={() => handleOpenAuth("signup")}
+                    className="bg-[hsl(0,75%,55%)] hover:bg-[hsl(0,75%,50%)] text-white"
+                  >
+                    Sign Up
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
