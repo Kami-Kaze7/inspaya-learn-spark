@@ -31,29 +31,38 @@ const StudentDashboard = () => {
   });
 
   useEffect(() => {
-    checkAuth();
-  }, [navigate]);
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate("/auth");
+      } else {
+        // Get user profile
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("first_name, last_name")
+          .eq("id", session.user.id)
+          .single();
+        
+        if (profile?.first_name) {
+          setUserName(profile.first_name);
+        }
 
-  const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      navigate("/auth");
-    } else {
-      // Get user profile
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("first_name, last_name")
-        .eq("id", session.user.id)
-        .single();
-      
-      if (profile?.first_name) {
-        setUserName(profile.first_name);
+        // Fetch enrollments
+        fetchEnrollments(session.user.id);
       }
+    };
 
-      // Fetch enrollments
-      fetchEnrollments(session.user.id);
-    }
-  };
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        navigate("/");
+      }
+    });
+
+    checkAuth();
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   const fetchEnrollments = async (userId: string) => {
     const { data, error } = await supabase

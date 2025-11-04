@@ -39,7 +39,17 @@ const AdminDashboard = () => {
       // Fetch stats
       fetchStats();
     };
+
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        navigate("/");
+      }
+    });
+
     checkAuth();
+
+    return () => subscription.unsubscribe();
   }, [navigate]);
 
   const fetchStats = async () => {
