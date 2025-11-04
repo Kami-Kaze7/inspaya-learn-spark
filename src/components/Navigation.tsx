@@ -19,6 +19,7 @@ const Navigation = () => {
   const [defaultTab, setDefaultTab] = useState<"signin" | "signup">("signin");
   const [user, setUser] = useState<any>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
     // Check current session
@@ -50,6 +51,17 @@ const Navigation = () => {
       .maybeSingle();
     
     setUserRole(data?.role ?? "student");
+    
+    // Fetch user profile for display name
+    const { data: profileData } = await supabase
+      .from("profiles")
+      .select("first_name, last_name")
+      .eq("id", userId)
+      .maybeSingle();
+    
+    if (profileData?.first_name) {
+      setUserName(profileData.first_name + (profileData.last_name ? ` ${profileData.last_name}` : ""));
+    }
   };
 
   const handleOpenAuth = (tab: "signin" | "signup") => {
@@ -134,7 +146,7 @@ const Navigation = () => {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex items-center gap-2">
                       <LayoutDashboard className="h-4 w-4" />
-                      <span className="hidden sm:inline">My Account</span>
+                      <span className="hidden sm:inline">{userName || user?.email || "My Account"}</span>
                       <ChevronDown className="h-3 w-3" />
                     </Button>
                   </DropdownMenuTrigger>
