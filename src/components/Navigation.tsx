@@ -40,17 +40,22 @@ const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-background z-50">
                   <DropdownMenuItem asChild>
-                    <Link to="/courses/ai" className="cursor-pointer">
+                    <Link to="/" className="cursor-pointer">
+                      All Courses
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/" className="cursor-pointer">
                       AI COURSES
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/courses/motion-graphics" className="cursor-pointer">
+                    <Link to="/" className="cursor-pointer">
                       MOTION GRAPHICS
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/courses/video-editing" className="cursor-pointer">
+                    <Link to="/" className="cursor-pointer">
                       VIDEO EDITING
                     </Link>
                   </DropdownMenuItem>
