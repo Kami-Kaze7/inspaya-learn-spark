@@ -269,8 +269,9 @@ const PublicCourseDetail = () => {
                 <div className="aspect-video rounded-lg overflow-hidden shadow-2xl bg-black">
                   <video
                     controls
-                    className="w-full h-full"
+                    className="w-full h-full object-cover"
                     poster={course.thumbnail_url}
+                    style={{ objectFit: 'cover' }}
                   >
                     <source src={videoData.url} type="video/mp4" />
                     Your browser does not support the video tag.
