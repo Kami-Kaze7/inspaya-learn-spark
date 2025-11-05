@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { BookOpen, Search, Bell, ShoppingCart, User, ClipboardList, Award, MessageSquare, Megaphone } from "lucide-react";
+import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -305,14 +306,12 @@ export const StudentHeader = () => {
     <header className="fixed top-0 z-50 w-full border-b bg-card">
       <div className="flex h-[73px] items-center justify-between px-6">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-            <BookOpen className="h-6 w-6 text-primary-foreground" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-primary">Inspaya</h1>
-            <p className="text-xs text-muted-foreground">Learn Without Limits</p>
-          </div>
+        <Link to="/" className="flex items-center">
+          <img 
+            src={logo} 
+            alt="Inspaya" 
+            className="h-12 object-contain"
+          />
         </Link>
 
         {/* Center Navigation */}

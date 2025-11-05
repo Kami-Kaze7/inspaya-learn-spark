@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Search, ShoppingCart, GraduationCap, Award, ChevronDown, LayoutDashboard, LogOut, BookOpenCheck } from "lucide-react";
+import { Search, ShoppingCart, GraduationCap, Award, ChevronDown, LayoutDashboard, LogOut, BookOpenCheck } from "lucide-react";
+import logo from "@/assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthModal } from "./AuthModal";
 import { supabase } from "@/integrations/supabase/client";
@@ -93,11 +94,12 @@ const Navigation = () => {
       <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="rounded-full bg-primary/10 p-2">
-                <BookOpen className="h-6 w-6 text-primary" />
-              </div>
-              <span className="text-xl font-bold">Inspaya</span>
+            <Link to="/" className="flex items-center">
+              <img 
+                src={logo} 
+                alt="Inspaya" 
+                className="h-10 object-contain"
+              />
             </Link>
 
             <div className="hidden md:flex items-center gap-6">

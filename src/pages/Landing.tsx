@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { BookOpen, Users, Award, TrendingUp, Play, Star } from "lucide-react";
+import logo from "@/assets/logo.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -614,9 +615,12 @@ const Landing = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             {/* Brand Section */}
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <BookOpen className="h-8 w-8 text-[hsl(0,70%,60%)]" />
-                <span className="text-xl font-bold">Inspaya</span>
+              <div className="mb-4">
+                <img 
+                  src={logo} 
+                  alt="Inspaya" 
+                  className="h-10 object-contain"
+                />
               </div>
               <p className="text-white/70 mb-4">
                 Empowering learners worldwide with online courses and industry-recognized certifications.
