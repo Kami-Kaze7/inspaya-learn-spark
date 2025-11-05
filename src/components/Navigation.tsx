@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Search, ShoppingCart, GraduationCap, Award, ChevronDown, LayoutDashboard, LogOut } from "lucide-react";
+import { BookOpen, Search, ShoppingCart, GraduationCap, Award, ChevronDown, LayoutDashboard, LogOut, BookOpenCheck } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthModal } from "./AuthModal";
 import { supabase } from "@/integrations/supabase/client";
@@ -128,6 +128,10 @@ const Navigation = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              <Link to="/courses" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
+                <BookOpenCheck className="h-4 w-4" />
+                Browse All Courses
+              </Link>
               <Link to="/student-works" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
                 <Award className="h-4 w-4" />
                 View Our Students Works
