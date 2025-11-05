@@ -6,6 +6,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, BookOpen, ClipboardCheck, Award } from "lucide-react";
 import { toast } from "sonner";
+import { getInstructorCourseIds } from "@/lib/instructorCourseAccess";
 
 export default function InstructorDashboard() {
   const navigate = useNavigate();
@@ -94,13 +95,8 @@ export default function InstructorDashboard() {
 
   const fetchStats = async (userId: string) => {
     try {
-      // Get instructor's courses
-      const { data: courses } = await supabase
-        .from("courses")
-        .select("id")
-        .eq("instructor_id", userId);
-
-      const courseIds = courses?.map(c => c.id) || [];
+      // Get all course IDs the instructor has access to
+      const courseIds = await getInstructorCourseIds(userId);
 
       // Count unique students across all instructor's courses
       const { data: enrollments } = await supabase
@@ -138,7 +134,7 @@ export default function InstructorDashboard() {
 
       setStats({
         totalStudents: uniqueStudents.size,
-        activeCourses: courses?.length || 0,
+        activeCourses: courseIds.length,
         pendingSubmissions: (assignmentCount || 0) + (projectCount || 0),
         certificatesAwarded: certCount || 0,
       });

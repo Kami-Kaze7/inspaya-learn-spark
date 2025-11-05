@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { CourseFormDialog } from "@/components/CourseFormDialog";
 import { CourseContentManager } from "@/components/CourseContentManager";
+import { getInstructorCourseIds } from "@/lib/instructorCourseAccess";
 
 interface Course {
   id: string;
@@ -28,6 +29,7 @@ interface Course {
   duration_minutes?: number;
   video_url?: string;
   thumbnail_url?: string;
+  instructor_id?: string;
 }
 
 export default function Courses() {
@@ -71,10 +73,13 @@ export default function Courses() {
 
   const fetchCourses = async (userId: string) => {
     try {
+      // Get all course IDs the instructor has access to
+      const courseIds = await getInstructorCourseIds(userId);
+
       const { data: coursesData, error } = await supabase
         .from("courses")
         .select("*")
-        .eq("instructor_id", userId)
+        .in("id", courseIds)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -166,13 +171,18 @@ export default function Courses() {
                           )}
                         </TableCell>
                         <TableCell>
-                          <div className="font-semibold">{course.title}</div>
+                          <div className="flex items-center gap-2">
+                            <div className="font-semibold">{course.title}</div>
+                            <Badge variant={course.instructor_id === currentUserId ? "default" : "secondary"}>
+                              {course.instructor_id === currentUserId ? "Owner" : "Assigned"}
+                            </Badge>
+                          </div>
                           <div className="text-sm text-muted-foreground">
                             {course.short_description || course.description}
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="secondary">{course.category || "N/A"}</Badge>
+                          <Badge variant="outline">{course.category || "N/A"}</Badge>
                         </TableCell>
                         <TableCell>
                           {course.price ? `$${course.price.toFixed(2)}` : "Free"}

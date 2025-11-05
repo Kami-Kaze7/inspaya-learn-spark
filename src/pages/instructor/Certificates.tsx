@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { InstructorSidebar } from "@/components/InstructorSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { getInstructorCourseIds } from "@/lib/instructorCourseAccess";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Award } from "lucide-react";
@@ -28,8 +29,7 @@ export default function Certificates() {
   };
 
   const fetchCertificates = async (userId: string) => {
-    const { data: courses } = await supabase.from("courses").select("id").eq("instructor_id", userId);
-    const courseIds = courses?.map(c => c.id) || [];
+    const courseIds = await getInstructorCourseIds(userId);
     const { data } = await supabase.from('certificate_requests').select('*').in('course_id', courseIds).order('awarded_at', { ascending: false });
     const studentIds = [...new Set(data?.map(r => r.student_id) || [])];
     const { data: profiles } = await supabase.from('profiles').select('id, full_name').in('id', studentIds);

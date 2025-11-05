@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { InstructorSidebar } from "@/components/InstructorSidebar";
+import { getInstructorCourseIds } from "@/lib/instructorCourseAccess";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -54,13 +55,8 @@ export default function Students() {
 
   const fetchStudents = async (userId: string) => {
     try {
-      // Get instructor's courses
-      const { data: courses } = await supabase
-        .from("courses")
-        .select("id")
-        .eq("instructor_id", userId);
-
-      const courseIds = courses?.map(c => c.id) || [];
+      // Get all course IDs the instructor has access to
+      const courseIds = await getInstructorCourseIds(userId);
 
       if (courseIds.length === 0) {
         setLoading(false);

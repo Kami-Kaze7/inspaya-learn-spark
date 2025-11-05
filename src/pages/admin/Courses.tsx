@@ -14,11 +14,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Edit, List, Trash2, Play } from "lucide-react";
+import { Edit, List, Trash2, Play, Users } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { CourseFormDialog } from "@/components/CourseFormDialog";
 import { CourseContentManager } from "@/components/CourseContentManager";
+import { InstructorAssignmentDialog } from "@/components/InstructorAssignmentDialog";
 
 interface Course {
   id: string;
@@ -36,6 +37,7 @@ interface Course {
   video_url?: string;
   video_duration?: string;
   thumbnail_url?: string;
+  instructor_id?: string;
 }
 
 export default function Courses() {
@@ -46,6 +48,8 @@ export default function Courses() {
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [lessonDialogOpen, setLessonDialogOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<{ id: string; title: string } | null>(null);
+  const [instructorDialogOpen, setInstructorDialogOpen] = useState(false);
+  const [selectedCourseForInstructors, setSelectedCourseForInstructors] = useState<Course | null>(null);
   const [stats, setStats] = useState({
     total: 0,
     published: 0,
@@ -314,6 +318,16 @@ export default function Courses() {
                             >
                               <List className="h-4 w-4" />
                             </Button>
+                            <Button 
+                              size="sm" 
+                              variant="ghost"
+                              onClick={() => {
+                                setSelectedCourseForInstructors(course);
+                                setInstructorDialogOpen(true);
+                              }}
+                            >
+                              <Users className="h-4 w-4" />
+                            </Button>
                             <Button size="sm" variant="ghost" onClick={() => handleDelete(course.id)}>
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -345,6 +359,16 @@ export default function Courses() {
           onOpenChange={setLessonDialogOpen}
           courseId={selectedCourse.id}
           courseTitle={selectedCourse.title}
+        />
+      )}
+
+      {selectedCourseForInstructors && (
+        <InstructorAssignmentDialog
+          open={instructorDialogOpen}
+          onOpenChange={setInstructorDialogOpen}
+          courseId={selectedCourseForInstructors.id}
+          courseTitle={selectedCourseForInstructors.title}
+          courseOwnerId={selectedCourseForInstructors.instructor_id || ""}
         />
       )}
     </SidebarProvider>

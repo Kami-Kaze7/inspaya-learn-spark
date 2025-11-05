@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { InstructorSidebar } from "@/components/InstructorSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { getInstructorCourseIds } from "@/lib/instructorCourseAccess";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -78,8 +79,7 @@ export default function Projects() {
   };
 
   const fetchProjects = async (userId: string) => {
-    const { data: courses } = await supabase.from("courses").select("id").eq("instructor_id", userId);
-    const courseIds = courses?.map(c => c.id) || [];
+    const courseIds = await getInstructorCourseIds(userId);
 
     const { data, error } = await supabase
       .from("projects")

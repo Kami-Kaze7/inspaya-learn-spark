@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { InstructorSidebar } from "@/components/InstructorSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { getInstructorCourseIds } from "@/lib/instructorCourseAccess";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -100,14 +101,10 @@ export default function Assignments() {
   };
 
   const fetchAssignments = async (userId: string) => {
+    setLoading(true);
     try {
-      // Get instructor's courses
-      const { data: courses } = await supabase
-        .from("courses")
-        .select("id")
-        .eq("instructor_id", userId);
-
-      const courseIds = courses?.map(c => c.id) || [];
+      // Get all course IDs the instructor has access to
+      const courseIds = await getInstructorCourseIds(userId);
 
       const { data, error } = await supabase
         .from("assignments")
