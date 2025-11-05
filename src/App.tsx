@@ -31,6 +31,15 @@ import NotFound from "./pages/NotFound";
 import StudentWorks from "./pages/StudentWorks";
 import AdminProjects from "./pages/admin/Projects";
 import StudentProjects from "./pages/student/Projects";
+import InstructorCourses from "./pages/instructor/Courses";
+import InstructorStudents from "./pages/instructor/Students";
+import InstructorAssignments from "./pages/instructor/Assignments";
+import InstructorProjects from "./pages/instructor/Projects";
+import InstructorMessages from "./pages/instructor/Messages";
+import InstructorCertificates from "./pages/instructor/Certificates";
+import InstructorNotifications from "./pages/instructor/Notifications";
+import InstructorEnroll from "./pages/instructor/Enroll";
+import InstructorCourseDetail from "./pages/instructor/CourseDetail";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +66,16 @@ const App = () => (
           <Route path="/student/messages" element={<StudentMessages />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-cancelled" element={<PaymentCancelled />} />
+          <Route path="/instructor" element={<InstructorDashboard />} />
+          <Route path="/instructor/courses" element={<InstructorCourses />} />
+          <Route path="/instructor/students" element={<InstructorStudents />} />
+          <Route path="/instructor/assignments" element={<InstructorAssignments />} />
+          <Route path="/instructor/projects" element={<InstructorProjects />} />
+          <Route path="/instructor/messages" element={<InstructorMessages />} />
+          <Route path="/instructor/certificates" element={<InstructorCertificates />} />
+          <Route path="/instructor/notifications" element={<InstructorNotifications />} />
+          <Route path="/instructor/enroll" element={<InstructorEnroll />} />
+          <Route path="/instructor/course/:courseId" element={<InstructorCourseDetail />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/students" element={<Students />} />
           <Route path="/admin/instructors" element={<Instructors />} />
