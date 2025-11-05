@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import PublicCourseDetail from "./pages/PublicCourseDetail";
+import CoursesLanding from "./pages/CoursesLanding";
 import StudentDashboard from "./pages/StudentDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import Students from "./pages/admin/Students";
@@ -41,6 +42,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/courses" element={<CoursesLanding />} />
           <Route path="/course/:courseId" element={<PublicCourseDetail />} />
           <Route path="/student-works" element={<StudentWorks />} />
           <Route path="/student" element={<StudentDashboard />} />
