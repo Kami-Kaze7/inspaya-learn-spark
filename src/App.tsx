@@ -9,6 +9,7 @@ import PublicCourseDetail from "./pages/PublicCourseDetail";
 import CoursesLanding from "./pages/CoursesLanding";
 import StudentDashboard from "./pages/StudentDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import InstructorDashboard from "./pages/InstructorDashboard";
 import Students from "./pages/admin/Students";
 import Instructors from "./pages/admin/Instructors";
 import Courses from "./pages/admin/Courses";
