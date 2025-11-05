@@ -20,6 +20,44 @@ export default function InstructorDashboard() {
     checkAuth();
   }, []);
 
+  useEffect(() => {
+    const channel = supabase
+      .channel('instructor-dashboard-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'assignment_submissions'
+        },
+        () => {
+          // Refetch stats when submissions change
+          supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) fetchStats(session.user.id);
+          });
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'project_submissions'
+        },
+        () => {
+          // Refetch stats when project submissions change
+          supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) fetchStats(session.user.id);
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     

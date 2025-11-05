@@ -49,6 +49,32 @@ export default function Assignments() {
     checkAuth();
   }, []);
 
+  useEffect(() => {
+    if (loading === false) {
+      const channel = supabase
+        .channel('assignment-submissions-updates')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'assignment_submissions'
+          },
+          () => {
+            // Refetch assignments and submissions when changes occur
+            supabase.auth.getSession().then(({ data: { session } }) => {
+              if (session) fetchAssignments(session.user.id);
+            });
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+  }, [loading]);
+
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     

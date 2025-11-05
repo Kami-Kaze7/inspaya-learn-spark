@@ -27,6 +27,32 @@ export default function Projects() {
     checkAuth();
   }, []);
 
+  useEffect(() => {
+    if (loading === false) {
+      const channel = supabase
+        .channel('project-submissions-updates')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'project_submissions'
+          },
+          () => {
+            // Refetch projects when submissions change
+            supabase.auth.getSession().then(({ data: { session } }) => {
+              if (session) fetchProjects(session.user.id);
+            });
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+  }, [loading]);
+
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
