@@ -7,7 +7,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Lock, PlayCircle, Clock, BookOpen, FileText, Award } from "lucide-react";
+import { Lock, PlayCircle, Clock, BookOpen, FileText, Award, Building2, UsersRound, Handshake, Check, MapPin, Copy, CreditCard, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { PaymentForm } from "@/components/PaymentForm";
@@ -80,6 +80,8 @@ const CourseDetail = () => {
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [user, setUser] = useState<any>(undefined);
   const [lessonAssignment, setLessonAssignment] = useState<any>(null);
+  const [showPhysicalDialog, setShowPhysicalDialog] = useState(false);
+  const [showPhysicalPaymentDialog, setShowPhysicalPaymentDialog] = useState(false);
 
   useEffect(() => {
     fetchCourseDetails();
@@ -252,6 +254,54 @@ const CourseDetail = () => {
     } else {
       // If course is paid, show payment dialog
       setShowPaymentDialog(true);
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied!",
+      description: "Account details copied to clipboard",
+    });
+  };
+
+  const handlePhysicalEnrollment = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+
+    try {
+      // Create pending enrollment for physical student
+      const { error } = await supabase
+        .from("enrollments")
+        .insert({
+          student_id: user.id,
+          course_id: courseId,
+          status: 'pending',
+          payment_verified: false,
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Enrollment Submitted",
+        description: "Your physical student enrollment has been submitted and is awaiting admin approval.",
+      });
+
+      // Close dialogs
+      setShowPhysicalDialog(false);
+      setShowPhysicalPaymentDialog(false);
+      
+      // Refresh enrollment status
+      checkEnrollment();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
@@ -445,39 +495,60 @@ const CourseDetail = () => {
                 </div>
                 <p className="text-muted-foreground">{course.description}</p>
                 
-                {!isEnrolled && (
-                  <div className="mt-6 flex items-center justify-between rounded-lg border p-4">
-                    <div>
+                {!isEnrolled && enrollmentStatus !== "pending" && (
+                  <div className="mt-6 rounded-lg border p-4">
+                    <div className="mb-4">
                       <p className="text-2xl font-bold">${course.price || "Free"}</p>
                       <p className="text-sm text-muted-foreground">
-                        {course.price && course.price > 0 ? "One-time payment" : "Free enrollment"}
+                        {course.price && course.price > 0 ? "Choose your enrollment type" : "Free enrollment"}
                       </p>
                     </div>
+                    
                     {course.price && course.price > 0 ? (
-                      <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
-                        <DialogTrigger asChild>
-                          <Button onClick={handleEnroll}>Enroll Now</Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-                          <DialogHeader>
-                            <DialogTitle>Complete Your Enrollment</DialogTitle>
-                          </DialogHeader>
-                          <PaymentForm 
-                            courseId={courseId!}
-                            amount={course.price}
-                            currency="USD"
-                            onSuccess={() => {
-                              setShowPaymentDialog(false);
-                              checkEnrollment();
-                            }}
-                          />
-                        </DialogContent>
-                      </Dialog>
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        {/* Physical Student Enrollment Button */}
+                        <Button 
+                          size="lg" 
+                          className="flex-1 bg-green-600 hover:bg-green-700"
+                          onClick={() => setShowPhysicalDialog(true)}
+                        >
+                          <Building2 className="mr-2 h-4 w-4" />
+                          Enroll as Physical Student
+                        </Button>
+                        
+                        {/* Online Student Enrollment Button */}
+                        <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
+                          <DialogTrigger asChild>
+                            <Button 
+                              size="lg" 
+                              variant="outline"
+                              className="flex-1"
+                            >
+                              <CreditCard className="mr-2 h-4 w-4" />
+                              Enroll as Online Student
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                            <DialogHeader>
+                              <DialogTitle>Complete Your Enrollment</DialogTitle>
+                            </DialogHeader>
+                            <PaymentForm 
+                              courseId={courseId!}
+                              amount={course.price}
+                              currency="USD"
+                              onSuccess={() => {
+                                setShowPaymentDialog(false);
+                                checkEnrollment();
+                              }}
+                            />
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     ) : (
-                      <Button onClick={handleEnroll}>Enroll Now</Button>
+                      <Button onClick={handleEnroll} className="w-full">Enroll Now</Button>
                     )}
                   </div>
-                 )}
+                )}
                  {enrollmentStatus === "pending" && (
                    <div className="mt-6 rounded-lg border border-orange-500 bg-orange-500/10 p-4">
                      <p className="font-semibold text-orange-600">⏳ Enrollment Pending</p>
@@ -572,6 +643,189 @@ const CourseDetail = () => {
             courseDescription={course.description}
           />
         )}
+
+        {/* Physical Learning Centers Dialog */}
+        <Dialog open={showPhysicalDialog} onOpenChange={setShowPhysicalDialog}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-2xl flex items-center gap-2">
+                <Building2 className="h-6 w-6 text-green-600" />
+                Physical Learning Centers
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-6">
+              <p className="text-muted-foreground">
+                Join our vibrant learning community at one of our physical centers across Nigeria!
+              </p>
+
+              <div className="grid gap-4 md:grid-cols-3">
+                <Card className="border-green-500/20">
+                  <CardContent className="pt-6">
+                    <Building2 className="h-8 w-8 text-green-600 mb-3" />
+                    <h3 className="font-semibold mb-2">Modern Facilities</h3>
+                    <p className="text-sm text-muted-foreground">
+                      State-of-the-art learning spaces with high-speed internet and equipment
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-green-500/20">
+                  <CardContent className="pt-6">
+                    <UsersRound className="h-8 w-8 text-green-600 mb-3" />
+                    <h3 className="font-semibold mb-2">Live Sessions</h3>
+                    <p className="text-sm text-muted-foreground">
+                      In-person instruction with experienced educators and peer collaboration
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-green-500/20">
+                  <CardContent className="pt-6">
+                    <Handshake className="h-8 w-8 text-green-600 mb-3" />
+                    <h3 className="font-semibold mb-2">Networking</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Build connections with fellow students and industry professionals
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-semibold mb-3 flex items-center gap-2">
+                  <MapPin className="h-5 w-5 text-green-600" />
+                  Our Locations
+                </h3>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-green-600 mt-0.5" />
+                    <span><strong>Lagos Center:</strong> Victoria Island, Lagos</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-green-600 mt-0.5" />
+                    <span><strong>Abuja Center:</strong> Central Business District, Abuja</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-green-600 mt-0.5" />
+                    <span><strong>Port Harcourt Center:</strong> GRA Phase 2, Port Harcourt</span>
+                  </li>
+                </ul>
+              </div>
+
+              <Button 
+                onClick={() => {
+                  setShowPhysicalDialog(false);
+                  setShowPhysicalPaymentDialog(true);
+                }}
+                className="w-full bg-green-600 hover:bg-green-700"
+                size="lg"
+              >
+                Continue
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Payment Details Dialog */}
+        <Dialog open={showPhysicalPaymentDialog} onOpenChange={setShowPhysicalPaymentDialog}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <CreditCard className="h-5 w-5" />
+                Payment Details
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+                  <div className="space-y-2 flex-1">
+                    <p className="font-semibold text-blue-900 dark:text-blue-100">Bank Transfer Instructions</p>
+                    <p className="text-sm text-blue-800 dark:text-blue-200">
+                      Please make your payment to the account below and your enrollment will be activated upon verification.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                  <div>
+                    <p className="text-xs text-muted-foreground">Bank Name</p>
+                    <p className="font-semibold">First Bank of Nigeria</p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard("First Bank of Nigeria")}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                  <div>
+                    <p className="text-xs text-muted-foreground">Account Number</p>
+                    <p className="font-semibold">1234567890</p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard("1234567890")}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                  <div>
+                    <p className="text-xs text-muted-foreground">Account Name</p>
+                    <p className="font-semibold">Inspaya Learning Platform</p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard("Inspaya Learning Platform")}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                  <div>
+                    <p className="text-xs text-muted-foreground">Amount</p>
+                    <p className="font-semibold text-lg">${course?.price}</p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard(course?.price?.toString() || "")}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowPhysicalPaymentDialog(false);
+                    setShowPhysicalDialog(true);
+                  }}
+                  className="flex-1"
+                >
+                  Back
+                </Button>
+                <Button
+                  onClick={handlePhysicalEnrollment}
+                  className="flex-1 bg-green-600 hover:bg-green-700"
+                >
+                  Proceed
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </main>
     </div>
   );
