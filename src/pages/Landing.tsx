@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { BookOpen, Users, Award, TrendingUp, Play, Star } from "lucide-react";
 import logo from "@/assets/logo.png";
@@ -10,6 +11,7 @@ import testimonialEsther from "@/assets/testimonials/esther-onuh.png";
 import testimonialHenrii from "@/assets/testimonials/henrii.png";
 import testimonialCharles from "@/assets/testimonials/charles-maryfrancis.png";
 import testimonialChisom from "@/assets/testimonials/chisom-nwachukwu.png";
+import testimonialEkechi from "@/assets/testimonials/ekechi-wisdom.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -509,27 +511,28 @@ const Landing = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-            <CardContent className="pt-6 flex flex-col h-full">
-              <div className="mb-4 flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="mb-6 text-muted-foreground flex-grow">
-                "The hands-on projects and real-world applications made learning enjoyable. I gained practical skills that I use daily in my job."
-              </p>
-              <div className="flex items-center gap-3 mt-auto">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">
-                  AR
+            <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+              <CardContent className="pt-6 flex flex-col h-full">
+                <div className="mb-4 flex gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                  ))}
                 </div>
-                <div>
-                  <div className="font-semibold">Aisha Rahman</div>
-                  <div className="text-sm text-muted-foreground">UX Designer</div>
+                <p className="mb-6 text-muted-foreground flex-grow">
+                  "Inspaya is an amazing platform that has taken my video editing and AI content creation skills to the next level! The interactive assignments and personalized feedback from instructors are incredibly helpful. I've learned so much in such a short time, and I'm loving every moment of it! The user-friendly interface makes it easy to navigate and access all the resources I need. Overall, I'd give Inspire 5/5 stars - it's a must-try for anyone looking to boost their creative skills!"
+                </p>
+                <div className="flex items-center gap-3 mt-auto">
+                  <Avatar>
+                    <AvatarImage src={testimonialEkechi} />
+                    <AvatarFallback>EW</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className="font-semibold">Ekechi Wisdom</div>
+                    <div className="text-sm text-muted-foreground">Video Editor & AI Content Creator</div>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
           <Card className="bg-card hover:shadow-lg transition-shadow h-full">
             <CardContent className="pt-6 flex flex-col h-full">
