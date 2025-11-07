@@ -6,6 +6,7 @@ import logo from "@/assets/logo.png";
 import heroSlide1 from "@/assets/hero/slide1.jpg";
 import heroSlide2 from "@/assets/hero/slide2.jpg";
 import heroSlide3 from "@/assets/hero/slide3.jpg";
+import testimonialEsther from "@/assets/testimonials/esther-onuh.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -417,15 +418,17 @@ const Landing = () => {
                 ))}
               </div>
               <p className="mb-6 text-muted-foreground">
-                "The courses on Inspaya helped me transition into web development. The instructor explanations were clear and the projects were practical. Highly recommend!"
+                "The AI Content Creation course I took at Inspaya completely transformed my workflow and mindset. I can now create stunning visuals and engaging videos effortlessly. Highly recommend!"
               </p>
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">
-                  SJ
-                </div>
+                <img 
+                  src={testimonialEsther} 
+                  alt="Esther Onuh" 
+                  className="h-12 w-12 rounded-full object-cover"
+                />
                 <div>
-                  <div className="font-semibold">Sarah Johnson</div>
-                  <div className="text-sm text-muted-foreground">Web Developer</div>
+                  <div className="font-semibold">Esther Onuh</div>
+                  <div className="text-sm text-muted-foreground">AI Content Creator</div>
                 </div>
               </div>
             </CardContent>
