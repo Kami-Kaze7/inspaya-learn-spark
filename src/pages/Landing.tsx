@@ -8,6 +8,7 @@ import heroSlide2 from "@/assets/hero/slide2.jpg";
 import heroSlide3 from "@/assets/hero/slide3.jpg";
 import testimonialEsther from "@/assets/testimonials/esther-onuh.png";
 import testimonialHenrii from "@/assets/testimonials/henrii.png";
+import testimonialCharles from "@/assets/testimonials/charles-maryfrancis.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -467,15 +468,17 @@ const Landing = () => {
                 ))}
               </div>
               <p className="mb-6 text-muted-foreground">
-                "Best investment in my career! The certificates are recognized by employers and the skills I learned landed me a promotion."
+                "Inspaya isn't just another training center, it's a creative powerhouse that transforms ordinary minds into industry-ready creators. I would say that the blend of practical learning, real-world projects, and supportive mentors equipped me into becoming a better creative professional. If you're serious about mastering media and digital creativity, Inspaya is the place to be."
               </p>
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">
-                  EP
-                </div>
+                <img 
+                  src={testimonialCharles} 
+                  alt="Charles C.O. MaryFrancis" 
+                  className="h-12 w-12 rounded-full object-cover"
+                />
                 <div>
-                  <div className="font-semibold">Emily Patel</div>
-                  <div className="text-sm text-muted-foreground">Marketing Manager</div>
+                  <div className="font-semibold">Charles C.O. MaryFrancis</div>
+                  <div className="text-sm text-muted-foreground">Creative Professional (McChuks Concepts)</div>
                 </div>
               </div>
             </CardContent>
