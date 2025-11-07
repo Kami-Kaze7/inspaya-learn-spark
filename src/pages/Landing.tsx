@@ -7,6 +7,7 @@ import heroSlide1 from "@/assets/hero/slide1.jpg";
 import heroSlide2 from "@/assets/hero/slide2.jpg";
 import heroSlide3 from "@/assets/hero/slide3.jpg";
 import testimonialEsther from "@/assets/testimonials/esther-onuh.png";
+import testimonialHenrii from "@/assets/testimonials/henrii.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -442,15 +443,17 @@ const Landing = () => {
                 ))}
               </div>
               <p className="mb-6 text-muted-foreground">
-                "I've taken multiple courses here and each one exceeded my expectations. The content is up-to-date and the community support is amazing!"
+                "This program is the real deal. As a video editor, I needed practical, hands-on skills, and that's exactly what I got. The instructors were amazing and focused on real-world projects, which gave me the confidence to start working professionally. Being chosen for an internship here was the perfect way to start my career. I rate them 5/5… I highly recommend. Thank you. Henrii"
               </p>
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground font-semibold">
-                  MC
-                </div>
+                <img 
+                  src={testimonialHenrii} 
+                  alt="Henrii" 
+                  className="h-12 w-12 rounded-full object-cover"
+                />
                 <div>
-                  <div className="font-semibold">Michael Chen</div>
-                  <div className="text-sm text-muted-foreground">Data Analyst</div>
+                  <div className="font-semibold">Henrii</div>
+                  <div className="text-sm text-muted-foreground">Video Editor</div>
                 </div>
               </div>
             </CardContent>
