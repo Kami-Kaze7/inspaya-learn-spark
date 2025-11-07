@@ -7,6 +7,8 @@ import logo from "@/assets/logo.png";
 import heroSlide1 from "@/assets/hero/slide1.jpg";
 import heroSlide2 from "@/assets/hero/slide2.jpg";
 import heroSlide3 from "@/assets/hero/slide3.jpg";
+import heroSlide4 from "@/assets/hero/slide4.jpg";
+import heroSlide5 from "@/assets/hero/slide5.jpg";
 import testimonialEsther from "@/assets/testimonials/esther-onuh.png";
 import testimonialHenrii from "@/assets/testimonials/henrii.png";
 import testimonialCharles from "@/assets/testimonials/charles-maryfrancis.png";
@@ -248,6 +250,116 @@ const Landing = () => {
                         <CardContent className="p-6 text-center">
                           <div className="text-3xl font-bold text-white mb-2">Lifetime</div>
                           <div className="text-white/80">Course Access</div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CarouselItem>
+
+            {/* Slide 4 */}
+            <CarouselItem>
+              <div 
+                className="relative bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: `url(${heroSlide4})` }}
+              >
+                <div className="absolute inset-0 bg-black/50" />
+                <div className="container relative mx-auto px-4 py-20 md:py-32">
+                  <div className="mx-auto max-w-4xl text-center text-white">
+                    <Award className="mx-auto mb-6 h-16 w-16" />
+                    <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl">
+                      Celebrating Excellence & Achievement
+                    </h1>
+                    <p className="mb-8 text-xl text-white/90">
+                      Join a community that recognizes and rewards your hard work with prestigious awards and industry recognition
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+                      <Link to="/courses">
+                        <Button size="lg" className="bg-white text-primary hover:bg-white/90 w-full sm:w-auto">
+                          See Success Stories
+                        </Button>
+                      </Link>
+                      <Link to="/auth">
+                        <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 w-full sm:w-auto">
+                          Enroll Now
+                        </Button>
+                      </Link>
+                    </div>
+
+                    {/* Recognition Stats */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+                        <CardContent className="p-6 text-center">
+                          <div className="text-3xl font-bold text-white mb-2">250+</div>
+                          <div className="text-white/80">Awards Given</div>
+                        </CardContent>
+                      </Card>
+                      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+                        <CardContent className="p-6 text-center">
+                          <div className="text-3xl font-bold text-white mb-2">98%</div>
+                          <div className="text-white/80">Graduate Success Rate</div>
+                        </CardContent>
+                      </Card>
+                      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+                        <CardContent className="p-6 text-center">
+                          <div className="text-3xl font-bold text-white mb-2">150+</div>
+                          <div className="text-white/80">Industry Partners</div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CarouselItem>
+
+            {/* Slide 5 */}
+            <CarouselItem>
+              <div 
+                className="relative bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: `url(${heroSlide5})` }}
+              >
+                <div className="absolute inset-0 bg-black/50" />
+                <div className="container relative mx-auto px-4 py-20 md:py-32">
+                  <div className="mx-auto max-w-4xl text-center text-white">
+                    <Users className="mx-auto mb-6 h-16 w-16" />
+                    <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl">
+                      Transform Your Future Today
+                    </h1>
+                    <p className="mb-8 text-xl text-white/90">
+                      Experience the joy of achievement as you transition from student to certified professional in your chosen field
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+                      <Link to="/courses">
+                        <Button size="lg" className="bg-white text-primary hover:bg-white/90 w-full sm:w-auto">
+                          View Programs
+                        </Button>
+                      </Link>
+                      <Link to="/auth">
+                        <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 w-full sm:w-auto">
+                          Join Community
+                        </Button>
+                      </Link>
+                    </div>
+
+                    {/* Success Stats */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+                        <CardContent className="p-6 text-center">
+                          <div className="text-3xl font-bold text-white mb-2">5,000+</div>
+                          <div className="text-white/80">Successful Graduates</div>
+                        </CardContent>
+                      </Card>
+                      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+                        <CardContent className="p-6 text-center">
+                          <div className="text-3xl font-bold text-white mb-2">92%</div>
+                          <div className="text-white/80">Career Placement</div>
+                        </CardContent>
+                      </Card>
+                      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+                        <CardContent className="p-6 text-center">
+                          <div className="text-3xl font-bold text-white mb-2">4.9/5</div>
+                          <div className="text-white/80">Student Satisfaction</div>
                         </CardContent>
                       </Card>
                     </div>
