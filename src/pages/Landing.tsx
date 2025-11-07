@@ -413,17 +413,17 @@ const Landing = () => {
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          <Card className="bg-card hover:shadow-lg transition-shadow">
-            <CardContent className="pt-6">
+          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+            <CardContent className="pt-6 flex flex-col h-full">
               <div className="mb-4 flex gap-1">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                 ))}
               </div>
-              <p className="mb-6 text-muted-foreground">
+              <p className="mb-6 text-muted-foreground flex-grow">
                 "The AI Content Creation course I took at Inspaya completely transformed my workflow and mindset. I can now create stunning visuals and engaging videos effortlessly. Highly recommend!"
               </p>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 mt-auto">
                 <img 
                   src={testimonialEsther} 
                   alt="Esther Onuh" 
@@ -437,17 +437,17 @@ const Landing = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-card hover:shadow-lg transition-shadow">
-            <CardContent className="pt-6">
+          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+            <CardContent className="pt-6 flex flex-col h-full">
               <div className="mb-4 flex gap-1">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                 ))}
               </div>
-              <p className="mb-6 text-muted-foreground">
+              <p className="mb-6 text-muted-foreground flex-grow">
                 "This program is the real deal. As a video editor, I needed practical, hands-on skills, and that's exactly what I got. The instructors were amazing and focused on real-world projects, which gave me the confidence to start working professionally. Being chosen for an internship here was the perfect way to start my career. I rate them 5/5… I highly recommend. Thank you. Henrii"
               </p>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 mt-auto">
                 <img 
                   src={testimonialHenrii} 
                   alt="Henrii" 
@@ -461,17 +461,17 @@ const Landing = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-card hover:shadow-lg transition-shadow">
-            <CardContent className="pt-6">
+          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+            <CardContent className="pt-6 flex flex-col h-full">
               <div className="mb-4 flex gap-1">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                 ))}
               </div>
-              <p className="mb-6 text-muted-foreground">
+              <p className="mb-6 text-muted-foreground flex-grow">
                 "Inspaya isn't just another training center, it's a creative powerhouse that transforms ordinary minds into industry-ready creators. I would say that the blend of practical learning, real-world projects, and supportive mentors equipped me into becoming a better creative professional. If you're serious about mastering media and digital creativity, Inspaya is the place to be."
               </p>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 mt-auto">
                 <img 
                   src={testimonialCharles} 
                   alt="Charles C.O. MaryFrancis" 
@@ -485,17 +485,17 @@ const Landing = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-card hover:shadow-lg transition-shadow">
-            <CardContent className="pt-6">
+          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+            <CardContent className="pt-6 flex flex-col h-full">
               <div className="mb-4 flex gap-1">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                 ))}
               </div>
-              <p className="mb-6 text-muted-foreground">
+              <p className="mb-6 text-muted-foreground flex-grow">
                 "Joining Inspaya as a beginner in AI content creation was a life-changing experience. The hands-on training was practical, engaging, and perfectly structured to help me build real skills from scratch. The tutors were knowledgeable, approachable, and truly dedicated to our growth. Inspaya provides an inspiring environment that encourages creativity and continuous learning. Being selected as an intern has allowed me to keep improving and exploring more in AI. I proudly rate Inspaya ⭐⭐⭐⭐⭐ for their excellence and highly recommend them to anyone passionate about digital innovation. Thank you INSPAYA."
               </p>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 mt-auto">
                 <img 
                   src={testimonialChisom} 
                   alt="Nwachukwu Chisom Favour" 
@@ -509,17 +509,17 @@ const Landing = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-card hover:shadow-lg transition-shadow">
-            <CardContent className="pt-6">
+          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+            <CardContent className="pt-6 flex flex-col h-full">
               <div className="mb-4 flex gap-1">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                 ))}
               </div>
-              <p className="mb-6 text-muted-foreground">
+              <p className="mb-6 text-muted-foreground flex-grow">
                 "The hands-on projects and real-world applications made learning enjoyable. I gained practical skills that I use daily in my job."
               </p>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 mt-auto">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">
                   AR
                 </div>
@@ -531,17 +531,17 @@ const Landing = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-card hover:shadow-lg transition-shadow">
-            <CardContent className="pt-6">
+          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+            <CardContent className="pt-6 flex flex-col h-full">
               <div className="mb-4 flex gap-1">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                 ))}
               </div>
-              <p className="mb-6 text-muted-foreground">
+              <p className="mb-6 text-muted-foreground flex-grow">
                 "From beginner to confident professional - this platform made it possible. The instructors are knowledgeable and always ready to help."
               </p>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 mt-auto">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground font-semibold">
                   JL
                 </div>
