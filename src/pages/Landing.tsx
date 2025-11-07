@@ -9,6 +9,7 @@ import heroSlide3 from "@/assets/hero/slide3.jpg";
 import testimonialEsther from "@/assets/testimonials/esther-onuh.png";
 import testimonialHenrii from "@/assets/testimonials/henrii.png";
 import testimonialCharles from "@/assets/testimonials/charles-maryfrancis.png";
+import testimonialChisom from "@/assets/testimonials/chisom-nwachukwu.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -492,15 +493,17 @@ const Landing = () => {
                 ))}
               </div>
               <p className="mb-6 text-muted-foreground">
-                "As a busy professional, I appreciated the flexible learning schedule. The course quality is exceptional and worth every penny!"
+                "Joining Inspaya as a beginner in AI content creation was a life-changing experience. The hands-on training was practical, engaging, and perfectly structured to help me build real skills from scratch. The tutors were knowledgeable, approachable, and truly dedicated to our growth. Inspaya provides an inspiring environment that encourages creativity and continuous learning. Being selected as an intern has allowed me to keep improving and exploring more in AI. I proudly rate Inspaya ⭐⭐⭐⭐⭐ for their excellence and highly recommend them to anyone passionate about digital innovation. Thank you INSPAYA."
               </p>
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground font-semibold">
-                  DT
-                </div>
+                <img 
+                  src={testimonialChisom} 
+                  alt="Nwachukwu Chisom Favour" 
+                  className="h-12 w-12 rounded-full object-cover"
+                />
                 <div>
-                  <div className="font-semibold">David Thompson</div>
-                  <div className="text-sm text-muted-foreground">Product Manager</div>
+                  <div className="font-semibold">Nwachukwu Chisom Favour</div>
+                  <div className="text-sm text-muted-foreground">AI Content Creator</div>
                 </div>
               </div>
             </CardContent>
