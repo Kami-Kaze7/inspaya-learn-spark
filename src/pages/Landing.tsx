@@ -15,6 +15,7 @@ import testimonialCharles from "@/assets/testimonials/charles-maryfrancis.png";
 import testimonialChisom from "@/assets/testimonials/chisom-nwachukwu.png";
 import testimonialEkechi from "@/assets/testimonials/ekechi-wisdom.png";
 import testimonialSamuel from "@/assets/testimonials/ogwuche-samuel.png";
+import testimonialChukwuemeka from "@/assets/testimonials/chukwuemeka-somadina.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -665,6 +666,42 @@ const Landing = () => {
                 <div>
                   <div className="font-semibold">Ogwuche Samuel</div>
                   <div className="text-sm text-muted-foreground">Videographer/Editor</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Featured Testimonial */}
+        <div className="mt-8">
+          <Card className="bg-card hover:shadow-lg transition-shadow overflow-hidden border-2">
+            <CardContent className="p-0">
+              <div className="grid md:grid-cols-[300px,1fr] gap-0">
+                {/* Image Section */}
+                <div className="bg-muted/30 flex items-center justify-center p-8 md:p-12">
+                  <img 
+                    src={testimonialChukwuemeka} 
+                    alt="Chukwuemeka Somadina" 
+                    className="h-48 w-48 rounded-full object-cover shadow-lg"
+                  />
+                </div>
+                
+                {/* Content Section */}
+                <div className="p-6 md:p-8 flex flex-col justify-center">
+                  <div className="mb-4 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-6 text-muted-foreground leading-relaxed">
+                    "I'm blown away by my experience at INSPAYA Academy! As a graphics designer, I was looking to upgrade my skills in tech, and I'm so glad I chose INSPAYA. The courses are top-notch, and the instructors are industry experts who know their stuff. I specialized in Motion Graphics, and the Adobe After Effects training I received was phenomenal. I can confidently say I'm now a pro at creating stunning animations and visual effects. The hands-on approach and project-based learning helped me build a solid portfolio that showcases my skills. What really sets INSPAYA apart is the supportive community and practical approach. The curriculum is designed to get you job-ready, and the career support is fantastic. If you're looking to level up your tech skills in areas like video editing, AI content creation, broadcasting engineering, photography, or videography, look no further than INSPAYA Academy. Trust me, you won't regret it! Highly recommended! Register now and start building your dream."
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <div>
+                      <div className="font-semibold text-lg">CHUKWUEMEKA SOMADINA</div>
+                      <div className="text-sm text-muted-foreground">Motion Graphics Specialist</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </CardContent>
