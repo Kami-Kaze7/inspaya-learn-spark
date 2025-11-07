@@ -12,6 +12,7 @@ import testimonialHenrii from "@/assets/testimonials/henrii.png";
 import testimonialCharles from "@/assets/testimonials/charles-maryfrancis.png";
 import testimonialChisom from "@/assets/testimonials/chisom-nwachukwu.png";
 import testimonialEkechi from "@/assets/testimonials/ekechi-wisdom.png";
+import testimonialSamuel from "@/assets/testimonials/ogwuche-samuel.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -542,15 +543,16 @@ const Landing = () => {
                 ))}
               </div>
               <p className="mb-6 text-muted-foreground flex-grow">
-                "From beginner to confident professional - this platform made it possible. The instructors are knowledgeable and always ready to help."
+                "If you're looking for a place to learn editing or improve your production skills, this is the right spot. Their training is practical and flexible, and you actually leave with real skills you can start using immediately."
               </p>
               <div className="flex items-center gap-3 mt-auto">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground font-semibold">
-                  JL
-                </div>
+                <Avatar>
+                  <AvatarImage src={testimonialSamuel} />
+                  <AvatarFallback>OS</AvatarFallback>
+                </Avatar>
                 <div>
-                  <div className="font-semibold">James Lee</div>
-                  <div className="text-sm text-muted-foreground">Software Engineer</div>
+                  <div className="font-semibold">Ogwuche Samuel</div>
+                  <div className="text-sm text-muted-foreground">Videographer/Editor</div>
                 </div>
               </div>
             </CardContent>
