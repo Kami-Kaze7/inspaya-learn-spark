@@ -117,7 +117,7 @@ const Landing = () => {
                         </Button>
                       </Link>
                       <Link to="/auth">
-                        <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 w-full sm:w-auto">
+                        <Button size="lg" variant="hero" className="w-full sm:w-auto">
                           Get Started Free
                         </Button>
                       </Link>
@@ -172,7 +172,7 @@ const Landing = () => {
                         </Button>
                       </Link>
                       <Link to="/auth">
-                        <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 w-full sm:w-auto">
+                        <Button size="lg" variant="hero" className="w-full sm:w-auto">
                           Start Learning
                         </Button>
                       </Link>
@@ -227,7 +227,7 @@ const Landing = () => {
                         </Button>
                       </Link>
                       <Link to="/auth">
-                        <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 w-full sm:w-auto">
+                        <Button size="lg" variant="hero" className="w-full sm:w-auto">
                           Join Today
                         </Button>
                       </Link>
@@ -282,7 +282,7 @@ const Landing = () => {
                         </Button>
                       </Link>
                       <Link to="/auth">
-                        <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 w-full sm:w-auto">
+                        <Button size="lg" variant="hero" className="w-full sm:w-auto">
                           Enroll Now
                         </Button>
                       </Link>
@@ -337,7 +337,7 @@ const Landing = () => {
                         </Button>
                       </Link>
                       <Link to="/auth">
-                        <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 w-full sm:w-auto">
+                        <Button size="lg" variant="hero" className="w-full sm:w-auto">
                           Join Community
                         </Button>
                       </Link>
