@@ -20,6 +20,7 @@ import testimonialDivineGift from "@/assets/testimonials/divine-gift-francis.png
 import testimonialPromise from "@/assets/testimonials/promise-okoli.png";
 import testimonialIzuchukwu from "@/assets/testimonials/izuchukwu-timothy.png";
 import testimonialJideofor from "@/assets/testimonials/jideofor-ugochukwu.png";
+import testimonialGoziemba from "@/assets/testimonials/goziemba-chibueze.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -795,6 +796,31 @@ const Landing = () => {
                 <div>
                   <div className="font-semibold">Jideofor Ugochukwu Vincent</div>
                   <div className="text-sm text-muted-foreground">Media & Digital Creative Professional</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Goziemba Chibueze */}
+          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+            <CardContent className="pt-6 flex flex-col h-full">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="mb-6 text-muted-foreground flex-grow">
+                "Before my enrollment in Inspaya, I had zero/little knowledge or experience in AI and Photography. But at Inspaya, I was exposed to the theoretical and practical aspects of the two programs which helped in honing my skills in them. The tutors here are top notch, approachable and relatable. I will certainly recommend Inspaya to anyone."
+              </p>
+              <div className="flex items-center gap-3">
+                <img 
+                  src={testimonialGoziemba}
+                  alt="Goziemba Chibueze"
+                  className="h-12 w-12 rounded-full object-cover"
+                />
+                <div>
+                  <div className="font-semibold">Goziemba Chibueze</div>
+                  <div className="text-sm text-muted-foreground">AI & Photography Specialist</div>
                 </div>
               </div>
             </CardContent>
