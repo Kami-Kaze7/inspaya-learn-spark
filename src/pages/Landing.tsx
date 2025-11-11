@@ -17,6 +17,7 @@ import testimonialEkechi from "@/assets/testimonials/ekechi-wisdom.png";
 import testimonialSamuel from "@/assets/testimonials/ogwuche-samuel.png";
 import testimonialChukwuemeka from "@/assets/testimonials/chukwuemeka-somadina.png";
 import testimonialDivineGift from "@/assets/testimonials/divine-gift-francis.png";
+import testimonialPromise from "@/assets/testimonials/promise-okoli.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -717,6 +718,31 @@ const Landing = () => {
                 <div>
                   <div className="font-semibold">Divine-Gift Francis</div>
                   <div className="text-sm text-muted-foreground">Video Editor & AI Content Creator</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Promise Okoli */}
+          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+            <CardContent className="pt-6 flex flex-col h-full">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="mb-6 text-muted-foreground flex-grow">
+                "I used to think I was a video editor till I came to Inspaya. Inspaya took me from 0-100. I became more creative with my videos. I wanted to do more than what I used to do. Inspaya is a great place to learn and the tutors are teaching friendly. If you are looking for the best place to learn tech skills, then Inspaya is the best place for you. They don't only teach but they push you to become a better version of yourself. Join Inspaya now!!"
+              </p>
+              <div className="flex items-center gap-3">
+                <img 
+                  src={testimonialPromise}
+                  alt="Promise Okoli"
+                  className="h-12 w-12 rounded-full object-cover"
+                />
+                <div>
+                  <div className="font-semibold">Promise Okoli</div>
+                  <div className="text-sm text-muted-foreground">Video Editor</div>
                 </div>
               </div>
             </CardContent>
