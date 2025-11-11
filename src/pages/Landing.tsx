@@ -671,32 +671,30 @@ const Landing = () => {
                 </CardContent>
               </Card>
 
-              {/* Chukwuemeka Somadina */}
-              <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-                <CardContent className="pt-6 flex flex-col h-full">
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="mb-6 text-muted-foreground flex-grow">
-                    "Inspaya opened doors I never knew existed. The motion graphics course was incredibly comprehensive, and the instructor's industry experience really showed. I'm now freelancing full-time and couldn't be happier with my career transition!"
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <img 
-                      src={testimonialChukwuemeka}
-                      alt="Chukwuemeka Somadina"
-                      className="h-12 w-12 rounded-full object-cover"
-                    />
-                    <div>
-                      <div className="font-semibold">Chukwuemeka Somadina</div>
-                      <div className="text-sm text-muted-foreground">Motion Graphics Specialist</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+          {/* Chukwuemeka Somadina */}
+          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+            <CardContent className="pt-6 flex flex-col h-full">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="mb-6 text-muted-foreground flex-grow">
+                "Inspaya opened doors I never knew existed. The motion graphics course was incredibly comprehensive, and the instructor's industry experience really showed. I'm now freelancing full-time and couldn't be happier with my career transition!"
+              </p>
+              <div className="flex items-center gap-3">
+                <img 
+                  src={testimonialChukwuemeka}
+                  alt="Chukwuemeka Somadina"
+                  className="h-12 w-12 rounded-full object-cover"
+                />
+                <div>
+                  <div className="font-semibold">Chukwuemeka Somadina</div>
+                  <div className="text-sm text-muted-foreground">Motion Graphics Specialist</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
