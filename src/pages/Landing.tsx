@@ -16,6 +16,7 @@ import testimonialChisom from "@/assets/testimonials/chisom-nwachukwu.png";
 import testimonialEkechi from "@/assets/testimonials/ekechi-wisdom.png";
 import testimonialSamuel from "@/assets/testimonials/ogwuche-samuel.png";
 import testimonialChukwuemeka from "@/assets/testimonials/chukwuemeka-somadina.png";
+import testimonialDivineGift from "@/assets/testimonials/divine-gift-francis.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -691,6 +692,31 @@ const Landing = () => {
                 <div>
                   <div className="font-semibold">Chukwuemeka Somadina</div>
                   <div className="text-sm text-muted-foreground">Motion Graphics Specialist</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Divine-Gift Francis */}
+          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+            <CardContent className="pt-6 flex flex-col h-full">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="mb-6 text-muted-foreground flex-grow">
+                "Inspaya is an amazing learning institution that has taken my video editing and AI content creation skills to the next level! The interactive assignments and personalized feedback from instructors are incredibly helpful. I've learned so much in such a short time, and I'm loving every moment of it! The user-friendly interface makes it easy to navigate and access all the resources I need. Overall, I'd give Inspaya 5/5 stars - it's a must-try for anyone looking to boost their creative skills!"
+              </p>
+              <div className="flex items-center gap-3">
+                <img 
+                  src={testimonialDivineGift}
+                  alt="Divine-Gift Francis"
+                  className="h-12 w-12 rounded-full object-cover"
+                />
+                <div>
+                  <div className="font-semibold">Divine-Gift Francis</div>
+                  <div className="text-sm text-muted-foreground">Video Editor & AI Content Creator</div>
                 </div>
               </div>
             </CardContent>
