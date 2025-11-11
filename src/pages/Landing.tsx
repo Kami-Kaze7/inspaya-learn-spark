@@ -18,6 +18,7 @@ import testimonialSamuel from "@/assets/testimonials/ogwuche-samuel.png";
 import testimonialChukwuemeka from "@/assets/testimonials/chukwuemeka-somadina.png";
 import testimonialDivineGift from "@/assets/testimonials/divine-gift-francis.png";
 import testimonialPromise from "@/assets/testimonials/promise-okoli.png";
+import testimonialIzuchukwu from "@/assets/testimonials/izuchukwu-timothy.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -743,6 +744,31 @@ const Landing = () => {
                 <div>
                   <div className="font-semibold">Promise Okoli</div>
                   <div className="text-sm text-muted-foreground">Video Editor</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Izuchukwu Timothy Chiagozie */}
+          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+            <CardContent className="pt-6 flex flex-col h-full">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="mb-6 text-muted-foreground flex-grow">
+                "A graduate of INSPAYA, where I studied Broadcast Engineering and Videography. My time at INSPAYA was nothing short of impactful. The training was hands-on, the facilitators were top-notch, and I left more confident and equipped for real-world media production."
+              </p>
+              <div className="flex items-center gap-3">
+                <img 
+                  src={testimonialIzuchukwu}
+                  alt="Izuchukwu Timothy Chiagozie"
+                  className="h-12 w-12 rounded-full object-cover"
+                />
+                <div>
+                  <div className="font-semibold">Izuchukwu Timothy Chiagozie</div>
+                  <div className="text-sm text-muted-foreground">Broadcast Engineer & Videographer</div>
                 </div>
               </div>
             </CardContent>
