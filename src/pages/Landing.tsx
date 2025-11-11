@@ -19,6 +19,7 @@ import testimonialChukwuemeka from "@/assets/testimonials/chukwuemeka-somadina.p
 import testimonialDivineGift from "@/assets/testimonials/divine-gift-francis.png";
 import testimonialPromise from "@/assets/testimonials/promise-okoli.png";
 import testimonialIzuchukwu from "@/assets/testimonials/izuchukwu-timothy.png";
+import testimonialJideofor from "@/assets/testimonials/jideofor-ugochukwu.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -769,6 +770,31 @@ const Landing = () => {
                 <div>
                   <div className="font-semibold">Izuchukwu Timothy Chiagozie</div>
                   <div className="text-sm text-muted-foreground">Broadcast Engineer & Videographer</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Jideofor Ugochukwu Vincent */}
+          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+            <CardContent className="pt-6 flex flex-col h-full">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+              <p className="mb-6 text-muted-foreground flex-grow">
+                "Inspaya goes beyond being a typical training center; it's a hub of creativity that turns everyday individuals into skilled professionals ready for the industry. The combination of hands-on learning, real-life projects, and encouraging mentors helped me grow into a stronger creative expert. If you want to truly excel in media and digital creativity, Inspaya is the ideal choice."
+              </p>
+              <div className="flex items-center gap-3">
+                <img 
+                  src={testimonialJideofor}
+                  alt="Jideofor Ugochukwu Vincent"
+                  className="h-12 w-12 rounded-full object-cover"
+                />
+                <div>
+                  <div className="font-semibold">Jideofor Ugochukwu Vincent</div>
+                  <div className="text-sm text-muted-foreground">Media & Digital Creative Professional</div>
                 </div>
               </div>
             </CardContent>
