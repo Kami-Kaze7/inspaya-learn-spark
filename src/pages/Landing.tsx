@@ -449,7 +449,7 @@ const Landing = () => {
           </div>
         ) : (
           <div className="relative">
-            <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+            <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide justify-center">
               {courses.map((course) => (
                 <div key={course.id} className="flex-shrink-0 w-[350px] snap-start">
                   <Link to={`/course/${course.id}`} className="block h-full">
