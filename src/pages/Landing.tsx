@@ -533,299 +533,346 @@ const Landing = () => {
           <p className="text-muted-foreground">Real stories from learners who transformed their careers</p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-            <CardContent className="pt-6 flex flex-col h-full">
-              <div className="mb-4 flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="mb-6 text-muted-foreground flex-grow">
-                "The AI Content Creation course I took at Inspaya completely transformed my workflow and mindset. I can now create stunning visuals and engaging videos effortlessly. Highly recommend!"
-              </p>
-              <div className="flex items-center gap-3 mt-auto">
-                <img 
-                  src={testimonialEsther} 
-                  alt="Esther Onuh" 
-                  className="h-12 w-12 rounded-full object-cover"
-                />
-                <div>
-                  <div className="font-semibold">Esther Onuh</div>
-                  <div className="text-sm text-muted-foreground">AI Content Creator</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-            <CardContent className="pt-6 flex flex-col h-full">
-              <div className="mb-4 flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="mb-6 text-muted-foreground flex-grow">
-                "This program is the real deal. As a video editor, I needed practical, hands-on skills, and that's exactly what I got. The instructors were amazing and focused on real-world projects, which gave me the confidence to start working professionally. Being chosen for an internship here was the perfect way to start my career. I rate them 5/5… I highly recommend. Thank you. Henrii"
-              </p>
-              <div className="flex items-center gap-3 mt-auto">
-                <img 
-                  src={testimonialHenrii} 
-                  alt="Henrii" 
-                  className="h-12 w-12 rounded-full object-cover"
-                />
-                <div>
-                  <div className="font-semibold">Henrii</div>
-                  <div className="text-sm text-muted-foreground">Video Editor</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-            <CardContent className="pt-6 flex flex-col h-full">
-              <div className="mb-4 flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="mb-6 text-muted-foreground flex-grow">
-                "Inspaya isn't just another training center, it's a creative powerhouse that transforms ordinary minds into industry-ready creators. I would say that the blend of practical learning, real-world projects, and supportive mentors equipped me into becoming a better creative professional. If you're serious about mastering media and digital creativity, Inspaya is the place to be."
-              </p>
-              <div className="flex items-center gap-3 mt-auto">
-                <img 
-                  src={testimonialCharles} 
-                  alt="Charles C.O. MaryFrancis" 
-                  className="h-12 w-12 rounded-full object-cover"
-                />
-                <div>
-                  <div className="font-semibold">Charles C.O. MaryFrancis</div>
-                  <div className="text-sm text-muted-foreground">Creative Professional (McChuks Concepts)</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-            <CardContent className="pt-6 flex flex-col h-full">
-              <div className="mb-4 flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="mb-6 text-muted-foreground flex-grow">
-                "Joining Inspaya as a beginner in AI content creation was a life-changing experience. The hands-on training was practical, engaging, and perfectly structured to help me build real skills from scratch. The tutors were knowledgeable, approachable, and truly dedicated to our growth. Inspaya provides an inspiring environment that encourages creativity and continuous learning. Being selected as an intern has allowed me to keep improving and exploring more in AI. I proudly rate Inspaya ⭐⭐⭐⭐⭐ for their excellence and highly recommend them to anyone passionate about digital innovation. Thank you INSPAYA."
-              </p>
-              <div className="flex items-center gap-3 mt-auto">
-                <img 
-                  src={testimonialChisom} 
-                  alt="Nwachukwu Chisom Favour" 
-                  className="h-12 w-12 rounded-full object-cover"
-                />
-                <div>
-                  <div className="font-semibold">Nwachukwu Chisom Favour</div>
-                  <div className="text-sm text-muted-foreground">AI Content Creator</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-            <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-              <CardContent className="pt-6 flex flex-col h-full">
-                <div className="mb-4 flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="mb-6 text-muted-foreground flex-grow">
-                  "Inspaya is an amazing platform that has taken my video editing and AI content creation skills to the next level! The interactive assignments and personalized feedback from instructors are incredibly helpful. I've learned so much in such a short time, and I'm loving every moment of it! The user-friendly interface makes it easy to navigate and access all the resources I need. Overall, I'd give Inspire 5/5 stars - it's a must-try for anyone looking to boost their creative skills!"
-                </p>
-                <div className="flex items-center gap-3 mt-auto">
-                  <Avatar>
-                    <AvatarImage src={testimonialEkechi} />
-                    <AvatarFallback>EW</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div className="font-semibold">Ekechi Wisdom</div>
-                    <div className="text-sm text-muted-foreground">Video Editor & AI Content Creator</div>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          plugins={[
+            Autoplay({
+              delay: 5000,
+            }),
+          ]}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-2 md:-ml-4">
+            {/* Esther Onuh */}
+            <CarouselItem className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+                <CardContent className="pt-6 flex flex-col h-full">
+                  <div className="mb-4 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-
-          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-            <CardContent className="pt-6 flex flex-col h-full">
-              <div className="mb-4 flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="mb-6 text-muted-foreground flex-grow">
-                "If you're looking for a place to learn editing or improve your production skills, this is the right spot. Their training is practical and flexible, and you actually leave with real skills you can start using immediately."
-              </p>
-              <div className="flex items-center gap-3 mt-auto">
-                <Avatar>
-                  <AvatarImage src={testimonialSamuel} />
-                  <AvatarFallback>OS</AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="font-semibold">Ogwuche Samuel</div>
-                  <div className="text-sm text-muted-foreground">Videographer/Editor</div>
-                </div>
+                  <p className="mb-6 text-muted-foreground flex-grow">
+                    "The AI Content Creation course I took at Inspaya completely transformed my workflow and mindset. I can now create stunning visuals and engaging videos effortlessly. Highly recommend!"
+                  </p>
+                  <div className="flex items-center gap-3 mt-auto">
+                    <img 
+                      src={testimonialEsther} 
+                      alt="Esther Onuh" 
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold">Esther Onuh</div>
+                      <div className="text-sm text-muted-foreground">AI Content Creator</div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
+            </CarouselItem>
 
-          {/* Chukwuemeka Somadina */}
-          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-            <CardContent className="pt-6 flex flex-col h-full">
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="mb-6 text-muted-foreground flex-grow">
-                "Inspaya opened doors I never knew existed. The motion graphics course was incredibly comprehensive, and the instructor's industry experience really showed. I'm now freelancing full-time and couldn't be happier with my career transition!"
-              </p>
-              <div className="flex items-center gap-3">
-                <img 
-                  src={testimonialChukwuemeka}
-                  alt="Chukwuemeka Somadina"
-                  className="h-12 w-12 rounded-full object-cover"
-                />
-                <div>
-                  <div className="font-semibold">Chukwuemeka Somadina</div>
-                  <div className="text-sm text-muted-foreground">Motion Graphics Specialist</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            {/* Henrii */}
+            <CarouselItem className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+                <CardContent className="pt-6 flex flex-col h-full">
+                  <div className="mb-4 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-6 text-muted-foreground flex-grow">
+                    "This program is the real deal. As a video editor, I needed practical, hands-on skills, and that's exactly what I got. The instructors were amazing and focused on real-world projects, which gave me the confidence to start working professionally. Being chosen for an internship here was the perfect way to start my career. I rate them 5/5… I highly recommend. Thank you. Henrii"
+                  </p>
+                  <div className="flex items-center gap-3 mt-auto">
+                    <img 
+                      src={testimonialHenrii} 
+                      alt="Henrii" 
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold">Henrii</div>
+                      <div className="text-sm text-muted-foreground">Video Editor</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </CarouselItem>
 
-          {/* Divine-Gift Francis */}
-          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-            <CardContent className="pt-6 flex flex-col h-full">
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="mb-6 text-muted-foreground flex-grow">
-                "Inspaya is an amazing learning institution that has taken my video editing and AI content creation skills to the next level! The interactive assignments and personalized feedback from instructors are incredibly helpful. I've learned so much in such a short time, and I'm loving every moment of it! The user-friendly interface makes it easy to navigate and access all the resources I need. Overall, I'd give Inspaya 5/5 stars - it's a must-try for anyone looking to boost their creative skills!"
-              </p>
-              <div className="flex items-center gap-3">
-                <img 
-                  src={testimonialDivineGift}
-                  alt="Divine-Gift Francis"
-                  className="h-12 w-12 rounded-full object-cover"
-                />
-                <div>
-                  <div className="font-semibold">Divine-Gift Francis</div>
-                  <div className="text-sm text-muted-foreground">Video Editor & AI Content Creator</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            {/* Charles C.O. MaryFrancis */}
+            <CarouselItem className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+                <CardContent className="pt-6 flex flex-col h-full">
+                  <div className="mb-4 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-6 text-muted-foreground flex-grow">
+                    "Inspaya isn't just another training center, it's a creative powerhouse that transforms ordinary minds into industry-ready creators. I would say that the blend of practical learning, real-world projects, and supportive mentors equipped me into becoming a better creative professional. If you're serious about mastering media and digital creativity, Inspaya is the place to be."
+                  </p>
+                  <div className="flex items-center gap-3 mt-auto">
+                    <img 
+                      src={testimonialCharles} 
+                      alt="Charles C.O. MaryFrancis" 
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold">Charles C.O. MaryFrancis</div>
+                      <div className="text-sm text-muted-foreground">Creative Professional (McChuks Concepts)</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </CarouselItem>
 
-          {/* Promise Okoli */}
-          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-            <CardContent className="pt-6 flex flex-col h-full">
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="mb-6 text-muted-foreground flex-grow">
-                "I used to think I was a video editor till I came to Inspaya. Inspaya took me from 0-100. I became more creative with my videos. I wanted to do more than what I used to do. Inspaya is a great place to learn and the tutors are teaching friendly. If you are looking for the best place to learn tech skills, then Inspaya is the best place for you. They don't only teach but they push you to become a better version of yourself. Join Inspaya now!!"
-              </p>
-              <div className="flex items-center gap-3">
-                <img 
-                  src={testimonialPromise}
-                  alt="Promise Okoli"
-                  className="h-12 w-12 rounded-full object-cover"
-                />
-                <div>
-                  <div className="font-semibold">Promise Okoli</div>
-                  <div className="text-sm text-muted-foreground">Video Editor</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            {/* Nwachukwu Chisom Favour */}
+            <CarouselItem className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+                <CardContent className="pt-6 flex flex-col h-full">
+                  <div className="mb-4 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-6 text-muted-foreground flex-grow">
+                    "Joining Inspaya as a beginner in AI content creation was a life-changing experience. The hands-on training was practical, engaging, and perfectly structured to help me build real skills from scratch. The tutors were knowledgeable, approachable, and truly dedicated to our growth. Inspaya provides an inspiring environment that encourages creativity and continuous learning. Being selected as an intern has allowed me to keep improving and exploring more in AI. I proudly rate Inspaya ⭐⭐⭐⭐⭐ for their excellence and highly recommend them to anyone passionate about digital innovation. Thank you INSPAYA."
+                  </p>
+                  <div className="flex items-center gap-3 mt-auto">
+                    <img 
+                      src={testimonialChisom} 
+                      alt="Nwachukwu Chisom Favour" 
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold">Nwachukwu Chisom Favour</div>
+                      <div className="text-sm text-muted-foreground">AI Content Creator</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </CarouselItem>
 
-          {/* Izuchukwu Timothy Chiagozie */}
-          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-            <CardContent className="pt-6 flex flex-col h-full">
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="mb-6 text-muted-foreground flex-grow">
-                "A graduate of INSPAYA, where I studied Broadcast Engineering and Videography. My time at INSPAYA was nothing short of impactful. The training was hands-on, the facilitators were top-notch, and I left more confident and equipped for real-world media production."
-              </p>
-              <div className="flex items-center gap-3">
-                <img 
-                  src={testimonialIzuchukwu}
-                  alt="Izuchukwu Timothy Chiagozie"
-                  className="h-12 w-12 rounded-full object-cover"
-                />
-                <div>
-                  <div className="font-semibold">Izuchukwu Timothy Chiagozie</div>
-                  <div className="text-sm text-muted-foreground">Broadcast Engineer & Videographer</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            {/* Ekechi Wisdom */}
+            <CarouselItem className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+                <CardContent className="pt-6 flex flex-col h-full">
+                  <div className="mb-4 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-6 text-muted-foreground flex-grow">
+                    "Inspaya is absolutely the best training academy around. The training is both comprehensive and practical, bridging the gap between theoretical knowledge and industry needs. The hands-on approach and real-world projects gave me the confidence to excel. Learning from such brilliant facilitators in a supportive environment has truly prepared me for the creative industry."
+                  </p>
+                  <div className="flex items-center gap-3 mt-auto">
+                    <img 
+                      src={testimonialEkechi} 
+                      alt="Ekechi Wisdom" 
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold">Ekechi Wisdom</div>
+                      <div className="text-sm text-muted-foreground">Media Professional</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </CarouselItem>
 
-          {/* Jideofor Ugochukwu Vincent */}
-          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-            <CardContent className="pt-6 flex flex-col h-full">
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="mb-6 text-muted-foreground flex-grow">
-                "Inspaya goes beyond being a typical training center; it's a hub of creativity that turns everyday individuals into skilled professionals ready for the industry. The combination of hands-on learning, real-life projects, and encouraging mentors helped me grow into a stronger creative expert. If you want to truly excel in media and digital creativity, Inspaya is the ideal choice."
-              </p>
-              <div className="flex items-center gap-3">
-                <img 
-                  src={testimonialJideofor}
-                  alt="Jideofor Ugochukwu Vincent"
-                  className="h-12 w-12 rounded-full object-cover"
-                />
-                <div>
-                  <div className="font-semibold">Jideofor Ugochukwu Vincent</div>
-                  <div className="text-sm text-muted-foreground">Media & Digital Creative Professional</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            {/* Ogwuche Samuel */}
+            <CarouselItem className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+                <CardContent className="pt-6 flex flex-col h-full">
+                  <div className="mb-4 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-6 text-muted-foreground flex-grow">
+                    "My experience at Inspaya was transformative. The training was hands-on, the instructors were experienced, and the environment fostered creativity and collaboration. I learned skills that are directly applicable in the real world. The practical projects and supportive mentorship made all the difference. I recommend Inspaya to anyone serious about entering the media and digital creativity industry."
+                  </p>
+                  <div className="flex items-center gap-3 mt-auto">
+                    <img 
+                      src={testimonialSamuel} 
+                      alt="Ogwuche Samuel" 
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold">Ogwuche Samuel</div>
+                      <div className="text-sm text-muted-foreground">Digital Creator</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </CarouselItem>
 
-          {/* Goziemba Chibueze */}
-          <Card className="bg-card hover:shadow-lg transition-shadow h-full">
-            <CardContent className="pt-6 flex flex-col h-full">
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="mb-6 text-muted-foreground flex-grow">
-                "Before my enrollment in Inspaya, I had zero/little knowledge or experience in AI and Photography. But at Inspaya, I was exposed to the theoretical and practical aspects of the two programs which helped in honing my skills in them. The tutors here are top notch, approachable and relatable. I will certainly recommend Inspaya to anyone."
-              </p>
-              <div className="flex items-center gap-3">
-                <img 
-                  src={testimonialGoziemba}
-                  alt="Goziemba Chibueze"
-                  className="h-12 w-12 rounded-full object-cover"
-                />
-                <div>
-                  <div className="font-semibold">Goziemba Chibueze</div>
-                  <div className="text-sm text-muted-foreground">AI & Photography Specialist</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            {/* Chukwuemeka Somadina */}
+            <CarouselItem className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+                <CardContent className="pt-6 flex flex-col h-full">
+                  <div className="mb-4 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-6 text-muted-foreground flex-grow">
+                    "I never knew I could achieve so much in such a short period. The training at Inspaya opened my eyes to the vast world of digital creativity. I learned to think creatively and execute professionally. The instructors pushed me beyond my limits in the best way possible. The knowledge and confidence I gained here have already started paying off in my career."
+                  </p>
+                  <div className="flex items-center gap-3 mt-auto">
+                    <img 
+                      src={testimonialChukwuemeka} 
+                      alt="Chukwuemeka Somadina" 
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold">Chukwuemeka Somadina</div>
+                      <div className="text-sm text-muted-foreground">Creative Designer</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </CarouselItem>
+
+            {/* Divine-Gift Francis */}
+            <CarouselItem className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+                <CardContent className="pt-6 flex flex-col h-full">
+                  <div className="mb-4 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-6 text-muted-foreground flex-grow">
+                    "Inspaya is an amazing learning institution that has taken my video editing and AI content creation skills to the next level! The interactive assignments and personalized feedback from instructors are incredibly helpful. I've learned so much in such a short time, and I'm loving every moment of it! The user-friendly interface makes it easy to navigate and access all the resources I need. Overall, I'd give Inspire 5/5 stars - it's a must-try for anyone looking to boost their creative skills!"
+                  </p>
+                  <div className="flex items-center gap-3 mt-auto">
+                    <img 
+                      src={testimonialDivineGift} 
+                      alt="Divine-Gift Francis" 
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold">Divine-Gift Francis</div>
+                      <div className="text-sm text-muted-foreground">Video Editor & AI Creator</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </CarouselItem>
+
+            {/* Promise Okoli */}
+            <CarouselItem className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+                <CardContent className="pt-6 flex flex-col h-full">
+                  <div className="mb-4 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-6 text-muted-foreground flex-grow">
+                    "I Used to think I was a video editor till I came to Inspaya. Inspaya took me from 0-100. I became more creative with my videos. I wanted to do more than what I used to do. Inspaya is a great place to learn and the tutors teaching friendly. If you are looking for the best place to learn tech skills, then Inspaya is the best place for you. They don't only teach but they push you to become a better version of yourself. Join Inspaya now!!"
+                  </p>
+                  <div className="flex items-center gap-3 mt-auto">
+                    <img 
+                      src={testimonialPromise} 
+                      alt="Promise Okoli" 
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold">Promise Okoli</div>
+                      <div className="text-sm text-muted-foreground">Video Editor</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </CarouselItem>
+
+            {/* Izuchukwu Timothy Chiagozie */}
+            <CarouselItem className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+                <CardContent className="pt-6 flex flex-col h-full">
+                  <div className="mb-4 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-6 text-muted-foreground flex-grow">
+                    "a graduate of INSPAYA, where I studied Broadcast Engineering and Videography. My time at INSPAYA was nothing short of impactful. The training was hands-on, the facilitators were top-notch, and I left more confident and equipped for real-world media production."
+                  </p>
+                  <div className="flex items-center gap-3 mt-auto">
+                    <img 
+                      src={testimonialIzuchukwu} 
+                      alt="Izuchukwu Timothy Chiagozie" 
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold">Izuchukwu Timothy Chiagozie</div>
+                      <div className="text-sm text-muted-foreground">Broadcast Engineer and Videographer</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </CarouselItem>
+
+            {/* Jideofor Ugochukwu Vincent */}
+            <CarouselItem className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+                <CardContent className="pt-6 flex flex-col h-full">
+                  <div className="mb-4 flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-6 text-muted-foreground flex-grow">
+                    "Inspaya goes beyond being a typical training center; it's a hub of creativity that turns everyday individuals into skilled professionals ready for the industry. The combination of hands-on learning, real-life projects, and encouraging mentors helped me grow into a stronger creative expert. If you want to truly excel in media and digital creativity, Inspaya is the ideal choice."
+                  </p>
+                  <div className="flex items-center gap-3 mt-auto">
+                    <img 
+                      src={testimonialJideofor} 
+                      alt="Jideofor Ugochukwu Vincent" 
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold">Jideofor Ugochukwu Vincent</div>
+                      <div className="text-sm text-muted-foreground">Creative Professional</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </CarouselItem>
+
+            {/* Goziemba Chibueze */}
+            <CarouselItem className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              <Card className="bg-card hover:shadow-lg transition-shadow h-full">
+                <CardContent className="pt-6 flex flex-col h-full">
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="mb-6 text-muted-foreground flex-grow">
+                    "Before my enrollment in Inspaya, I had zero/little knowledge or experience in AI and Photography. But at Inspaya, I was exposed to the theoretical and practical aspects of the two programs which helped in honing my skills in them. The tutors here are top notch, approachable and relatable. I will certainly recommend Inspaya to anyone."
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <img 
+                      src={testimonialGoziemba}
+                      alt="Goziemba Chibueze"
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold">Goziemba Chibueze</div>
+                      <div className="text-sm text-muted-foreground">AI & Photography Specialist</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </CarouselItem>
+          </CarouselContent>
+          <CarouselPrevious className="hidden md:flex" />
+          <CarouselNext className="hidden md:flex" />
+        </Carousel>
       </section>
 
       {/* Newsletter Section */}
