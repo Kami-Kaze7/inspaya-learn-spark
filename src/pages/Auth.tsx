@@ -8,7 +8,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { BookOpen, GraduationCap, Users } from "lucide-react";
+import { GraduationCap, Users } from "lucide-react";
+import authLogo from "@/assets/auth-logo.png";
 import { enrollmentIntent } from "@/lib/enrollmentIntent";
 
 const Auth = () => {
@@ -215,9 +216,7 @@ const Auth = () => {
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="text-center">
           <div className="mb-4 flex justify-center">
-            <div className="rounded-full bg-primary/10 p-3">
-              <BookOpen className="h-8 w-8 text-primary" />
-            </div>
+            <img src={authLogo} alt="Inspaya Logo" className="h-16 w-auto object-contain" />
           </div>
           <CardTitle className="text-2xl">Welcome to Inspaya</CardTitle>
           <CardDescription>Sign in to continue your learning journey</CardDescription>

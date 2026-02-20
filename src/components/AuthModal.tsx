@@ -8,7 +8,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { BookOpen, GraduationCap, Users, Eye, EyeOff } from "lucide-react";
+import { GraduationCap, Users, Eye, EyeOff } from "lucide-react";
+import authLogo from "@/assets/auth-logo.png";
 import { enrollmentIntent } from "@/lib/enrollmentIntent";
 
 interface AuthModalProps {
@@ -159,9 +160,7 @@ export const AuthModal = ({ isOpen, onClose, defaultTab = "signin" }: AuthModalP
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <div className="mb-4 flex justify-center">
-            <div className="rounded-full bg-primary/10 p-3">
-              <BookOpen className="h-8 w-8 text-primary" />
-            </div>
+            <img src={authLogo} alt="Inspaya Logo" className="h-16 w-auto object-contain" />
           </div>
           <DialogTitle className="text-center text-2xl">Welcome to Inspaya</DialogTitle>
           <DialogDescription className="text-center">
