@@ -513,7 +513,7 @@ const Landing = () => {
 
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-20">
-        <div className="rounded-2xl bg-gradient-to-r from-primary to-accent p-12 text-center text-primary-foreground shadow-2xl">
+        <div className="rounded-2xl p-12 text-center text-white shadow-2xl" style={{background: "linear-gradient(135deg, hsl(345, 70%, 28%) 0%, hsl(350, 65%, 20%) 100%)"}}>
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">Ready to Start Learning?</h2>
           <p className="mb-8 text-lg opacity-90">
             Join thousands of students already learning on Inspaya

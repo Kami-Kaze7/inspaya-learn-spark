@@ -91,7 +91,7 @@ const Navigation = () => {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <nav className="sticky top-0 z-50 w-full border-b bg-[hsl(345,60%,22%)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(345,60%,22%/0.95)]">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <Link to="/" className="flex items-center">
@@ -104,7 +104,7 @@ const Navigation = () => {
 
             <div className="hidden md:flex items-center gap-6">
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors outline-none">
+                <DropdownMenuTrigger className="flex items-center gap-2 text-sm font-medium text-white hover:text-red-300 transition-colors outline-none">
                   <GraduationCap className="h-4 w-4" />
                   Courses
                   <ChevronDown className="h-3 w-3" />
@@ -130,27 +130,27 @@ const Navigation = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Link to="/courses" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
+              <Link to="/courses" className="flex items-center gap-2 text-sm font-medium text-white hover:text-red-300 transition-colors">
                 <BookOpenCheck className="h-4 w-4" />
                 Browse All Courses
               </Link>
-              <Link to="/student-works" className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
+              <Link to="/student-works" className="flex items-center gap-2 text-sm font-medium text-white hover:text-red-300 transition-colors">
                 <Award className="h-4 w-4" />
                 View Our Students Works
               </Link>
             </div>
 
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className="relative text-white hover:text-red-300 hover:bg-white/10">
                 <Search className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className="relative text-white hover:text-red-300 hover:bg-white/10">
                 <ShoppingCart className="h-5 w-5" />
               </Button>
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center gap-2">
+                    <Button variant="ghost" className="flex items-center gap-2 text-white hover:text-red-300 hover:bg-white/10">
                       <LayoutDashboard className="h-4 w-4" />
                       <span className="hidden sm:inline">{userName || user?.email || "My Account"}</span>
                       <ChevronDown className="h-3 w-3" />
@@ -175,13 +175,13 @@ const Navigation = () => {
                   <Button 
                     variant="ghost" 
                     onClick={() => handleOpenAuth("signin")}
-                    className="hidden sm:inline-flex"
+                    className="hidden sm:inline-flex text-white hover:text-red-300 hover:bg-white/10"
                   >
                     Sign In
                   </Button>
                   <Button 
                     onClick={() => handleOpenAuth("signup")}
-                    className="bg-[hsl(0,75%,55%)] hover:bg-[hsl(0,75%,50%)] text-white"
+                    className="bg-white text-[hsl(345,60%,22%)] hover:bg-red-100 font-semibold"
                   >
                     Sign Up
                   </Button>
