@@ -18,10 +18,9 @@ interface Enrollment {
     id: string;
     title: string;
     price: number;
-    instructor: {
-      full_name: string;
-    };
+    instructor_id: string | null;
   };
+  instructor_name?: string;
 }
 
 const Courses = () => {
@@ -48,16 +47,30 @@ const Courses = () => {
           id,
           title,
           price,
-          instructor:profiles!courses_instructor_id_fkey (
-            full_name
-          )
+          instructor_id
         )
       `)
       .eq("student_id", user.id)
       .order("enrolled_at", { ascending: false });
 
     if (!error && data) {
-      setEnrollments(data as any);
+      // Fetch instructor names
+      const instructorIds = [...new Set((data as any[]).map(e => e.course?.instructor_id).filter(Boolean))];
+      let instructorMap: Record<string, string> = {};
+      if (instructorIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("id, full_name")
+          .in("id", instructorIds);
+        if (profiles) {
+          instructorMap = Object.fromEntries(profiles.map(p => [p.id, p.full_name]));
+        }
+      }
+      const enriched = (data as any[]).map(e => ({
+        ...e,
+        instructor_name: instructorMap[e.course?.instructor_id] || "N/A",
+      }));
+      setEnrollments(enriched);
     }
     setLoading(false);
   };
@@ -120,7 +133,7 @@ const Courses = () => {
                       onClick={() => navigate(`/student/course/${enrollment.course.id}`)}
                     >
                       <TableCell className="font-medium">{enrollment.course.title}</TableCell>
-                      <TableCell>{enrollment.course.instructor.full_name}</TableCell>
+                      <TableCell>{enrollment.instructor_name}</TableCell>
                       <TableCell>${enrollment.course.price}</TableCell>
                       <TableCell>{getStatusBadge(enrollment.status)}</TableCell>
                       <TableCell>{format(new Date(enrollment.enrolled_at), "MMM dd, yyyy")}</TableCell>
