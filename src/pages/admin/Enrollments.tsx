@@ -384,8 +384,9 @@ export default function Enrollments() {
                            )}
                          </TableCell>
                       </TableRow>
-                    ))
-                  )}
+                    ));
+                })()}
+
                 </TableBody>
               </Table>
             </div>
