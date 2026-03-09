@@ -29,6 +29,10 @@ export default function Enrollments() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [enrollments, setEnrollments] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
+  const [filterCourse, setFilterCourse] = useState("all");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [stats, setStats] = useState({
     total: 0,
     active: 0,
