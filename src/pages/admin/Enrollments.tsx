@@ -29,6 +29,10 @@ export default function Enrollments() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [enrollments, setEnrollments] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
+  const [filterCourse, setFilterCourse] = useState("all");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [stats, setStats] = useState({
     total: 0,
     active: 0,
@@ -66,27 +70,25 @@ export default function Enrollments() {
 
   const fetchEnrollments = async () => {
     try {
-      const { data: enrollmentsData, error } = await supabase
-        .from("enrollments")
-        .select("*")
-        .order("enrolled_at", { ascending: false });
+      const [enrollmentsResult, coursesResult] = await Promise.all([
+        supabase.from("enrollments").select("*").order("enrolled_at", { ascending: false }),
+        supabase.from("courses").select("id, title, price")
+      ]);
 
-      if (error) throw error;
+      if (enrollmentsResult.error) throw enrollmentsResult.error;
+      const enrollmentsData = enrollmentsResult.data;
+      setCourses(coursesResult.data || []);
 
-      // Fetch related profiles and courses
       const studentIds = [...new Set(enrollmentsData?.map(e => e.student_id))];
       const courseIds = [...new Set(enrollmentsData?.map(e => e.course_id))];
 
-      const [profilesResult, coursesResult] = await Promise.all([
+      const [profilesResult] = await Promise.all([
         supabase.from("profiles").select("id, full_name, email").in("id", studentIds),
-        supabase.from("courses").select("id, title, price").in("id", courseIds)
       ]);
 
-      // Create lookup maps
       const profilesMap = new Map(profilesResult.data?.map(p => [p.id, p]) || []);
       const coursesMap = new Map(coursesResult.data?.map(c => [c.id, c]) || []);
 
-      // Combine the data
       const enrichedData = enrollmentsData?.map(enrollment => ({
         ...enrollment,
         student: profilesMap.get(enrollment.student_id),
@@ -232,22 +234,29 @@ export default function Enrollments() {
             <div className="flex gap-4 items-end">
               <div className="flex-1">
                 <label className="text-sm font-medium mb-2 block">Search Student/Course</label>
-                <Input placeholder="Student name or course title..." />
+                <Input 
+                  placeholder="Student name or course title..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </div>
               <div className="w-64">
                 <label className="text-sm font-medium mb-2 block">Filter by Course</label>
-                <Select defaultValue="all">
+                <Select value={filterCourse} onValueChange={setFilterCourse}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Courses</SelectItem>
+                    {courses.map((course) => (
+                      <SelectItem key={course.id} value={course.id}>{course.title}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="w-64">
                 <label className="text-sm font-medium mb-2 block">Filter by Status</label>
-                <Select defaultValue="all">
+                <Select value={filterStatus} onValueChange={setFilterStatus}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -259,7 +268,7 @@ export default function Enrollments() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button variant="outline">
+              <Button variant="outline" onClick={() => fetchEnrollments()}>
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Refresh
               </Button>
@@ -282,13 +291,28 @@ export default function Enrollments() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {loading ? (
+                {(() => {
+                  const filtered = enrollments.filter(e => {
+                    if (filterCourse !== "all" && e.course_id !== filterCourse) return false;
+                    if (filterStatus !== "all" && e.status !== filterStatus) return false;
+                    if (searchQuery) {
+                      const q = searchQuery.toLowerCase();
+                      const name = (e.student?.full_name || "").toLowerCase();
+                      const course = (e.course?.title || "").toLowerCase();
+                      if (!name.includes(q) && !course.includes(q)) return false;
+                    }
+                    return true;
+                  });
+
+                  if (loading) return (
                     <TableRow>
                       <TableCell colSpan={7} className="text-center py-16">
                         Loading enrollments...
                       </TableCell>
                     </TableRow>
-                  ) : enrollments.length === 0 ? (
+                  );
+
+                  if (filtered.length === 0) return (
                     <TableRow>
                       <TableCell colSpan={7} className="text-center py-16">
                         <GraduationCap className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
@@ -296,8 +320,9 @@ export default function Enrollments() {
                         <div className="text-sm text-muted-foreground">Enrollments will appear here</div>
                       </TableCell>
                     </TableRow>
-                  ) : (
-                    enrollments.map((enrollment) => (
+                  );
+
+                  return filtered.map((enrollment) => (
                       <TableRow key={enrollment.id}>
                         <TableCell>
                           <div>
@@ -359,8 +384,9 @@ export default function Enrollments() {
                            )}
                          </TableCell>
                       </TableRow>
-                    ))
-                  )}
+                    ));
+                })()}
+
                 </TableBody>
               </Table>
             </div>
