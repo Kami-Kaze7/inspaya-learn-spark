@@ -291,13 +291,28 @@ export default function Enrollments() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {loading ? (
+                {(() => {
+                  const filtered = enrollments.filter(e => {
+                    if (filterCourse !== "all" && e.course_id !== filterCourse) return false;
+                    if (filterStatus !== "all" && e.status !== filterStatus) return false;
+                    if (searchQuery) {
+                      const q = searchQuery.toLowerCase();
+                      const name = (e.student?.full_name || "").toLowerCase();
+                      const course = (e.course?.title || "").toLowerCase();
+                      if (!name.includes(q) && !course.includes(q)) return false;
+                    }
+                    return true;
+                  });
+
+                  if (loading) return (
                     <TableRow>
                       <TableCell colSpan={7} className="text-center py-16">
                         Loading enrollments...
                       </TableCell>
                     </TableRow>
-                  ) : enrollments.length === 0 ? (
+                  );
+
+                  if (filtered.length === 0) return (
                     <TableRow>
                       <TableCell colSpan={7} className="text-center py-16">
                         <GraduationCap className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
@@ -305,8 +320,9 @@ export default function Enrollments() {
                         <div className="text-sm text-muted-foreground">Enrollments will appear here</div>
                       </TableCell>
                     </TableRow>
-                  ) : (
-                    enrollments.map((enrollment) => (
+                  );
+
+                  return filtered.map((enrollment) => (
                       <TableRow key={enrollment.id}>
                         <TableCell>
                           <div>
