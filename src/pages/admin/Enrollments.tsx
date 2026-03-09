@@ -70,27 +70,25 @@ export default function Enrollments() {
 
   const fetchEnrollments = async () => {
     try {
-      const { data: enrollmentsData, error } = await supabase
-        .from("enrollments")
-        .select("*")
-        .order("enrolled_at", { ascending: false });
+      const [enrollmentsResult, coursesResult] = await Promise.all([
+        supabase.from("enrollments").select("*").order("enrolled_at", { ascending: false }),
+        supabase.from("courses").select("id, title, price")
+      ]);
 
-      if (error) throw error;
+      if (enrollmentsResult.error) throw enrollmentsResult.error;
+      const enrollmentsData = enrollmentsResult.data;
+      setCourses(coursesResult.data || []);
 
-      // Fetch related profiles and courses
       const studentIds = [...new Set(enrollmentsData?.map(e => e.student_id))];
       const courseIds = [...new Set(enrollmentsData?.map(e => e.course_id))];
 
-      const [profilesResult, coursesResult] = await Promise.all([
+      const [profilesResult] = await Promise.all([
         supabase.from("profiles").select("id, full_name, email").in("id", studentIds),
-        supabase.from("courses").select("id, title, price").in("id", courseIds)
       ]);
 
-      // Create lookup maps
       const profilesMap = new Map(profilesResult.data?.map(p => [p.id, p]) || []);
       const coursesMap = new Map(coursesResult.data?.map(c => [c.id, c]) || []);
 
-      // Combine the data
       const enrichedData = enrollmentsData?.map(enrollment => ({
         ...enrollment,
         student: profilesMap.get(enrollment.student_id),
