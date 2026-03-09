@@ -234,22 +234,29 @@ export default function Enrollments() {
             <div className="flex gap-4 items-end">
               <div className="flex-1">
                 <label className="text-sm font-medium mb-2 block">Search Student/Course</label>
-                <Input placeholder="Student name or course title..." />
+                <Input 
+                  placeholder="Student name or course title..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </div>
               <div className="w-64">
                 <label className="text-sm font-medium mb-2 block">Filter by Course</label>
-                <Select defaultValue="all">
+                <Select value={filterCourse} onValueChange={setFilterCourse}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Courses</SelectItem>
+                    {courses.map((course) => (
+                      <SelectItem key={course.id} value={course.id}>{course.title}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="w-64">
                 <label className="text-sm font-medium mb-2 block">Filter by Status</label>
-                <Select defaultValue="all">
+                <Select value={filterStatus} onValueChange={setFilterStatus}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -261,7 +268,7 @@ export default function Enrollments() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button variant="outline">
+              <Button variant="outline" onClick={() => fetchEnrollments()}>
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Refresh
               </Button>
