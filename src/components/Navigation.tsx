@@ -98,7 +98,7 @@ const Navigation = () => {
               <img 
                 src={logo} 
                 alt="Inspaya" 
-                className="h-10 object-contain"
+                className="h-10 object-contain brightness-0 invert"
               />
             </Link>
 
