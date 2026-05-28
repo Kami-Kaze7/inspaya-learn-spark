@@ -429,6 +429,9 @@ const CourseDetail = () => {
                         key={currentVideo}
                         src={currentVideo}
                         controls
+                        controlsList="nodownload noplaybackrate"
+                        disablePictureInPicture
+                        onContextMenu={(e) => e.preventDefault()}
                         className="h-full w-full absolute inset-0 object-contain bg-black"
                       />
                     )
